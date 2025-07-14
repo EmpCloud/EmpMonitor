@@ -7,7 +7,7 @@
     "require": {
         "php": "^8.3",
         "guzzlehttp/guzzle": "^7.2",
-        "laravel/framework": "^10.0",
+        "laravel/framework": "^12.12",
         "laravel/tinker": "^2.8",
         "spatie/laravel-ignition": "^2.8",
         "artem-schander/l5-modular": "*"
