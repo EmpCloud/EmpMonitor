@@ -1641,6 +1641,120 @@
           }
         }
       }
+    },
+    "/admin/report": {
+        "get": {
+          "tags": [
+            "Private"
+          ],
+          "summary": "Admin login",
+          "security": [
+            {
+              "bearerAuth": []
+            }
+          ],
+          "parameters": [
+            {
+              "name": "employee_id",
+              "in": "query",
+              "description": "employee id",
+              "schema": {
+                "type": "integer",
+                "example": "10"
+              }
+            },
+            {
+              "name": "department_id",
+              "in": "query",
+              "description": "department id",
+              "schema": {
+                "type": "integer",
+                "example": "10"
+              }
+            },
+            {
+              "name": "location_id",
+              "in": "query",
+              "description": "location id",
+              "schema": {
+                "type": "integer",
+                "example": "10"
+              }
+            },
+            {
+              "name": "start_date",
+              "in": "query",
+              "description": "Start date to filter by (YYYY-MM-DD)",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "date",
+                "example": "2024-01-01"
+              }
+            },
+            {
+              "name": "end_date",
+              "in": "query",
+              "description": "End date to filter by (YYYY-MM-DD)",
+              "required": false,
+              "schema": {
+                "type": "string",
+                "format": "date",
+                "example": "2024-01-31"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful login",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "token": {
+                        "type": "string",
+                        "description": "JWT token for authentication"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Invalid credentials",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Invalid credentials"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal server error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Internal server error"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
     }
   },
   "components": {
