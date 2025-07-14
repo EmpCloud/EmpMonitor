@@ -396,5 +396,53 @@ class EmployeeModel {
       }
     ]);
   }
+
+  getReports({ employee_id, start_date, end_date }) {
+    return WebAppActivityModel.find({
+      employee_id: { "$in": employee_id },
+      yyyymmdd: {
+        "$gte": +start_date.split("-").join(""),
+        "$lte": +end_date.split("-").join(""),
+      }
+    }).populate('employee_id') // assumes employee_id is a ref
+.lean();
+  }
+
+  getReportsCount({ employee_id, start_date, end_date }) {
+    return WebAppActivityModel.countDocuments({
+      employee_id: { "$in": employee_id },
+      yyyymmdd: {
+        "$gte": +start_date.split("-").join(""),
+        "$lte": +end_date.split("-").join(""),
+      }
+    });
+  }
+
+  async filterEmployee({ employee_id, department_id, location_id }) {
+    const pool = await mySqlSingleton.getPool();
+
+    let query = `SELECT * FROM employees`;
+    const conditions = [];
+    const values = [];
+
+    if (employee_id) {
+      conditions.push(`id = ?`);
+      values.push(employee_id);
+    }
+    if (department_id) {
+      conditions.push(`department_id = ?`);
+      values.push(department_id);
+    }
+    if (location_id) {
+      conditions.push(`location_id = ?`);
+      values.push(location_id);
+    }
+
+    if (conditions.length) {
+      query += ` WHERE ` + conditions.join(' AND ');
+    }
+
+    return pool.query(query, values);
+  }
 }
 module.exports = new EmployeeModel();

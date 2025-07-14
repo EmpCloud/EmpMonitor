@@ -399,5 +399,36 @@ async deleteLocation(req, res) {
     return res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 }
+
+  async getReports(req, res) {
+    try {
+      let { id: organization_id } = req.user;
+      let { employee_id, department_id, location_id, start_date, end_date } = req.query;
+      start_date = moment(start_date).format("YYYY-MM-DD");
+      end_date = moment(end_date).add(1, 'day').format("YYYY-MM-DD");
+      let [employeeData] = await EmployeeModel.filterEmployee({ employee_id, department_id, location_id });
+      let emp_ids = _.pluck(employeeData, 'id');
+      let [data, count] = await Promise.all([
+        EmployeeModel.getReports({ employee_id: emp_ids, start_date, end_date }),
+        EmployeeModel.getReportsCount({ employee_id: emp_ids, start_date, end_date  }),
+      ]);
+      data = data.map(i => {
+        let emp = employeeData.find(x => x.id == i.employee_id);
+        return {
+          ...i,
+          ...emp
+        }
+      })
+      return res.status(200).json({
+        code: 200,
+        data: { data, count },
+        error: null,
+        message: "Success"
+      })
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
 }
 module.exports = new AdminController();

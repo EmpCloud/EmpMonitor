@@ -34,6 +34,8 @@ class AdminRoutes {
         this.myRoutes.post('/locations', adminController.addLocation);
         this.myRoutes.put('/locations/:id', adminController.updateLocation);
         this.myRoutes.delete('/locations/:id', adminController.deleteLocation);
+
+        this.myRoutes.get("/report", adminController.getReports);
     }
 
     getRouters() {
