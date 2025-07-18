@@ -247,8 +247,10 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId, showEntries,
                         if (ADD_REMOVE_COLUMN.includes('EmpCode')) appendData += '<td class="EmpCodeTable" style="width: 90px;">' + attHistory.employee_code + '</td>';
                         if (ADD_REMOVE_COLUMN.includes('ClockIn')) appendData += '<td class="ClockInTable" style="width: 90px;">' + startTime + '</td>';
                         if (ADD_REMOVE_COLUMN.includes('ClockOut')) appendData += '<td class="ClockOutTable" style="width: 90px;">' + endTime + '</td>'; 
-                        if (ADD_REMOVE_COLUMN.includes('TotalHour')) appendData += ADD_REMOVE_COLUMN.includes('T_minutes') ? '<td class="TotalHourTable" style="text-align:center">' + startTime  + '</td>' : '<td class="TotalHourTable" style="text-align:center">' +hours.toFixed(2)  + '</td>';
-                        
+                        if (ADD_REMOVE_COLUMN.includes('TotalHour')) appendData += '<td class="TotalHourTable" style="width: 90px;">' +  formatSecondsToHHMMSS(attHistory.total_usage)  + '</td>' ;
+                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.office_usage) + '</td>'; 
+                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.active_usage) + '</td>'; 
+                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.idle_usage) + '</td>'; 
                         appendData +=  '</tr>';
                     });
                 }
@@ -283,6 +285,12 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId, showEntries,
             $('#employee').append(appendData);
         }
     });
+}
+function formatSecondsToHHMMSS(seconds) {
+    const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
+    const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
+    const secs = String(seconds % 60).padStart(2, '0');
+    return `${hrs}:${mins}:${secs}`;
 }
 
 //Added and removing table headers

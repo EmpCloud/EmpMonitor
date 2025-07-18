@@ -163,6 +163,8 @@ async getEmployeeById(req, res) {
 async getAttendance(req, res) {
   try {
     let { start_date, end_date, skip = 0, limit = 10, employee_id, name } = req.body;
+    if(employee_id) employee_id = parseInt(employee_id) || null;
+    if(limit) limit = parseInt(limit) || 10;
     start_date = moment(start_date).format("YYYY-MM-DD");
     end_date = moment(end_date).format("YYYY-MM-DD");
 
@@ -172,15 +174,15 @@ async getAttendance(req, res) {
       EmployeeModel.getAllAttendance(start_date, end_date, null, null, employee_id, name, 1)
     ]);
 
-    let dates = _.pluck(attendanceRecords, 'date').map(i => +moment(i).format('YYYY-MM-DD').split("-").join(''));
-    let timesheet = await EmployeeModel.getEmployeeTimesheet({ dates, employee_id});
-    
+    let empIds = _.pluck(attendanceRecords, 'employee_id');
+    let totalUsage = await EmployeeModel.getTotalUsage(empIds, start_date, end_date);
+
     attendanceRecords = attendanceRecords.map(record => {
-      let date = +moment(record.date).format('YYYY-MM-DD').split("-").join('');
-      let timesheetRecord = timesheet.find(ts => ts.yyyymmdd === date && ts.employee_id === record.employee_id);
+      let tempUsage = totalUsage.find(i => i._id === record.employee_id);
       return {
         ...record,
-        ...timesheetRecord
+        ...tempUsage,
+        total_usage: moment(record.end_time).diff(moment(record.start_time), 'seconds')
       }
     });
 
@@ -403,13 +405,13 @@ async deleteLocation(req, res) {
   async getReports(req, res) {
     try {
       let { id: organization_id } = req.user;
-      let { employee_id, department_id, location_id, start_date, end_date } = req.query;
+      let { employee_id, department_id, location_id, start_date, end_date, skip, limit } = req.query;
       start_date = moment(start_date).format("YYYY-MM-DD");
       end_date = moment(end_date).add(1, 'day').format("YYYY-MM-DD");
-      let [employeeData] = await EmployeeModel.filterEmployee({ employee_id, department_id, location_id });
+      let [employeeData] = await EmployeeModel.filterEmployee({ employee_id, department_id, location_id, organization_id });
       let emp_ids = _.pluck(employeeData, 'id');
       let [data, count] = await Promise.all([
-        EmployeeModel.getReports({ employee_id: emp_ids, start_date, end_date }),
+        EmployeeModel.getReports({ employee_id: emp_ids, start_date, end_date, }),
         EmployeeModel.getReportsCount({ employee_id: emp_ids, start_date, end_date  }),
       ]);
       data = data.map(i => {

@@ -405,7 +405,7 @@ class EmployeeModel {
         "$lte": +end_date.split("-").join(""),
       }
     }).populate('employee_id') // assumes employee_id is a ref
-.lean();
+    .lean();
   }
 
   getReportsCount({ employee_id, start_date, end_date }) {
@@ -421,7 +421,11 @@ class EmployeeModel {
   async filterEmployee({ employee_id, department_id, location_id }) {
     const pool = await mySqlSingleton.getPool();
 
-    let query = `SELECT * FROM employees`;
+    let query = `
+      SELECT employees.first_name, employees.last_name, employees.email, employees.id, departments.name AS department_name, locations.location_name, employees.role FROM employees
+      INNER JOIN departments ON employees.department_id = departments.id
+      INNER JOIN locations ON employees.location_id = locations.id
+    `;
     const conditions = [];
     const values = [];
 
@@ -444,5 +448,25 @@ class EmployeeModel {
 
     return pool.query(query, values);
   }
+
+  getTotalUsage(empIds, start_date, end_date) {
+    return WebAppActivityModel.aggregate([
+      {
+        $match: {
+          employee_id: { $in: empIds },
+          yyyymmdd: { $gte: +start_date.split("-").join(""), $lte: +end_date.split("-").join("") }
+        }
+      },
+      {
+        $group: {
+          _id: "$employee_id",
+          office_usage: { $sum: "$total_seconds" },
+          active_usage: { $sum: "$active_seconds" },
+          idle_usage: { $sum: "$idle_seconds" }
+        }
+      }
+    ]);
+  }
 }
+
 module.exports = new EmployeeModel();

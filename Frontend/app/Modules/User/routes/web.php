@@ -40,6 +40,7 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::post('/add-department', [UserController::class,'addDepartment']);
             Route::post('/delete-department', [UserController::class,'deleteDepartment']);
             Route::post('/update-department', [UserController::class,'updateDepartment']);
+            Route::get('/reports', [UserController::class,'getReports'])->name('reports');
             }); 
         });
 
