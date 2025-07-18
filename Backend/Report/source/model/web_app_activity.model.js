@@ -3,6 +3,9 @@ const Schema = mongoose.Schema;
 
 const WebAppActivitySchema = new Schema({
     employee_id: { type: Number, required: true },
+    organization_id: { type: Number, required: true },
+    application_id: { type: mongoose.Schema.Types.ObjectId, ref: 'organization_app_web' },
+    domain_id: { type: mongoose.Schema.Types.ObjectId, ref: 'organization_app_web' },
     start_time: { type: String, required: true },
     end_time: { type: String, },
     yyyymmdd: { type: Number, required: true },

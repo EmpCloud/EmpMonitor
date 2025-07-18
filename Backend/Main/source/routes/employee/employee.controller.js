@@ -115,7 +115,6 @@ async function getAttendance(req, res) {
       message: "Success"
     });
   } catch (error) {
-    console.log('rrt', error);
     return res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 }

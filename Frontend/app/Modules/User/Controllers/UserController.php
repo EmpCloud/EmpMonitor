@@ -692,4 +692,31 @@ class UserController extends Controller
         }
     }
 
+    public function getReports()
+    {
+
+        try {
+            $location = $this->getLocationsDept();
+            $departments = $this->getDepartments();
+            $employeesList = $this->helper->employeesList();
+            $api_url = env('MAIN_API') . 'admin/report?start_date=2025-07-18&end_date=2025-07-18';
+            $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, []);
+
+            if ($response['code'] == 200) {
+                $result['code'] = 200;
+                $result['msg'] = 'success';
+                $result['data'] = $response['data']['data'];
+                $reportData = $result;
+            } else {
+                $result['code'] = 400;
+                $result['msg'] = 'No data found';
+                $reportData = $result;
+            }
+            return view("User::Report.report")->with(array('departments' => $departments, 'location_departmnet' => $location, 'reportData' => $reportData, 'employeesList' => $employeesList));
+        } catch (\Exception $e) {
+            return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartments => Method-get');
+        }
+    }
+
 }

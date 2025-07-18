@@ -55,7 +55,10 @@
                     <i class="menu-icon far fa-calendar-alt"
                         title="{{ __('messages.timesheets') }}"></i><span>{{ __('messages.timesheets') }}</span>
                 </a>
-                 
+                <a href="{{ route('reports', (new App\Modules\User\helper())->getHostName()) }}">
+                    <i class="menu-icon icon-file-text"
+                       title="{{ __('messages.reports') }}"></i><span>{{ __('messages.reports') }}</span>
+                </a> 
                 @endif
             </li>
         </ul>
