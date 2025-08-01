@@ -10,8 +10,8 @@ class ActivityController {
 
             for (const e of data) {
                 let date = moment(e.dataId).format('YYYY-MM-DD');
-                let start_time = moment.utc(e.dataId).add(0, 'second').toISOString();
-                let end_time = moment.utc(e.dataId).add(e.mode.end, 'second').toISOString();
+                let start_time = moment.utc(e.dataId).format('YYYY-MM-DD HH:mm:ss');
+                let end_time = moment.utc(e.dataId).add(e.mode.end, 'second').format('YYYY-MM-DD HH:mm:ss');
                 let [previousAttendance] = await ReportModel.getEmployeeAttendance(user.id, date);
                 if(previousAttendance) {
                     let res = await ReportModel.updateEmployeeAttendance(previousAttendance.id, end_time);
