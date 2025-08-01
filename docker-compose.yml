@@ -1,0 +1,200 @@
+services:
+  # MariaDB Database
+  mariadb:
+    image: mariadb:latest
+    container_name: empmonitor_mariadb
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: empmonitor
+      MYSQL_USER: empmonitor
+      MYSQL_PASSWORD: empmonitor123
+    ports:
+      - "3306:3306"
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./Backend/Database_Configuration/db.sql:/docker-entrypoint-initdb.d/db.sql
+    networks:
+      - empmonitor_network
+
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: empmonitor_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: empmonitor
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - empmonitor_network
+
+  # Main Backend Service (Node.js)
+  backend-main:
+    build:
+      context: ./Backend/Main
+      dockerfile: Dockerfile
+    container_name: empmonitor_backend_main
+    restart: unless-stopped
+    ports:
+      - "5001:5001"
+    environment:
+      - NODE_ENV=production
+      - PORT=5001
+      - DB_HOST=mariadb
+      - DB_USER=empmonitor
+      - DB_PORT=3306
+      - DB_PASSWORD=empmonitor123
+      - DB_DATABASE=empmonitor
+      - MYSQL_POOL_CONNECTION_LIMIT=10
+      - JWT_SECRET=tfwsIg87P49M1CWCcpJYOtfwsIg87P49M1CWCcpJYOl2FN29fkAjjGQo7hAJtuXK3Ej8Uld
+      - MONGO_URI=mongodb://mongodb:27017/empmonitor
+    depends_on:
+      - mariadb
+      - mongodb
+    volumes:
+      - ./Backend/Main:/app
+      - /app/node_modules
+    networks:
+      - empmonitor_network
+
+  # Agent Backend Service (Node.js)
+  backend-agent:
+    build:
+      context: ./Backend/Agent
+      dockerfile: Dockerfile
+    container_name: empmonitor_backend_agent
+    restart: unless-stopped
+    ports:
+      - "5002:5002"
+    environment:
+      - NODE_ENV=production
+      - PORT=5002
+      - MYSQL_HOST=mariadb
+      - MYSQL_USERNAME=empmonitor
+      - MYSQL_PORT=3306
+      - MYSQL_PASSWORD=empmonitor123
+      - MYSQL_DBNAME=empmonitor
+      - MYSQL_POOL_CONNECTION_LIMIT=10
+      - JWT_SECRET=tfwsIg87P49M1CWCcpJYOtfwsIg87P49M1CWCcpJYOl2FN29fkAjjGQo7hAJtuXK3Ej8Uld
+      - MONGO_URI=mongodb://mongodb:27017/empmonitor
+    depends_on:
+      - mariadb
+      - mongodb
+    volumes:
+      - ./Backend/Agent:/app
+      - /app/node_modules
+    networks:
+      - empmonitor_network
+
+  # Report Backend Service (Node.js)
+  backend-report:
+    build:
+      context: ./Backend/Report
+      dockerfile: Dockerfile
+    container_name: empmonitor_backend_report
+    restart: unless-stopped
+    ports:
+      - "5003:5003"
+    environment:
+      - NODE_ENV=production
+      - PORT=5003
+      - MONGO_URI=mongodb://mongodb:27017/empmonitor
+      - JWT_SECRET=tfwsIg87P49M1CWCcpJYOtfwsIg87P49M1CWCcpJYOl2FN29fkAjjGQo7hAJtuXK3Ej8Uld
+      - MYSQL_HOST=mariadb
+      - MYSQL_USERNAME=empmonitor
+      - MYSQL_PASSWORD=empmonitor123
+      - MYSQL_DBNAME=empmonitor
+      - MYSQL_POOL_CONNECTION_LIMIT=10
+    depends_on:
+      - mariadb
+      - mongodb
+    volumes:
+      - ./Backend/Report:/app
+      - /app/node_modules
+    networks:
+      - empmonitor_network
+
+  # Store Backend Service (Node.js)
+  backend-store:
+    build:
+      context: ./Backend/Store
+      dockerfile: Dockerfile
+    container_name: empmonitor_backend_store
+    restart: unless-stopped
+    ports:
+      - "5004:5004"
+    environment:
+      - NODE_ENV=production
+      - PORT=5004
+      - MONGO_URI=mongodb://mongodb:27017/empmonitor
+      - JWT_SECRET=tfwsIg87P49M1CWCcpJYOtfwsIg87P49M1CWCcpJYOl2FN29fkAjjGQo7hAJtuXK3Ej8Uld
+      - MYSQL_HOST=mariadb
+      - MYSQL_USERNAME=empmonitor
+      - MYSQL_PASSWORD=empmonitor123
+      - MYSQL_DBNAME=empmonitor
+      - MYSQL_POOL_CONNECTION_LIMIT=10
+      - REPORT_SERVER_URL=http://backend-report:5003/report/add-data
+    depends_on:
+      - mariadb
+      - mongodb
+      - backend-report
+    volumes:
+      - ./Backend/Store:/app
+      - /app/node_modules
+    networks:
+      - empmonitor_network
+
+  # Frontend Service (Laravel)
+  frontend:
+    build:
+      context: ./Frontend
+      dockerfile: Dockerfile
+    container_name: empmonitor_frontend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Laravel
+      - APP_ENV=production
+      - APP_DEBUG=false
+      - APP_URL=http://localhost:8000
+      - MAIN_API=http://backend-main:5001
+      - DB_CONNECTION=mysql
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_DATABASE=empmonitor
+      - DB_USERNAME=empmonitor
+      - DB_PASSWORD=empmonitor123
+    depends_on:
+      - mariadb
+      - backend-main
+    volumes:
+      - ./Frontend:/var/www/html
+      - /var/www/html/vendor
+      - /var/www/html/node_modules
+    networks:
+      - empmonitor_network
+
+  # Redis for caching (optional but recommended for Laravel)
+  redis:
+    image: redis:7
+    container_name: empmonitor_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - empmonitor_network
+
+volumes:
+  mariadb_data:
+  mongodb_data:
+  redis_data:
+
+networks:
+  empmonitor_network:
+    driver: bridge 
