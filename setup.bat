@@ -121,8 +121,8 @@ echo.
 
 REM Start EmpMonitor from QT
 echo Navigating to "QT" directory to start EmpMonitor...
-if exist "QT\empmonitor.exe" (
-    cd /d "QT"
+if exist "QT\Windows\empmonitor.exe" (
+    cd /d "QT\Windows"
     echo Found empmonitor.exe, starting it...
     start "" "empmonitor.exe"
     echo empmonitor.exe started successfully.
@@ -198,6 +198,15 @@ echo Navigating to "Frontend" directory...
 if exist "Frontend" (
     cd /d "Frontend"
     echo Navigated to Frontend directory.
+
+    REM Ensure storage\sessions directory exists
+    if not exist "storage\framework\sessions\" (
+        echo Creating storage\framework\sessions\ directory...
+        mkdir "storage\framework\sessions\"
+        echo storage\framework\sessions\ directory created.
+    ) else (
+        echo storage\framework\sessions\ directory already exists.
+    )
 
     REM Create .env file if it doesn't exist
     if not exist ".env" (

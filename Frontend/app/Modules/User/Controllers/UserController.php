@@ -699,10 +699,12 @@ class UserController extends Controller
             $location = $this->getLocationsDept();
             $departments = $this->getDepartments();
             $employeesList = $this->helper->employeesList();
-            $api_url = env('MAIN_API') . 'admin/report?start_date=2025-07-18&end_date=2025-07-18';
+            $endDate = (new \DateTime())->format('Y-m-d');
+            $startDate = (new \DateTime('-30 days'))->format('Y-m-d');
+            $result;
+            $api_url = env('MAIN_API') . "admin/report?start_date=$startDate&end_date=$endDate";
             $method = "get-with-token";
             $response = $this->helper->postApiCall($method, $api_url, []);
-
             if ($response['code'] == 200) {
                 $result['code'] = 200;
                 $result['msg'] = 'success';
@@ -716,6 +718,60 @@ class UserController extends Controller
             return view("User::Report.report")->with(array('departments' => $departments, 'location_departmnet' => $location, 'reportData' => $reportData, 'employeesList' => $employeesList));
         } catch (\Exception $e) {
             return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartments => Method-get');
+        }
+    }
+
+    public function getReportData(Request $request)
+    {
+        try {
+            $locationId = $request->input('location_id');
+            $departmentId = $request->input('department_id');
+            $employeeId = $request->input('employee_id');
+            $fromDate = $request->input('from_date');
+            $toDate = $request->input('to_date');
+
+            // Build query parameters
+            $queryParams = [];
+            if ($fromDate) {
+                $queryParams['start_date'] = $fromDate;
+            }
+            if ($toDate) {
+                $queryParams['end_date'] = $toDate;
+            }
+            if ($locationId) {
+                $queryParams['location_id'] = $locationId;
+            }
+            if ($departmentId) {
+                $queryParams['department_id'] = $departmentId;
+            }
+            if ($employeeId) {
+                $queryParams['employee_id'] = $employeeId;
+            }
+
+            $queryString = http_build_query($queryParams);
+            $api_url = env('MAIN_API') . "admin/report?" . $queryString;
+            $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, []);
+
+            if ($response['code'] == 200) {
+                return response()->json([
+                    'code' => 200,
+                    'data' => $response['data']['data'] ?? [],
+                    'message' => 'Success'
+                ]);
+            } else {
+                return response()->json([
+                    'code' => 400,
+                    'data' => [],
+                    'message' => $response['message'] ?? 'No data found'
+                ]);
+            }
+        } catch (\Exception $e) {
+            return response()->json([
+                'code' => 500,
+                'data' => [],
+                'message' => 'Internal server error: ' . $e->getMessage()
+            ]);
         }
     }
 
