@@ -3,12 +3,35 @@
 @section('title')
 <title>@if((new App\Modules\User\helper)->checkHost() )
     @if((new App\Modules\User\helper)->checkHost() )
-    {{env('WEBSITE_TITLE')}} | @endif @endif Manage Department
+    {{env('WEBSITE_TITLE')}} | @endif @endif {{ __('messages.report') }}
 </title>
 @endsection
+
 @section('extra-style-links')
 <link rel="stylesheet" type="text/css" href="../assets/plugins/daterangepicker/daterangepicker.css" />
-
+<link rel="stylesheet" type="text/css" href="../assets/plugins/DataTables/datatables.min.css" />
+<style>
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
+        margin-bottom: 15px;
+    }
+    .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate {
+        margin-top: 15px;
+    }
+    .export-buttons {
+        margin-bottom: 15px;
+    }
+    .export-buttons .btn {
+        margin-right: 10px;
+    }
+    .logo-container {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .logo-container img {
+        max-height: 60px;
+        max-width: 200px;
+    }
+</style>
 @endsection
 
 @section('page-style')
@@ -45,12 +68,6 @@
         }
     }
 
-    /*.alert {*/
-    /*    padding: 10px;*/
-    /*    background-color: #2196F3;*/
-    /*    color: white;*/
-    /*}*/
-
     .closebtn {
         margin-left: 15px;
         color: white;
@@ -76,10 +93,23 @@
         border-radius: 3px;
         display: inline-flex;
     }
+
+    /* DataTables custom styling */
+    .dataTables_wrapper .dataTables_length select {
+        width: 80px;
+        display: inline-block;
+    }
+    
+    .dataTables_wrapper .dataTables_filter input {
+        width: 200px;
+        display: inline-block;
+    }
+    
+    .table-responsive {
+        overflow-x: auto;
+    }
 </style>
 @endsection
-
-
 
 @section('content')
 <div class="page-inner no-page-title" style="padding-right: 15px;">
@@ -98,14 +128,20 @@
 
             <h1 class="page-title">{{ __('messages.report') }}</h1>
 
-            <button
-                id="side-step2"
-                type="button"
-                class="btn btn-primary float-right"
-                data-toggle="modal"
-                data-target="#addDepartmentModal">
-                {{ __('messages.reportDownload') }}
-            </button>
+            <div class="float-right">
+                <button
+                    id="exportPDF"
+                    type="button"
+                    class="btn btn-danger">
+                    <i class="fa fa-file-pdf-o"></i> Export PDF
+                </button>
+                <button
+                    id="exportCSV"
+                    type="button"
+                    class="btn btn-success">
+                    <i class="fa fa-file-excel-o"></i> {{ __('messages.exportExcel') }}
+                </button>
+            </div>
         </div>
 
         <div class="row">
@@ -118,7 +154,7 @@
                                     {{ __('messages.location') }}</label>
                                 <div class="form-group">
                                     <select class="form-control mb-2" id="locationID">
-                                        <option>Select Location</option>
+                                        <option value="">Select Location</option>
                                         @if(isset($location_departmnet['code']) && $location_departmnet['code'] == 200)
                                         @if(!empty($location_departmnet['data']))
                                         @foreach($location_departmnet['data'] as $location)
@@ -130,11 +166,11 @@
                                 </div>
                             </div>
                             <div class="col-sm">
-                                <label class="font-weight-bold" for="location_option">
+                                <label class="font-weight-bold" for="department_option">
                                     {{ __('messages.department') }}</label>
                                 <div class="form-group">
-                                    <select class="form-control mb-2" id="locationID">
-                                        <option>Select Department</option>
+                                    <select class="form-control mb-2" id="departmentID">
+                                        <option value="">Select Department</option>
                                         @if(isset($departments['code']) && $departments['code'] == 200)
                                         @if(!empty($departments['data']))
                                         @foreach($departments['data'] as $department)
@@ -146,11 +182,11 @@
                                 </div>
                             </div>
                             <div class="col-sm">
-                                <label class="font-weight-bold" for="location_option">
+                                <label class="font-weight-bold" for="employee_option">
                                     {{ __('messages.employee') }}</label>
                                 <div class="form-group">
-                                    <select class="form-control mb-2" id="locationID">
-                                       <option selected class="active-result" value="0">
+                                    <select class="form-control mb-2" id="employeeID">
+                                       <option selected class="active-result" value="">
                                                 {{ __('messages.all') }}
                                             </option>
                                             @if (isset($employeesList['employees']) && count($employeesList['employees']) > 0)
@@ -166,7 +202,7 @@
                                 </div>
                             </div>
                             <div class="col-md-4">
-                                <label style="font-weight: 700;" for="location_option">
+                                <label style="font-weight: 700;" for="date_range">
                                     {{ __('messages.date_ranges') }} :<i
                                         class="fa fa-info-circle text-primary ml-2 toDateLimitInfo"
                                         data-toggle="tooltip" title="{{ __('messages.toDateLimitInfo') }}"></i>
@@ -186,64 +222,58 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                        <div class="w-100">
+                        <div class="table-responsive">
                             <table
-                                id="locationTable"
+                                id="reportTable"
                                 class="table table-striped table-bordered">
                                 <thead>
-                                    <th>
-                                        <a onclick="sort('Full Name','NameSort')"> {{ __('messages.fullName') }} </a>
-                                        <span class="float-right"><i id="NameSort"
-                                                class="fas fa-long-arrow-alt-up text-light"></i>
-                                        </span>
-                                    </th>
-                                    <th><label class="d-flex mb-0"><a class="w-100"
-                                                onclick="sort('Email','EmailSort')">{{ __('messages.email') }} </a><span
-                                                class="float-right"><i id="EmailSort"
-                                                    class="fas fa-long-arrow-alt-up text-light"></i>
-                                            </span></label></th>
-                                    <th><label class="d-flex mb-0"><a class="w-100"
-                                                onclick="sort('Location','LocationSort')">{{ __('messages.Location') }}</a><span
-                                                class="float-right"><i id="LocationSort"
-                                                    class="fas fa-long-arrow-alt-up text-light"></i>
-                                            </span></label></th>
-                                    <th>
-                                        <a onclick="sort('Department','DepartmentSort')">{{ __('messages.department') }}</a><span
-                                            class="float-right"><i id="DepartmentSort"
-                                                class="fas fa-long-arrow-alt-up text-light"></i>
-                                        </span>
-                                    </th>
-                                    <th>
-                                        <a onclick="sort('Role','RoleSort')">{{ __('messages.designation') }}</a><span
-                                            class="float-right"><i id="RoleSort"
-                                                class="fas fa-long-arrow-alt-up text-light"></i>
-                                        </span>
-                                    </th>
+                                    <tr>
+                                        <th>{{ __('messages.fullName') }}</th>
+                                        <th>{{ __('messages.email') }}</th>
+                                        <th>{{ __('messages.Location') }}</th>
+                                        <th>{{ __('messages.department') }}</th>
+                                        <th>{{ __('messages.designation') }}</th>
+                                        <th>Title</th>
+                                        <th>Application Name</th>
+                                        <th>URL</th>
+                                        <th>Start Time</th>
+                                        <th>End Time</th>
+                                        <th>Total Seconds</th>
+                                        <th>Idle Seconds</th>
+                                        <th>Active Seconds</th>
+                                        <th>Keystrokes Count</th>
+                                        <th>Mouse Movements Count</th>
+                                        <th>Button Clicks</th>
+                                        <th>Keystrokes</th>
+                                    </tr>
                                 </thead>
-                                <tbody id="getLocDept">
+                                <tbody>
                                     @if(isset($reportData['code']) && $reportData['code'] == 200)
                                     @foreach($reportData['data'] as $report)
-                                    <tr id="{{ $report['id'] }}">
-                                        <td> {{ $report['first_name'] }} {{ $report['last_name'] }}</td>
-                                        <td> {{ $report['email'] }}</td>
+                                    <tr>
+                                        <td>{{ $report['first_name'] }} {{ $report['last_name'] }}</td>
+                                        <td>{{ $report['email'] }}</td>
                                         <td>{{ $report['location_name'] }}</td>
-                                        <td id="report{{ $report['id'] }}">
-                                            {{ $report['department_name'] }}
-                                        </td>
+                                        <td>{{ $report['department_name'] }}</td>
                                         <td>{{ $report['role'] ?? '--' }}</td>
+                                        <td>{{ $report['title'] }}</td>
+                                        <td>{{ $report['application_name'] }}</td>
+                                        <td>{{ $report['url'] }}</td>
+                                        <td>{{ $report['start_time'] }}</td>
+                                        <td>{{ $report['end_time'] }}</td>
+                                        <td>{{ $report['total_seconds'] }}</td>
+                                        <td>{{ $report['idle_seconds'] }}</td>
+                                        <td>{{ $report['active_seconds'] }}</td>
+                                        <td>{{ $report['keystrokesCount'] }}</td>
+                                        <td>{{ $report['mouseMovementsCount'] }}</td>
+                                        <td>{{ $report['buttonClicks'] }}</td>
+                                        <td>{{ $report['keystrokes'] }}</td>
                                     </tr>
                                     @endforeach
-                                    @else
-                                    <tr align="center" id="data_not_found">
-                                        <td colspan="2">
-                                            <p>{{ $location_departmnet['message'] ?? 'No data found.' }}</p>
-                                        </td>
-                                    </tr>
                                     @endif
                                 </tbody>
                             </table>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -251,108 +281,559 @@
     </div>
 </div>
 
-
+<!-- Hidden table for export -->
+<table id="exportTable" style="display: none;">
+    <thead>
+        <tr>
+            <th colspan="17" class="text-center">
+                <div class="logo-container">
+                    <img src="../assets/images/logos/Icon.png" alt="Company Logo" />
+                </div>
+                <h3>Employee Activity Report</h3>
+                <p>Generated on: <span id="exportDate"></span></p>
+            </th>
+        </tr>
+        <tr>
+            <th>{{ __('messages.fullName') }}</th>
+            <th>{{ __('messages.email') }}</th>
+            <th>{{ __('messages.Location') }}</th>
+            <th>{{ __('messages.department') }}</th>
+            <th>{{ __('messages.designation') }}</th>
+            <th>Title</th>
+            <th>Application Name</th>
+            <th>URL</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Total Seconds</th>
+            <th>Idle Seconds</th>
+            <th>Active Seconds</th>
+            <th>Keystrokes Count</th>
+            <th>Mouse Movements Count</th>
+            <th>Button Clicks</th>
+            <th>Keystrokes</th>
+        </tr>
+    </thead>
+    <tbody id="exportTableBody">
+    </tbody>
+</table>
 
 @endsection
 
-@section ('page-scripts')
-<script src="../assets/js/final-timezone.js"></script>
-<script src="../assets/js/incJSFile/SuccessAndErrorHandlers/_swalHandlers.js"></script>
+@section('post-load-scripts')
+<script src="../assets/plugins/DataTables/datatables.min.js"></script>
 <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
 <script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
 <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.11/jspdf.plugin.autotable.min.js"></script>
+@endsection
+
+@section('page-scripts')
+<script src="../assets/js/final-timezone.js"></script>
+<script src="../assets/js/incJSFile/SuccessAndErrorHandlers/_swalHandlers.js"></script>
+
 <script>
-    $(function() {
-        const start = moment().subtract(29, 'days');
-        const end = moment();
+let reportTable;
+let currentData = [];
 
-        function cb(start, end) {
-            $('#reportranges span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
-            $('#from').val(start.format('YYYY-MM-DD'));
-            $('#to').val(end.format('YYYY-MM-DD'));
+$(function() {
+    const start = moment().subtract(29, 'days');
+    const end = moment();
+
+    function cb(start, end) {
+        $('#reportranges span').html(start.format('MMM D, YYYY') + ' - ' + end.format('MMM D, YYYY'));
+        $('#from').val(start.format('YYYY-MM-DD'));
+        $('#to').val(end.format('YYYY-MM-DD'));
+        loadReportData();
+    }
+
+    $('#reportranges').daterangepicker({
+        startDate: start,
+        endDate: end,
+        ranges: {
+            'Today': [moment(), moment()],
+            'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+            'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+            'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+            'This Month': [moment().startOf('month'), moment().endOf('month')],
+            'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
         }
+    }, cb);
 
-        $('#reportranges').daterangepicker({
-            startDate: start,
-            endDate: end,
-            ranges: {
-                'Today': [moment(), moment()],
-                'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-                'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-                'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-                'This Month': [moment().startOf('month'), moment().endOf('month')],
-                'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-            }
-        }, cb);
+    cb(start, end);
+    
+    // Initialize DataTable
+    initializeDataTable();
+    
+    // Load initial data
+    loadReportData();
+});
 
-        cb(start, end); // Set initial values
-    });
-
-    function addDepartmentFun() {
-        console.log($('#locationID').val());
-        $.ajax({
-            url: "/" + userType + '/add-department',
-            type: 'Post',
-            data: {
-                departmentName: $('#departmentName').val(),
-                locationId: $('#locationID').val(),
-            },
-            beforeSend: function() {
-                $('#locError1').html("");
-                $('#addDeptId').attr("disabled", true);
-            },
-            success: function(response) {
-                if (response.statusCode === 200 && response.data.code === 200) {
-                    successSwal(response.data.message);
-                    location.reload();
-                } else {
-                    errorSwal(response.data.message ?? 'Something went wrong');
-                }
-            }
-        })
-    }
-
-    function updateDepartment(id) {}
-
-    function deleteDepartment(id) {
-        Swal.fire({
-            title: "Are you sure?",
-            text: "Do you really want to delete this department?",
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, delete it!',
-            cancelButtonText: 'Cancel'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                $.ajax({
-                    url: "/" + userType + '/delete-department',
-                    type: 'POST',
-                    data: {
-                        id,
-                    },
-                    beforeSend: function() {
-                        $('#locError1').html("");
-                        $('#addLocId').attr("disabled", true);
-                    },
-                    success: function(response) {
-                        if (response.code === 200) {
-                            successSwal(response.message);
-                            location.reload();
-                        } else {
-                            errorSwal(response.message ?? 'Something went wrong');
-                        }
-                    },
-                    error: function() {
-                        errorSwal('Failed to delete location. Please try again.');
-                    },
-                    complete: function() {
-                        $('#addLocId').attr("disabled", false);
+function initializeDataTable() {
+    if ($('#reportTable').length) {
+        // Destroy existing DataTable if it exists
+        if ($.fn.DataTable.isDataTable('#reportTable')) {
+            $('#reportTable').DataTable().destroy();
+        }
+        
+        try {
+            reportTable = $('#reportTable').DataTable({
+                processing: true,
+                serverSide: false,
+                pageLength: 25,
+                lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+                order: [[0, 'asc']],
+                responsive: true,
+                language: {
+                    search: "Search:",
+                    lengthMenu: "Show _MENU_ entries per page",
+                    info: "Showing _START_ to _END_ of _TOTAL_ entries",
+                    infoEmpty: "Showing 0 to 0 of 0 entries",
+                    infoFiltered: "(filtered from _MAX_ total entries)",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
                     }
-                });
-            }
-        });
+                },
+                columnDefs: [
+                    {
+                        targets: [6, 7], // URL and Application Name columns
+                        render: function(data, type, row) {
+                            if (type === 'display' && data && data.length > 30) {
+                                return '<span title="' + data + '">' + data.substring(0, 30) + '...</span>';
+                            }
+                            return data || '';
+                        }
+                    }
+                ]
+            });
+        } catch (error) {
+            console.error('Error initializing DataTable:', error);
+        }
     }
+}
+
+function loadReportData() {
+    const locationId = $('#locationID').val();
+    const departmentId = $('#departmentID').val();
+    const employeeId = $('#employeeID').val();
+    const fromDate = $('#from').val();
+    const toDate = $('#to').val();
+
+    // Fallback for userType if not defined
+    const currentUserType = typeof userType !== 'undefined' ? userType : 'admin';
+
+    $.ajax({
+        url: "/" + currentUserType + '/get-report-data',
+        type: 'POST',
+        data: {
+            location_id: locationId,
+            department_id: departmentId,
+            employee_id: employeeId,
+            from_date: fromDate,
+            to_date: toDate
+        },
+        beforeSend: function() {
+            if (reportTable) {
+                reportTable.clear().draw();
+            }
+        },
+        success: function(response) {
+            if (response.code === 200 && response.data) {
+                currentData = response.data;
+                updateTableData(response.data);
+            } else {
+                currentData = [];
+                updateTableData([]);
+                console.error('Error loading report data:', response.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            currentData = [];
+            updateTableData([]);
+            console.error('Ajax error:', error);
+        }
+    });
+}
+
+function updateTableData(data) {
+    if (reportTable) {
+        reportTable.clear();
+        
+        if (data && data.length > 0) {
+            data.forEach(function(item) {
+                reportTable.row.add([
+                    item.first_name + ' ' + item.last_name,
+                    item.email || '',
+                    item.location_name || '',
+                    item.department_name || '',
+                    item.role || '--',
+                    item.title || '',
+                    item.application_name || '',
+                    item.url || '',
+                    item.start_time || '',
+                    item.end_time || '',
+                    item.total_seconds || '',
+                    item.idle_seconds || '',
+                    item.active_seconds || '',
+                    item.keystrokesCount || '',
+                    item.mouseMovementsCount || '',
+                    item.buttonClicks || '',
+                    item.keystrokes || ''
+                ]);
+            });
+        }
+        
+        reportTable.draw();
+    }
+}
+
+// Export to PDF
+$('#exportPDF').on('click', function() {
+    if (!currentData || currentData.length === 0) {
+        errorSwal('No data available to export.');
+        return;
+    }
+    
+    try {
+        exportToPDF();
+    } catch (error) {
+        console.error('PDF export error:', error);
+        errorSwal('Error generating PDF. Please try again.');
+    }
+});
+
+// Export to Excel
+$('#exportCSV').on('click', function() {
+    if (!currentData || currentData.length === 0) {
+        errorSwal('No data available to export.');
+        return;
+    }
+    
+    try {
+        exportToExcel();
+    } catch (error) {
+        console.error('Excel export error:', error);
+        errorSwal('Error generating Excel file. Please try again.');
+    }
+});
+
+function exportToPDF() {
+    if (!currentData || currentData.length === 0) {
+        errorSwal('No data available to export.');
+        return;
+    }
+
+    const doc = new jsPDF('l', 'pt', 'a4');
+    
+    // Add logo to first page
+    const logoImg = new Image();
+    logoImg.src = '../assets/images/logos/Icon.png';
+    
+    logoImg.onload = function() {
+        try {
+            // Add logo (smaller and positioned better)
+            doc.addImage(logoImg, 'PNG', 20, 15, 40, 20);
+            
+            // Add title
+            doc.setFontSize(16);
+            doc.text('Employee Activity Report', 80, 30);
+            
+            // Add date
+            doc.setFontSize(10);
+            doc.text('Generated on: ' + moment().format('MMMM D, YYYY HH:mm:ss'), 80, 45);
+            
+            // Prepare table data
+            const tableData = currentData.map(function(item) {
+                return [
+                    item.first_name + ' ' + item.last_name,
+                    item.email || '',
+                    item.location_name || '',
+                    item.department_name || '',
+                    item.role || '--',
+                    item.title || '',
+                    item.application_name || '',
+                    item.url || '',
+                    item.start_time || '',
+                    item.end_time || '',
+                    item.total_seconds || '',
+                    item.idle_seconds || '',
+                    item.active_seconds || '',
+                    item.keystrokesCount || '',
+                    item.mouseMovementsCount || '',
+                    item.buttonClicks || '',
+                    item.keystrokes || ''
+                ];
+            });
+            
+            const headers = [
+                'Full Name',
+                'Email',
+                'Location',
+                'Department',
+                'Designation',
+                'Title',
+                'Application Name',
+                'URL',
+                'Start Time',
+                'End Time',
+                'Total Seconds',
+                'Idle Seconds',
+                'Active Seconds',
+                'Keystrokes Count',
+                'Mouse Movements Count',
+                'Button Clicks',
+                'Keystrokes'
+            ];
+            
+            doc.autoTable({
+                head: [headers],
+                body: tableData,
+                startY: 60,
+                theme: 'grid',
+                styles: {
+                    fontSize: 6,
+                    cellPadding: 1,
+                    overflow: 'linebreak',
+                    halign: 'left'
+                },
+                headStyles: {
+                    fillColor: [41, 128, 185],
+                    textColor: 255,
+                    fontSize: 7,
+                    fontStyle: 'bold',
+                    halign: 'center'
+                },
+                didDrawPage: function(data) {
+                    // Add logo to each page (smaller and positioned to avoid covering table)
+                    doc.addImage(logoImg, 'PNG', 20, 15, 40, 20);
+                    
+                    // Add page number at the bottom
+                    const pageCount = doc.internal.getNumberOfPages();
+                    doc.setFontSize(8);
+                    doc.text('Page ' + data.pageNumber + ' of ' + pageCount, doc.internal.pageSize.width - 80, doc.internal.pageSize.height - 15);
+                },
+                margin: {
+                    top: 60,
+                    right: 5,
+                    bottom: 30,
+                    left: 5
+                },
+                tableWidth: 'auto'
+            });
+            
+            doc.save('Employee_Activity_Report_' + moment().format('YYYY-MM-DD') + '.pdf');
+        } catch (error) {
+            console.error('Error in PDF generation:', error);
+            errorSwal('Error generating PDF. Please try again.');
+        }
+    };
+    
+    // Handle logo loading error
+    logoImg.onerror = function() {
+        // If logo fails to load, continue without it
+        exportToPDFWithoutLogo();
+    };
+}
+
+function exportToPDFWithoutLogo() {
+    const doc = new jsPDF('l', 'pt', 'a4');
+    
+    // Add title
+    doc.setFontSize(16);
+    doc.text('Employee Activity Report', 80, 30);
+    
+    // Add date
+    doc.setFontSize(10);
+    doc.text('Generated on: ' + moment().format('MMMM D, YYYY HH:mm:ss'), 80, 45);
+    
+    // Prepare table data
+    const tableData = currentData.map(function(item) {
+        return [
+            item.first_name + ' ' + item.last_name,
+            item.email || '',
+            item.location_name || '',
+            item.department_name || '',
+            item.role || '--',
+            item.title || '',
+            item.application_name || '',
+            item.url || '',
+            item.start_time || '',
+            item.end_time || '',
+            item.total_seconds || '',
+            item.idle_seconds || '',
+            item.active_seconds || '',
+            item.keystrokesCount || '',
+            item.mouseMovementsCount || '',
+            item.buttonClicks || '',
+            item.keystrokes || ''
+        ];
+    });
+    
+    const headers = [
+        'Full Name',
+        'Email',
+        'Location',
+        'Department',
+        'Designation',
+        'Title',
+        'Application Name',
+        'URL',
+        'Start Time',
+        'End Time',
+        'Total Seconds',
+        'Idle Seconds',
+        'Active Seconds',
+        'Keystrokes Count',
+        'Mouse Movements Count',
+        'Button Clicks',
+        'Keystrokes'
+    ];
+    
+    doc.autoTable({
+        head: [headers],
+        body: tableData,
+        startY: 60,
+        theme: 'grid',
+        styles: {
+            fontSize: 6,
+            cellPadding: 1,
+            overflow: 'linebreak',
+            halign: 'left'
+        },
+        headStyles: {
+            fillColor: [41, 128, 185],
+            textColor: 255,
+            fontSize: 7,
+            fontStyle: 'bold',
+            halign: 'center'
+        },
+        didDrawPage: function(data) {
+            // Add page number at the bottom
+            const pageCount = doc.internal.getNumberOfPages();
+            doc.setFontSize(8);
+            doc.text('Page ' + data.pageNumber + ' of ' + pageCount, doc.internal.pageSize.width - 80, doc.internal.pageSize.height - 15);
+        },
+        margin: {
+            top: 60,
+            right: 5,
+            bottom: 30,
+            left: 5
+        },
+        tableWidth: 'auto'
+    });
+    
+    doc.save('Employee_Activity_Report_' + moment().format('YYYY-MM-DD') + '.pdf');
+}
+
+function exportToExcel() {
+    if (!currentData || currentData.length === 0) {
+        errorSwal('No data available to export.');
+        return;
+    }
+    
+    try {
+        // Prepare headers
+        const headers = [
+            'Full Name',
+            'Email',
+            'Location',
+            'Department',
+            'Designation',
+            'Title',
+            'Application Name',
+            'URL',
+            'Start Time',
+            'End Time',
+            'Total Seconds',
+            'Idle Seconds',
+            'Active Seconds',
+            'Keystrokes Count',
+            'Mouse Movements Count',
+            'Button Clicks',
+            'Keystrokes'
+        ];
+        
+        // Prepare data for Excel
+        const excelData = [
+            headers, // First row is headers
+            ...currentData.map(function(item) {
+                return [
+                    item.first_name + ' ' + item.last_name,
+                    item.email || '',
+                    item.location_name || '',
+                    item.department_name || '',
+                    item.role || '--',
+                    item.title || '',
+                    item.application_name || '',
+                    item.url || '',
+                    item.start_time || '',
+                    item.end_time || '',
+                    item.total_seconds || '',
+                    item.idle_seconds || '',
+                    item.active_seconds || '',
+                    item.keystrokesCount || '',
+                    item.mouseMovementsCount || '',
+                    item.buttonClicks || '',
+                    item.keystrokes || ''
+                ];
+            })
+        ];
+        
+        // Create workbook and worksheet
+        const wb = XLSX.utils.book_new();
+        const ws = XLSX.utils.aoa_to_sheet(excelData);
+        
+        // Set column widths for better readability
+        const colWidths = [
+            { wch: 20 }, // Full Name
+            { wch: 25 }, // Email
+            { wch: 15 }, // Location
+            { wch: 15 }, // Department
+            { wch: 12 }, // Designation
+            { wch: 20 }, // Title
+            { wch: 20 }, // Application Name
+            { wch: 30 }, // URL
+            { wch: 15 }, // Start Time
+            { wch: 15 }, // End Time
+            { wch: 12 }, // Total Seconds
+            { wch: 12 }, // Idle Seconds
+            { wch: 12 }, // Active Seconds
+            { wch: 15 }, // Keystrokes Count
+            { wch: 18 }, // Mouse Movements Count
+            { wch: 12 }, // Button Clicks
+            { wch: 15 }  // Keystrokes
+        ];
+        ws['!cols'] = colWidths;
+        
+        // Add worksheet to workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Employee Activity Report');
+        
+        // Generate Excel file and download
+        const fileName = 'Employee_Activity_Report_' + moment().format('YYYY-MM-DD') + '.xlsx';
+        XLSX.writeFile(wb, fileName);
+        
+    } catch (error) {
+        console.error('Error in Excel generation:', error);
+        errorSwal('Error generating Excel file. Please try again.');
+    }
+}
+
+// Filter change handlers
+$('#locationID, #departmentID, #employeeID').on('change', function() {
+    loadReportData();
+});
+
+// Initialize filters
+$(document).ready(function() {
+    // Set initial values for date range
+    const start = moment().subtract(29, 'days');
+    const end = moment();
+    $('#from').val(start.format('YYYY-MM-DD'));
+    $('#to').val(end.format('YYYY-MM-DD'));
+});
 </script>
 @endsection
