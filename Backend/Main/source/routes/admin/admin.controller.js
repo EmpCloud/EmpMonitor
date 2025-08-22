@@ -432,5 +432,28 @@ async deleteLocation(req, res) {
     }
   }
 
+  async updateLocalizationData(req, res) {
+    try {
+      let { id: organization_id } = req.user;
+      let { language, timezone } = req.body;
+      if (!language || !timezone) return res.status(400).json({ message: 'Invalid inputs' });
+      await AdminModel.upsertLocalizationData({ organization_id, lang: language, timezone });
+      return res.status(200).json({ message: 'Localization data updated successfully' });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
+  async getLocalizationData(req, res) {
+    try {
+      let { id: organization_id } = req.user;
+      console.log(organization_id)
+      let data = await AdminModel.getLocalizationData(organization_id);
+      return res.status(200).json({ code: 200, data, message: 'Success' });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
 }
 module.exports = new AdminController();

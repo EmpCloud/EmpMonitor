@@ -104,5 +104,34 @@ async getLoginUserData(req) {
             throw error;
         }
     }
+
+    async upsertLocalizationData({ organization_id, lang, timezone }) {
+        try {
+            const pool = await mySqlSingleton.getPool();
+            const query = `
+                UPDATE admins
+                SET lang = ?, time_zone = ?
+                WHERE id = ?
+            `;
+            const [result] = await pool.execute(query, [lang, timezone, organization_id]);
+            return result.affectedRows > 0;
+        } catch (error) {
+            console.error('Error in upsertLocalizationData: ', error);
+            throw error;
+        }
+    }
+
+    async getLocalizationData(organization_id) {
+        try {
+            const pool = await mySqlSingleton.getPool();
+            const query = 'SELECT lang, time_zone FROM admins WHERE id = ? LIMIT 1';
+            const [rows] = await pool.execute(query, [organization_id]);
+            if (rows.length === 0) return null;
+            return rows[0];
+        } catch (error) {
+            console.error('Error in getLocalizationData: ', error);
+            throw error;
+        }
+    }
 }
 module.exports = new AdminModel();

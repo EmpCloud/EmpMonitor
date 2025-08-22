@@ -4,8 +4,9 @@ use App\Modules\User\Controllers\UserDetailsController;
 use App\Modules\User\Controllers\EmployeeController;
 use App\Modules\User\Controllers\EmployeeDetailsController;
 use App\Modules\User\Controllers\TimeAttendanceController;
-
+use App\Modules\User\Controllers\LocalizationController;
 Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\Modules\User\Controllers'], function () {
+    Route::group(['middleware' => ['LocaleMiddleware']], function () {
     Route::get('/login', [UserController::class,'login']);
     Route::post('/login', [UserController::class,'login']);
     Route::get('/admin-login', [UserController::class,'adminLogin'])->middleware('openAdmin');
@@ -42,6 +43,9 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::post('/update-department', [UserController::class,'updateDepartment']);
             Route::get('/reports', [UserController::class,'getReports'])->name('reports');
             Route::post('/get-report-data', [UserController::class,'getReportData'])->name('getReportData');
+
+            Route::get('/localization', [LocalizationController::class,'getLocalize']);
+            Route::post('/save-locale', [LocalizationController::class,'saveLocalize']);
             }); 
         });
 
@@ -57,6 +61,7 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             });
         });
 
+});
 });
 
 
