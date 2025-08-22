@@ -1755,6 +1755,86 @@
             }
           }
         }
+    },
+    "/admin/localization": {
+      "get": {
+        "tags": ["Private"],
+        "summary": "Get localization data",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+
+        ],
+        "responses": {
+          "200": {
+            "description": "Localization data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "language": {
+                      "type": "string",
+                      "example": "en"
+                    },
+                    "timezone": {
+                      "type": "string",
+                      "example": "Asia/Kolkata"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input or language not found"
+          }
+        }
+      },
+      "post": {
+        "tags": ["Private"],
+        "summary": "Update localization data",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "language": {
+                    "type": "string",
+                    "example": "en"
+                  },
+                  "timezone": {
+                    "type": "string",
+                    "example": "Asia/Kolkata"
+                  }
+                },
+                "required": [
+                  "language",
+                  "timezone"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Localization data updated successfully"
+          },
+          "400": {
+            "description": "Invalid input"
+          }
+        }
+      }
     }
   },
   "components": {

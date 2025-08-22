@@ -160,6 +160,7 @@ class UserController extends Controller
                     }
                     if ($response->getStatusCode() == 200) { 
                         $response = json_decode($response->getBody()->getContents(), true);
+                        // Session::put('locale', $response['language']);
                        if ($response['role'] == 'employee') {  
                            Session::put('employee_session', $response);
                              return redirect('/employee/myTimeline?id='.$response['id']);

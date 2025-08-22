@@ -151,7 +151,25 @@ class helper
                     return $response;
                 }
                 break;
-
+            case "post_localisation":
+                $response = [];
+                try {
+                    $response=$this->client->request('POST',$api_url,[
+                        'json'=>$data,
+                         'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Authorization' => 'Bearer ' . $session_token
+                        ]
+                         ]);
+                    $response = json_decode($response->getBody()->getContents(), true);
+                    return $response;
+                } catch (Exception $e) {
+                      $response->code = 400;
+                    $response->message = $e->getMessage();
+                    Log::info('Exception postApiCall put' . $e->getLine() . "=> code =>" . $e->getCode() . " => message =>  " . $e->getMessage());
+                    return $response;
+                }
+            break;
             //  FOR PATCH METHOD
             case "patch":
                 $response = [];

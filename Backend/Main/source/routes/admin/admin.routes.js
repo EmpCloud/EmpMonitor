@@ -36,6 +36,9 @@ class AdminRoutes {
         this.myRoutes.delete('/locations/:id', adminController.deleteLocation);
 
         this.myRoutes.get("/report", adminController.getReports);
+
+        this.myRoutes.post("/localization", adminController.updateLocalizationData);
+        this.myRoutes.get("/localization", adminController.getLocalizationData);
     }
 
     getRouters() {

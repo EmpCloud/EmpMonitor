@@ -37,6 +37,9 @@
                   <a href="{{ route('manageDepartment', (new App\Modules\User\helper())->getHostName()) }}">
                    <span>Add {{ __('messages.department') }}</span>
                 </a>
+                <a href="localization">
+                    <span title="{{ __('messages.localization') }}">{{ __('messages.localization') }}</span>
+                </a> 
             </li> 
                 </ul>
                 

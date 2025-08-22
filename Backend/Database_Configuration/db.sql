@@ -71,13 +71,14 @@ CREATE TABLE `admins` (
   `time_zone` VARCHAR(50) DEFAULT NULL,
   `license` INT DEFAULT NULL,
   `role` VARCHAR(50) NOT NULL DEFAULT 'admin',
+  `lang` VARCHAR(5) NOT NULL DEFAULT 'en',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- Sample Data
-INSERT INTO `admins` (`id`, `first_name`, `last_name`, `email`, `password`, `mobile_number`, `employee_code`, `time_zone`, `license`, `role`) VALUES
-(1, 'Admin', 'EmpMonitor', 'admin@mail.com', '939c78c19263c8ec0b9e5fb85d7bf73d:5a5a948f63a8d406ed6af916a4928a3b', '1234567890', 'Admin', 'UTC',5, 'admin');
+INSERT INTO `admins` (`id`, `first_name`, `last_name`, `email`, `password`, `mobile_number`, `employee_code`, `time_zone`, `license`, `role`, `lang`) VALUES
+(1, 'Admin', 'EmpMonitor', 'admin@mail.com', '939c78c19263c8ec0b9e5fb85d7bf73d:5a5a948f63a8d406ed6af916a4928a3b', '1234567890', 'Admin', 'UTC',5, 'admin', 'en');
 
 -- ------------------------
 -- Table: employees
