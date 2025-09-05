@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 require('dotenv').config();
 const mySqlSingleton = require('../../database/MySqlConnection');
 
+const Organization_App_Web = require('../../model/organization_app_web.model');
+
 const algorithm = 'aes-256-cbc';
 const key = crypto.createHash('sha256').update(process.env.JWT_SECRET).digest('base64').substr(0, 32);
 class AdminModel{
@@ -133,5 +135,39 @@ async getLoginUserData(req) {
             throw error;
         }
     }
+
+  async getProductivityRules({ skip, limit, search, organization_id }) {
+    let match = { organization_id: organization_id };
+    if (search) match.search = { $regex: search, $options: 'i' };
+    return Organization_App_Web.aggregate([
+      {
+        $match: match
+      },
+      {
+        $skip: parseInt(skip) || 0
+      },
+      {
+        $limit: parseInt(limit) || 10
+      }
+    ])
+  }
+
+  async getProductivityRulesCount({ search, organization_id }) {
+    let match = { organization_id: organization_id };
+    if (search) match.search = { $regex: search, $options: 'i' };
+    const result = await Organization_App_Web.aggregate([
+      {
+        $match: match
+      },
+      {
+        $count: 'total'
+      }
+    ]);
+    return result.length > 0 ? result[0].total : 0;
+  }
+
+  getProductivityById(id) {
+    return Organization_App_Web.findOne({ _id: id });
+  }
 }
 module.exports = new AdminModel();

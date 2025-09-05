@@ -462,7 +462,10 @@ class EmployeeModel {
           _id: "$employee_id",
           office_usage: { $sum: "$total_seconds" },
           active_usage: { $sum: "$active_seconds" },
-          idle_usage: { $sum: "$idle_seconds" }
+          idle_usage: { $sum: "$idle_seconds" },
+          productive_usage: { $sum: "$productive_seconds" },
+          unproductive_usage: { $sum: "$unproductive_seconds" },
+          neutral_usage: { $sum: "$neutral_seconds" },
         }
       }
     ]);

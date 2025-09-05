@@ -75,11 +75,14 @@ function timeSheetData(response) {
                 
                 const time1 = moment(timeSheet.end_time);
                 const time2 = moment(timeSheet.start_time);
-                let total_hours = timeSheet.total_seconds ? formatSecondsToHHMMSS(timeSheet.total_seconds) : 0;
-                let active_hours = timeSheet.active_seconds ? formatSecondsToHHMMSS(timeSheet.active_seconds) : 0;
-                let idle_hours = timeSheet.idle_seconds ? formatSecondsToHHMMSS(timeSheet.idle_seconds) : 0;
+                let total_hours = timeSheet.total_usage ? formatSecondsToHHMMSS(timeSheet.total_usage) : "00:00:00";
+                let active_hours = timeSheet.active_usage ? formatSecondsToHHMMSS(timeSheet.active_usage) : "00:00:00";
+                let idle_hours = timeSheet.idle_usage ? formatSecondsToHHMMSS(timeSheet.idle_usage) : "00:00:00";
+                let productive_hours = timeSheet.productive_usage ? formatSecondsToHHMMSS(timeSheet.productive_usage) : "00:00:00";
+                let unproductive_hours = timeSheet.unproductive_usage ? formatSecondsToHHMMSS(timeSheet.unproductive_usage) : "00:00:00";
+                let neutral_hours = timeSheet.neutral_usage ? formatSecondsToHHMMSS(timeSheet.neutral_usage) : "00:00:00";
 
-                $('#timeSheetsData').append('<tr class="text-center">\n' + ' <td>' + startTime + '</td><td>' + endTime + '</td><td title="' +  total_hours + '">' + total_hours + '</td><td>' + active_hours + '</td><td>' + idle_hours + '</td></tr>' );
+                $('#timeSheetsData').append('<tr class="text-center">\n' + ' <td>' + startTime + '</td><td>' + endTime + '</td><td title="' +  total_hours + '">' + total_hours + '</td><td>' + active_hours + '</td><td>' + idle_hours + `</td> <td>${productive_hours}</td> <td>${unproductive_hours}</td> <td>${neutral_hours}</td> </tr>` );
             });
             $("#timeSheetDataTable").DataTable({
                 "lengthMenu": [[10, 25, 50, 100, 200], [10, 25, 50, 100, 200]],
@@ -111,6 +114,9 @@ function timeSheetData(response) {
     }
 }
 function formatSecondsToHHMMSS(seconds) {
+    if (isNaN(seconds) || seconds < 0) {
+        return "00:00:00";
+    }
     const hrs = String(Math.floor(seconds / 3600)).padStart(2, '0');
     const mins = String(Math.floor((seconds % 3600) / 60)).padStart(2, '0');
     const secs = String(seconds % 60).padStart(2, '0');
@@ -130,10 +136,11 @@ function browserHistoryData(response) {
                 let startDate = moment(new Date(webData.start_time)).format('YYYY-MM-DD HH:mm:ss');
                 let endDate = moment(new Date(webData.end_time)).format('YYYY-MM-DD HH:mm:ss');
              
-                let urlFormat = webData.application_name.length < 40 ? webData.application_name.toString().substr(0, 40) : webData.application_name.toString().substr(0, 40).concat('...');
+                let urlFormat = webData.url.length < 40 ? webData.url.toString().substr(0, 40) : webData.url.toString().substr(0, 40).concat('...');
+
                 let titleFormat = webData.application_name.length < 40 ? webData.application_name : webData.application_name.toString().substr(0, 40).concat('...');
-                $('#browserHistoryDataTableData').append('<tr style="font-size: 14px !important;"><td style="text-transform: capitalize">' + webData.application_name + '</td><td style="text-transform: capitalize;" title="' + webData.application_name + '">' + titleFormat + '</td><td width="400px"><a href="' + webData.url + '" title="' + webData.url + '" target="_blank">' + webData.url + '</td>' +
-                    '<td>' + startDate + '</td><td>' + endDate + '</td> <td style="">' + webData.keystrokes + '</td><td style="">' + webData.keystrokesCount + '</td><td style="">' + webData.buttonClicks + '</td><td style="">' + webData.mouseMovementsCount + '</td></tr>');
+                $('#browserHistoryDataTableData').append('<tr style="font-size: 14px !important;"><td style="text-transform: capitalize">' + webData.application_name + '</td><td style="text-transform: capitalize;" title="' + webData.application_name + '">' + titleFormat + '</td><td width="400px"><a href="' + webData.url + '" title="' + urlFormat  + '" target="_blank">' + urlFormat   + '</td>' +
+                    '<td>' + startDate + '</td><td>' + endDate + '</td>'+ `<td>${formatSecondsToHHMMSS(webData.active_seconds)}</td>  <td>${formatSecondsToHHMMSS(webData.idle_seconds)}</td> <td>${formatSecondsToHHMMSS(webData.productive_seconds)}</td>   <td>${formatSecondsToHHMMSS(webData.unproductive_seconds)}</td> <td>${formatSecondsToHHMMSS(webData.neutral_seconds)}</td>   ` +'<td style="">' + webData.keystrokes + '</td><td style="">' + webData.keystrokesCount + '</td><td style="">' + webData.buttonClicks + '</td><td style="">' + webData.mouseMovementsCount + '</td></tr>');
             });
             $("#browserHistoryTableId").DataTable({
                 "lengthMenu": [[10, 25, 50, 100, 200], [10, 25, 50, 100, 200]],
@@ -176,7 +183,7 @@ function applicationHistoryData(response) {
                 $('#appHistoryTable').append('<tr><td class="td-url" title="' + appData.application_name + '" style="text-transform: capitalize"><i class="fas fa-mobile-alt mr-2"></i>' + appData.application_name + '</td></tr>');
                 let startDate = moment(new Date(appData.start_time)).format('YYYY-MM-DD HH:mm:ss');
                 let endDate = moment(new Date(appData.end_time)).format('YYYY-MM-DD HH:mm:ss');
-                $('#applicationHistoryDataTableData').append('<tr style="text-align: center; font-size: 14px !important;"><td style="text-transform: capitalize">' + appData.application_name.replace(".exe", "") + '</td><td style="text-transform: capitalize;">' + appData.application_name + '</td><td>' + startDate + '</td><td>' + endDate + '</td> <td style="">' + appData.keystrokes + '</td><td style="">' + appData.keystrokesCount + '</td><td style="">' + appData.buttonClicks + '</td><td style="">' + appData.mouseMovementsCount + '</td></tr>');
+                $('#applicationHistoryDataTableData').append('<tr style="text-align: center; font-size: 14px !important;"><td style="text-transform: capitalize">' + appData.application_name.replace(".exe", "") + '</td><td style="text-transform: capitalize;">' + appData.application_name + '</td><td>' + startDate + '</td><td>' + endDate + '</td>'+ `<td>${formatSecondsToHHMMSS(appData.active_seconds)}</td>  <td>${formatSecondsToHHMMSS(appData.idle_seconds)}</td> <td>${formatSecondsToHHMMSS(appData.productive_seconds)}</td>   <td>${formatSecondsToHHMMSS(appData.unproductive_seconds)}</td> <td>${formatSecondsToHHMMSS(appData.neutral_seconds)}</td>   `  +'<td style="">' + appData.keystrokes + '</td><td style="">' + appData.keystrokesCount + '</td><td style="">' + appData.buttonClicks + '</td><td style="">' + appData.mouseMovementsCount + '</td></tr>');
                   
             });
 
