@@ -250,7 +250,10 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId, showEntries,
                         if (ADD_REMOVE_COLUMN.includes('TotalHour')) appendData += '<td class="TotalHourTable" style="width: 90px;">' +  formatSecondsToHHMMSS(attHistory.total_usage)  + '</td>' ;
                         appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.office_usage) + '</td>'; 
                         appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.active_usage) + '</td>'; 
-                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.idle_usage) + '</td>'; 
+                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.idle_usage) + '</td>';
+                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.productive_usage) + '</td>';
+                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.unproductive_usage) + '</td>';
+                        appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.neutral_usage) + '</td>';
                         appendData +=  '</tr>';
                     });
                 }

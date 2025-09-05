@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 const WebAppActivitySchema = new Schema({
     organization_id: { type: Number, required: true },
     type: { type: Number, required: true }, // 1 for app, 2 for web
-    name: { type: String, required: true }
+    name: { type: String, required: true },
+    category: { type: Number, required: false, default: 0 }, // 0 for Neutral, 1 for Productive, 2 for Unproductive
 }, { timestamps: true });
 
 WebAppActivitySchema.index({ organization_id: 1, type: 1, name: 1 });

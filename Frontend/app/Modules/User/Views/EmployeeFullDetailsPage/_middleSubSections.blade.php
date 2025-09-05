@@ -40,6 +40,18 @@
                                             <i class="fas fa-info-circle ml-1"
                                                title="{{__('messages.idleInfo')}}"></i>
                                         </th>
+                                        <th class="text-center text-warning">Productive Hours
+                                            <i class="fas fa-info-circle ml-1"
+                                               title="Productive Hours"></i>
+                                        </th>
+                                        <th class="text-center text-danger">Unproductive Hours
+                                            <i class="fas fa-info-circle ml-1"
+                                               title="Unproductive Hours"></i>
+                                        </th>
+                                        <th class="text-center">Neutral Hours
+                                            <i class="fas fa-info-circle ml-1"
+                                               title="Neutral Hours"></i>
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody id="timeSheetsData">
@@ -62,6 +74,11 @@
                                         <th>{{ __('messages.browserURL') }}</th>
                                         <th>{{ __('messages.startTime') }}</th>
                                         <th>{{ __('messages.endTime') }}</th>
+                                        <th>Active Seconds</th>
+                                        <th>Idle Seconds</th>
+                                        <th>Productive Seconds</th>
+                                        <th>Unproductive Seconds</th>
+                                        <th>Neutral Seconds</th>
                                         <th>{{ __('messages.keystrokeData') }}</th>
                                         <th>{{ __('messages.keystrokesCount') }}</th>
                                         <th>{{ __('messages.mouseClickCount') }}</th>
@@ -88,6 +105,11 @@
                                         <th>{{ __('messages.title') }}</th>
                                         <th>{{ __('messages.startTime') }}</th>
                                         <th>{{ __('messages.endTime') }}</th>
+                                        <th>Active Seconds</th>
+                                        <th>Idle Seconds</th>
+                                        <th>Productive Seconds</th>
+                                        <th>Unproductive Seconds</th>
+                                        <th>Neutral Seconds</th>
                                         <th>{{ __('messages.keystrokeData') }}</th>
                                         <th>{{ __('messages.keystrokesCount') }}</th>
                                         <th>{{ __('messages.mouseClickCount') }}</th>

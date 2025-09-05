@@ -62,6 +62,9 @@
                     <i class="menu-icon icon-file-text"
                        title="{{ __('messages.reports') }}"></i><span>{{ __('messages.reports') }}</span>
                 </a> 
+                 <a href="{{route('productivity',(new App\Modules\User\helper)->getHostName())}}"
+                                   title="{{ __('messages.productivityRules') }}"> <i class="menu-icon fas fa-tasks"
+                                       title="{{ __('messages.productivityRules') }}"></i>{{ __('messages.productivityRules') }}</a>
                 @endif
             </li>
         </ul>

@@ -160,44 +160,44 @@ async getEmployeeById(req, res) {
   }
 }
 
-async getAttendance(req, res) {
-  try {
-    let { start_date, end_date, skip = 0, limit = 10, employee_id, name } = req.body;
-    if(employee_id) employee_id = parseInt(employee_id) || null;
-    if(limit) limit = parseInt(limit) || 10;
-    start_date = moment(start_date).format("YYYY-MM-DD");
-    end_date = moment(end_date).format("YYYY-MM-DD");
+  async getAttendance(req, res) {
+    try {
+      let { start_date, end_date, skip = 0, limit = 10, employee_id, name } = req.body;
+      if (employee_id) employee_id = parseInt(employee_id) || null;
+      if (limit) limit = parseInt(limit) || 10;
+      start_date = moment(start_date).format("YYYY-MM-DD");
+      end_date = moment(end_date).format("YYYY-MM-DD");
 
-    // Run both queries in parallel
-    let [attendanceRecords, attendanceRecordCount] = await Promise.all([
-      EmployeeModel.getAllAttendance(start_date, end_date, +skip, +limit, employee_id, name, 0),
-      EmployeeModel.getAllAttendance(start_date, end_date, null, null, employee_id, name, 1)
-    ]);
+      // Run both queries in parallel
+      let [attendanceRecords, attendanceRecordCount] = await Promise.all([
+        EmployeeModel.getAllAttendance(start_date, end_date, +skip, +limit, employee_id, name, 0),
+        EmployeeModel.getAllAttendance(start_date, end_date, null, null, employee_id, name, 1)
+      ]);
 
-    let empIds = _.pluck(attendanceRecords, 'employee_id');
-    let totalUsage = await EmployeeModel.getTotalUsage(empIds, start_date, end_date);
+      let empIds = _.pluck(attendanceRecords, 'employee_id');
+      let totalUsage = await EmployeeModel.getTotalUsage(empIds, start_date, end_date);
 
-    attendanceRecords = attendanceRecords.map(record => {
-      let tempUsage = totalUsage.find(i => i._id === record.employee_id);
-      return {
-        ...record,
-        ...tempUsage,
-        total_usage: moment(record.end_time).diff(moment(record.start_time), 'seconds')
-      }
-    });
+      attendanceRecords = attendanceRecords.map(record => {
+        let tempUsage = totalUsage.find(i => i._id === record.employee_id);
+        return {
+          ...record,
+          ...tempUsage,
+          total_usage: moment(record.end_time).diff(moment(record.start_time), 'seconds')
+        }
+      });
 
-    return res.json({
-      code: 200,
-      data: {
-        totalCount: attendanceRecordCount,
-        data: attendanceRecords
-      },
-      message: "Success"
-    });
-  } catch (error) {
-    return res.status(500).json({ message: 'Internal server error', error: error.message });
+      return res.json({
+        code: 200,
+        data: {
+          totalCount: attendanceRecordCount,
+          data: attendanceRecords
+        },
+        message: "Success"
+      });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
   }
-}
 
 
 async getAttendanceById(req, res) {
@@ -451,6 +451,37 @@ async deleteLocation(req, res) {
       let data = await AdminModel.getLocalizationData(organization_id);
       return res.status(200).json({ code: 200, data, message: 'Success' });
     } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
+  async getProductivityRules(req, res) {
+    try {
+      let { id: organization_id } = req.user;
+      let { skip = 0, limit = 10, search = "" } = req.query;
+      if(skip) skip = parseInt(skip) || 0;
+      if(limit) limit = parseInt(limit) || 10;
+      let [data, count] = await Promise.all([
+        AdminModel.getProductivityRules({ skip, limit, search, organization_id }),
+        AdminModel.getProductivityRulesCount({ search, organization_id })
+      ]);
+      return res.status(200).json({ code: 200, data: { data, count }, message: 'Success' });
+    }
+    catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
+  async updateProductivityRules(req, res) {
+    try {
+      let { _id, category } = req.body;
+      let prRules = await AdminModel.getProductivityById({ _id });
+      if (!prRules) return res.status(404).json({ message: 'Productivity rule not found' });
+      prRules.category = category || prRules.category;
+      await prRules.save();
+      return res.status(200).json({ code: 200, data: prRules, message: 'Success' });
+    }
+    catch (error) {
       return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
   }

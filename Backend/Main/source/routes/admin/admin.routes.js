@@ -39,6 +39,9 @@ class AdminRoutes {
 
         this.myRoutes.post("/localization", adminController.updateLocalizationData);
         this.myRoutes.get("/localization", adminController.getLocalizationData);
+
+        this.myRoutes.get("/productivity-rules", adminController.getProductivityRules);
+        this.myRoutes.put("/productivity-rules", adminController.updateProductivityRules);
     }
 
     getRouters() {

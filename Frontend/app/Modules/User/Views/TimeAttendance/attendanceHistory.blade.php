@@ -215,7 +215,7 @@
                                             value="TotalHour" />{{ __('messages.totalHours') }}</li>
                                 </ul>
                             </div>
-                            <div class="stickyCol-wrapper" style="width:64% !important; overflow-x: auto;">
+                            <div class="stickyCol-wrapper">
                                 <div class="table-wrap stickyCol-scroller">
                                     <table id="history_tracked"
                                         class="table-striped table-bordered ad_tab stickyCol-table" >
@@ -281,6 +281,18 @@
                                                 <th class="text-warning IdleTimeTable"><a onclick="sort('Idle','IdleSort')">{{ __('messages.attendanceIdleHours') }} </a><span
                                                         class=""><i id="IdleSort" class="fas fa-info-circle ml-1"
                                                             data-toggle="tooltip" data-placement="bottom" title="{{__('messages.idleInfo')}}"></i>
+                                                    </span></th>
+                                                <th class="text-success ProductiveTimeTable"><a onclick="sort('Productive Hours','ProductiveHoursSort')">Productive Hour </a><span
+                                                        class=""><i id="ProductiveHoursSort" class="fas fa-info-circle ml-1"
+                                                            data-toggle="tooltip" data-placement="bottom" title="{{__('messages.productiveInfo')}}"></i>
+                                                    </span></th>
+                                                <th class="text-danger UnproductiveTimeTable"><a onclick="sort('Unproductive Hours','UnproductiveHoursSort')">Unproductive Hours </a><span
+                                                        class=""><i id="UnproductiveHoursSort" class="fas fa-info-circle ml-1"
+                                                            data-toggle="tooltip" data-placement="bottom" title="{{__('messages.unproductiveInfo')}}"></i>
+                                                    </span></th>
+                                                <th class="NeutralTimeTable"><a onclick="sort('Neutral Hours','NeutralHoursSort')">Neutral Hours </a><span
+                                                        class=""><i id="NeutralHoursSort" class="fas fa-info-circle ml-1"
+                                                            data-toggle="tooltip" data-placement="bottom" title="{{__('messages.neutralInfo')}}"></i>
                                                     </span></th>
                                             </tr>
                                         </thead>

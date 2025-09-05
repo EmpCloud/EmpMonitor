@@ -1836,6 +1836,104 @@
         }
       }
     }
+    ,
+    "/admin/productivity-rules": {
+      "get": {
+        "tags": ["Private"],
+        "summary": "Get productivity rules",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "parameters": [
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 0 },
+            "description": "Number of records to skip"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "integer", "default": 10 },
+            "description": "Number of records to return"
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": { "type": "string", "default": "" },
+            "description": "Search by application name/title/url/category"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of productivity rules",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer", "example": 200 },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "data": { "type": "array", "items": { "type": "object" } },
+                        "count": { "type": "integer", "example": 42 }
+                      }
+                    },
+                    "message": { "type": "string", "example": "Success" }
+                  }
+                }
+              }
+            }
+          },
+          "500": { "description": "Internal server error" }
+        }
+      },
+      "put": {
+        "tags": ["Private"],
+        "summary": "Update a productivity rule",
+        "security": [
+          { "bearerAuth": [] }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "_id": { "type": "string", "example": "662b1c9f5a7f4a001234abcd" },
+                  "category": { "type": "string", "example": "productive" }
+                },
+                "required": ["_id", "category"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Productivity rule updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": { "type": "integer", "example": 200 },
+                    "data": { "type": "object" },
+                    "message": { "type": "string", "example": "Success" }
+                  }
+                }
+              }
+            }
+          },
+          "404": { "description": "Productivity rule not found" },
+          "500": { "description": "Internal server error" }
+        }
+      }
+    }
   },
   "components": {
     "securitySchemes": {

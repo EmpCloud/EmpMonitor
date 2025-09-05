@@ -46,6 +46,10 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
 
             Route::get('/localization', [LocalizationController::class,'getLocalize']);
             Route::post('/save-locale', [LocalizationController::class,'saveLocalize']);
+            Route::get('/productivity', [UserController::class,'productivityRanking'])->name('productivity');
+            Route::post('/productivity-update', [UserController::class,'productivityUpdate']);
+            Route::post('/productivity', [UserController::class,'productivityRanking'])->name('productivity');
+
             }); 
         });
 

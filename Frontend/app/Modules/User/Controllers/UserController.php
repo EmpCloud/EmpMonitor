@@ -775,5 +775,53 @@ class UserController extends Controller
             ]);
         }
     }
+    public function productivityRanking(Request $request)
+    {
+      
+        $responseData = [];
+        if ($request->isMethod('get')) {
+            $api_url = env('MAIN_API')  . 'admin/productivity-rules?skip=0&limit=10' ;
+            $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, []);
+            if ($response['code'] == 200) {
+                $responseData['data'] = $response['data']['data'];
+                for ($i = 0; $i < count($responseData['data']); $i++) {
+                    if (strpos($responseData['data'][$i]['name'], ".exe") !== false) {
+                        $responseData['data'][$i]['name'] = str_replace(".exe", "", $responseData['data'][$i]['name']);
+                    }
+                    if ($responseData['data'][$i]['type'] != 2) $responseData['data'][$i]['name'] = ucfirst($responseData['data'][$i]['name']);
+
+                }
+            }
+            $responseData['count'] = $response['data']['count'] ?? 0;
+            
+            return view('User::Settings.productivity_ranking')->with(['response' => $responseData]);
+        } else{
+            
+        }
+    }
+     public function productivityUpdate(Request $request)
+    {
+    
+        try {
+            $data['_id'] = $request->input('id');
+            $data['category'] = $request->input('category');
+            $api_url = env('MAIN_API')  . 'admin/productivity-rules' ;
+            $method = "put";
+            $response = $this->helper->postApiCall($method, $api_url, $data);
+            if ($response['code'] == 200) {
+                $result['code'] = 200;
+                $result['data'] = $response['data'];
+            } else {
+                $result['code'] = 400;
+                $result['message'] = "Productivity update failed";
+            }
+        } catch (\Exception $e) {
+            Log::info('Exception in productivityUpdate ' . $e->getMessage());
+            $result['code'] = 400;
+            $result['message'] = __('messages.exception');
+        }
+        return $result;
+    }
 
 }

@@ -19,6 +19,9 @@ const WebAppActivitySchema = new Schema({
     active_seconds: { type: Number, default: 0 },
     total_seconds: { type: Number, default: 0 },
     idle_seconds: { type: Number, default: 0 },
+    neutral_seconds: { type: Number, default: 0 },
+    productive_seconds: { type: Number, default: 0 },
+    unproductive_seconds: { type: Number, default: 0 },
 }, { timestamps: true });
 WebAppActivitySchema.index({ organization_id: 1, employee_id: 1 });
 
