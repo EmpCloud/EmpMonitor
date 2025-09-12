@@ -1137,7 +1137,7 @@
     <script src="../assets/plugins/amcharts/themes/animated.js"></script>
     <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
     <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="../assets/plugins/DataTables/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
     <script src="//unpkg.com/xlsx/dist/xlsx.full.min.js" type="text/javascript"></script>
 
@@ -1149,7 +1149,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-messaging.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
-    <link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"
             integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>

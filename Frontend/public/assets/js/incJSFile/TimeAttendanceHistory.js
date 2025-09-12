@@ -190,9 +190,8 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId) {
             jQueryScript1.setAttribute('src', 'https://momentjs.com/downloads/moment-timezone-with-data.min.js');
             document.head.appendChild(jQueryScript1);
             $("#timeattendanceHistory").empty();
-            $('#time_history_tracked').dataTable().fnClearTable();
-            $('#time_history_tracked').dataTable().fnDraw();
-            $('#time_history_tracked').dataTable().fnDestroy();
+            $('#time_history_tracked').DataTable().clear().draw();
+            $('#time_history_tracked').DataTable().destroy();
         },
         success: function (response) {
             GLOBALData=response.data.results;

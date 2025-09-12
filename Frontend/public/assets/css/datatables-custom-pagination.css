@@ -1,0 +1,124 @@
+/* Custom DataTables Pagination Styling - Exactly matching jqpagination gigantic style */
+
+/* DataTables pagination wrapper - matching jqpagination container */
+.dataTables_wrapper .dataTables_paginate {
+    float: right;
+    text-align: right;
+    margin-top: 10px;
+    display: inline-block;
+    border: 1px solid #CDCDCD;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+/* DataTables pagination buttons - matching jqpagination exactly */
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    display: block;
+    float: left;
+    width: 25px;
+    height: 25px;
+    outline: none;
+    border-right: 1px solid #CDCDCD;
+    border-left: 1px solid #CDCDCD;
+    color: #555555;
+    vertical-align: middle;
+    text-align: center;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: Times, 'Times New Roman', Georgia, Palatino;
+    background-color: #f3f3f3;
+    background-image: linear-gradient(#f3f3f3, lightgrey);
+    cursor: pointer;
+    line-height: 22px;
+    padding: 0;
+    margin: 0;
+}
+
+/* Hover effects - matching jqpagination exactly */
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button:focus,
+.dataTables_wrapper .dataTables_paginate .paginate_button:active {
+    background-color: #cecece;
+    background-image: linear-gradient(#e4e4e4, #cecece);
+}
+
+/* Disabled buttons - matching jqpagination exactly */
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:focus,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+    background-color: #f3f3f3;
+    background-image: linear-gradient(#f3f3f3, lightgrey);
+    color: #A8A8A8;
+    cursor: default;
+}
+
+/* First button - matching jqpagination first button */
+.dataTables_wrapper .dataTables_paginate .paginate_button.first {
+    border: none;
+    border-radius: 2px 0 0 2px;
+}
+
+/* Last button - matching jqpagination last button */
+.dataTables_wrapper .dataTables_paginate .paginate_button.last {
+    border: none;
+    border-radius: 0 2px 2px 0;
+}
+
+/* Active/Current page - custom styling */
+.dataTables_wrapper .dataTables_paginate .paginate_button.current {
+    background-color: #007bff;
+    background-image: linear-gradient(#007bff, #0056b3);
+    color: white;
+    border-color: #007bff;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+    background-color: #0056b3;
+    background-image: linear-gradient(#0056b3, #004085);
+    color: white;
+}
+
+/* Ellipsis (...) */
+.dataTables_wrapper .dataTables_paginate .paginate_button.ellipsis {
+    background-color: transparent;
+    background-image: none;
+    border: none;
+    color: #555555;
+    cursor: default;
+    width: auto;
+    padding: 0 5px;
+}
+
+/* Remove duplicate borders between adjacent buttons */
+.dataTables_wrapper .dataTables_paginate .paginate_button + .paginate_button {
+    border-left: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dataTables_wrapper .dataTables_paginate {
+        float: none;
+        text-align: center;
+        margin-top: 15px;
+    }
+    
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+        width: 22px;
+        height: 22px;
+        line-height: 20px;
+        font-size: 14px;
+    }
+}
+
+/* Additional styling for better integration */
+.dataTables_wrapper .dataTables_paginate .paginate_button:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* Ensure proper spacing */
+.dataTables_wrapper .dataTables_paginate {
+    margin-bottom: 10px;
+}

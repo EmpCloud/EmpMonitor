@@ -7,7 +7,7 @@
 @endsection
 
 @section('extra-style-links')
-    <link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css"
           href="//cdn.jsdelivr.net/bootstrap.daterangepicker/1/daterangepicker-bs3.css"/>
     <link href="../assets/css/jqpagination.css" type="text/css" rel="stylesheet">

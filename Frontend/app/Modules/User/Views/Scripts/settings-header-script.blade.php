@@ -34,7 +34,7 @@
         href="../assets/plugins/switchery/switchery.min.css"
         rel="stylesheet"
         />
-{{--<link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>--}}
+{{--<link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>--}}
 
 <link href="../assets/plugins/select2/css/select2.min.css"
         rel="stylesheet"

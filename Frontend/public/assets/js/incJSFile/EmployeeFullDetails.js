@@ -18,23 +18,55 @@ function loadTimeSheetData() {
         data: {data: `skip=0&limit=10&employee_id=${$('#userId').attr('value')}&start_date=${startTime}&end_date=${endTime}`},
         beforeSend: function () {
             TIME_SHEET_CHECK = true;
-            $('#timeSheetDataTable').dataTable().fnClearTable();
-            $('#timeSheetDataTable').dataTable().fnDraw();
+            // Destroy existing DataTable if it exists
+            if ($.fn.DataTable.isDataTable('#timeSheetDataTable')) {
+                $('#timeSheetDataTable').DataTable().destroy();
+            }
             $('#timeSheetsData').empty();
-            $('#timeSheetsData').append('<tr><td colspan="11"><div  class="loader"></div></td></tr>');
+            $('#timeSheetsData').append('<tr><td colspan="8"><div  class="loader"></div></td></tr>');
         },
         success: function (response) {
             return timeSheetData(response);
         },
         error: function (jqXHR) {
             if(jqXHR.status == 410)  {
+                // Destroy existing DataTable if it exists
+                if ($.fn.DataTable.isDataTable('#timeSheetDataTable')) {
+                    $('#timeSheetDataTable').DataTable().destroy();
+                }
                 $('#Timesheet').empty();
                 $('#timeSheetsData').empty();
                 $('#Timesheet').append('<p  style="color: red; text-align: center; font-size: 150%; width: 100%; height: 40% " class="mt-5"><b>'+jqXHR.responseJSON.error+'</b></p>');
-                $("#timeSheetDataTable").DataTable({ "language": {"url": DATATABLE_LANG},"bDestroy": true});
+                $("#timeSheetDataTable").DataTable({ 
+                    "language": {
+                        "url": DATATABLE_LANG,
+                        "paginate": {
+                            "first": "&laquo;",
+                            "last": "&raquo;",
+                            "next": "&rsaquo;",
+                            "previous": "&lsaquo;"
+                        }
+                    },
+                    "bDestroy": true
+                });
                 $("#ErrorMsgForUnaccess").html(jqXHR.responseJSON.error)
             } else {
-                $("#timeSheetDataTable").DataTable({ "language": {"url": DATATABLE_LANG},"bDestroy": true});
+                // Destroy existing DataTable if it exists
+                if ($.fn.DataTable.isDataTable('#timeSheetDataTable')) {
+                    $('#timeSheetDataTable').DataTable().destroy();
+                }
+                $("#timeSheetDataTable").DataTable({ 
+                    "language": {
+                        "url": DATATABLE_LANG,
+                        "paginate": {
+                            "first": "&laquo;",
+                            "last": "&raquo;",
+                            "next": "&rsaquo;",
+                            "previous": "&lsaquo;"
+                        }
+                    },
+                    "bDestroy": true
+                });
                 return errorHandler(EMPLOYEE_FULL_DETAILS_ERROR.somethingWrong);
             }
             TIME_SHEET_CHECK = false;
@@ -81,8 +113,8 @@ function loadAppHistory(type=1) {
         data: {data: `employeeId=${$('#userId').attr('value')}&startDate=${$('#from').val()}&endDate=${$('#to').val()}&type=${type}`},
         beforeSend: function () {
             APP_HISTORY_CHECK = true;
-            $('#applicationHistoryTableId').dataTable().fnClearTable();
-            $('#applicationHistoryTableId').dataTable().fnDraw();
+            $('#applicationHistoryTableId').DataTable().clear().draw();
+            $('#applicationHistoryTableId').DataTable().destroy();
             $('#appHistoryTable').empty();
             $('#appHistoryTable').append('<div  class="loader"></div>');
         },

@@ -6,7 +6,7 @@
 @endsection
 
 @section('extra-style-links')
-    <link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css"/>
     <link href="https://unpkg.com/gijgo@1.9.13/css/gijgo.min.css" rel="stylesheet" type="text/css"/>
     <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css"
@@ -1533,7 +1533,7 @@
 @endsection
 
 @section('post-load-scripts')
-    <script src="../assets/plugins/DataTables/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
     <script src="../assets/plugins/datetimepicker/js/gijgo.js"></script>
     <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
     <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>

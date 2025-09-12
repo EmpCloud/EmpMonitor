@@ -265,7 +265,7 @@
 @section('post-load-scripts')
 
     <!-- Javascripts -->
-    <script src="../assets/plugins/DataTables/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
     <script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script>
     <script src="../assets/plugins/daterangepicker/moment.min.js"></script>

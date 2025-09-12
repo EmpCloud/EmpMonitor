@@ -7,7 +7,7 @@
 @endsection
 
 @section('extra-style-links')
-    <link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet"/>
 
     {{--    this is for pagination--}}

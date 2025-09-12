@@ -10,10 +10,11 @@
 @section('extra-style-links')
 
     <link href="../assets/plugins/bootstrap/css/loader.css" type="text/css" rel="stylesheet"/>
-    <link href="../assets/plugins/DataTables/datatables.min.css" type="text/css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" type="text/css" rel="stylesheet"/>
     <link href="../assets/plugins/intel-tel-input/intlTelInput.css" type="text/css" rel="stylesheet">
     <link href="../assets/plugins/datetimepicker/css/gijgo.min.css" type="text/css" rel="stylesheet" type="text/css"/>
     <link href="../assets/css/jqpagination.css" type="text/css" rel="stylesheet">
+    <link href="../assets/css/datatables-custom-pagination.css" type="text/css" rel="stylesheet">
 
 @endsection
 
@@ -176,6 +177,7 @@
                                 <div class="stickyCol-wrapper">
                                     <div class="table-wrap stickyCol-scroller">
                                         <table class="table-bordered ad_tab stickyCol-table"
+                                                style="width: 100%;"
                                                id="empDetails_Table">
                                             <thead>
                                            
@@ -514,7 +516,7 @@
 
 @section('post-load-scripts')
     <script src="../assets/plugins/switchery/switchery.min.js" type="text/javascript"></script>
-    <script src="../assets/plugins/DataTables/datatables.min.js" type="text/javascript"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js" type="text/javascript"></script>
     <script src="../assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>
     {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> --}}
     <script src="../assets/plugins/datetimepicker/js/gijgo.min.js" type="text/javascript"></script>
@@ -576,9 +578,8 @@
             END_DATE=end.format('YYYY-MM-D') ;
             $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
             deletedUserList(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
-            $('#DeleteUserTable').dataTable().fnClearTable();
-            $('#DeleteUserTable').dataTable().fnDraw();
-            $('#DeleteUserTable').dataTable().fnDestroy();
+            $('#DeleteUserTable').DataTable().clear().draw();
+            $('#DeleteUserTable').DataTable().destroy();
             UserCompleteList = [];
         }
 

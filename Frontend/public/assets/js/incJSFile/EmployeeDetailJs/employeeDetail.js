@@ -364,9 +364,8 @@ function getUsers(showEntries, skipvalue, searchText, sortName, sortOrder, activ
         beforeSend: function () { 
             if(CollapseMerge !== 1) {
                 $('#fetch_Details').empty();
-                $('#empDetails_Table').dataTable().fnClearTable();
-                $('#empDetails_Table').dataTable().fnDraw();
-                $('#empDetails_Table').dataTable().fnDestroy();
+                $('#empDetails_Table').DataTable().clear().draw();
+                $('#empDetails_Table').DataTable().destroy();
                 UserCompleteList = [];
                 $("#loader").css('display', 'block');
             }

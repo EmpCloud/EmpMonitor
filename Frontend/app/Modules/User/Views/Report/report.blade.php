@@ -9,7 +9,7 @@
 
 @section('extra-style-links')
 <link rel="stylesheet" type="text/css" href="../assets/plugins/daterangepicker/daterangepicker.css" />
-<link rel="stylesheet" type="text/css" href="../assets/plugins/DataTables/datatables.min.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
 <style>
     .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
         margin-bottom: 15px;
@@ -320,7 +320,7 @@
 @endsection
 
 @section('post-load-scripts')
-<script src="../assets/plugins/DataTables/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
 <script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
 <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>

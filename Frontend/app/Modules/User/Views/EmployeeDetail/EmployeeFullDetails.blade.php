@@ -6,10 +6,11 @@
 @endsection
 
 @section('extra-style-links')
-    <link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet"/>
     <link href="../assets/plugins/intel-tel-input/intlTelInput.css" rel="stylesheet">
     <link href="../assets/css/jqpagination.css" rel="stylesheet">
+    <link href="../assets/css/datatables-custom-pagination.css" rel="stylesheet">
     <!-- Add fancyBox -->
     <link rel="stylesheet" href="../assets/plugins/fancybox2/source/jquery.fancybox.css?v=2.1.7" type="text/css"
           media="screen"/>

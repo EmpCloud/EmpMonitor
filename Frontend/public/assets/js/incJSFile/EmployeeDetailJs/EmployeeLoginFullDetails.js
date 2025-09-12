@@ -10,8 +10,8 @@ function loadWebAppHistory(type) {
 
         beforeSend: function () {
             APP_HISTORY_CHECK = true;
-            $('#applicationHistoryTableId').dataTable().fnClearTable();
-            $('#applicationHistoryTableId').dataTable().fnDraw();
+            $('#applicationHistoryTableId').DataTable().clear().draw();
+            $('#applicationHistoryTableId').DataTable().destroy();
             // $('#chartApp').empty();
             $('#appHistoryTable').empty();
             $('#appHistoryTable').append('<div  class="loader"></div>');

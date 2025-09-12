@@ -8,7 +8,7 @@
 @endsection
 
 @section('extra-style-links')
-<link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet" />
+<link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet" />
 <link href="../assets/css/jqpagination.css" rel="stylesheet">
 <link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet" />
 @endsection
@@ -344,7 +344,7 @@
 
 @section('post-load-scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-<script src="../assets/plugins/DataTables/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
 <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
 <script src="../assets/plugins/amcharts/core.js"></script>
