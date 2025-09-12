@@ -31,7 +31,7 @@ const initServer = async () => {
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   
     app.listen(port, () => {
-      console.log(`Server listening on port ${port}`);
+      console.log('Server listening on port:', port);
     });
   } catch (error) {
     console.error('Failed to initialize the server:', error.message);

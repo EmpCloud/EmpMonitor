@@ -221,7 +221,7 @@
                                                             <input type="radio" class="form-check-input globalPro"
                                                                    id="pro{{ $ranking['_id'] }}"
                                                                    onchange="changeProd('{{ $ranking['_id'] }}', 1);"
-                                                                   name="radioPro"
+                                                                   name="radioPro{{ $ranking['_id'] }}"
                                                                    value="1-global-{{ $ranking['_id'] }}"
                                                                    <?php if(!empty($ranking)){
                                                                    if(isset($ranking['category']) && $ranking['category'] == 1){ ?>checked <?php }
@@ -233,7 +233,7 @@
                                                             <input type="radio" class="form-check-input globalPro"
                                                                    id="neutral{{ $ranking['_id'] }}"
                                                                    onchange="changeProd('{{ $ranking['_id'] }}', 0);"
-                                                                   name="radioPro"
+                                                                   name="radioPro{{ $ranking['_id'] }}"
                                                                    value="0-global-{{ $ranking['_id'] }}"
                                                                    <?php if(isset($ranking['category']) && $ranking['category'] == 0){ ?>checked <?php } ?>>{{__('messages.neutral')}}
                                                         </label>
@@ -243,7 +243,7 @@
                                                             <input type="radio" class="form-check-input globalPro"
                                                                    id="unpro{{ $ranking['_id'] }}"
                                                                    onchange="changeProd('{{ $ranking['_id'] }}', 2);"
-                                                                   name="radioPro"
+                                                                   name="radioPro{{ $ranking['_id'] }}"
                                                                    value="2-global-{{ $ranking['_id'] }}"
                                                                    <?php if(isset($ranking['category']) && $ranking['category'] == 2){ ?>checked <?php } ?>>{{__('messages.unproductive')}}
                                                         </label>

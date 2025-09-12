@@ -797,7 +797,22 @@ class UserController extends Controller
             
             return view('User::Settings.productivity_ranking')->with(['response' => $responseData]);
         } else{
-            
+            $api_url = env('MAIN_API')  . 'admin/productivity-rules?skip='.$request->input('skip').'&limit='.$request->input('limit');
+            $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, []);
+           if ($response['code'] == 200) {
+                 $responseData['code'] = 200;
+                $responseData['data'] = $response['data']['data'];
+                for ($i = 0; $i < count($responseData['data']); $i++) {
+                    if (strpos($responseData['data'][$i]['name'], ".exe") !== false) {
+                        $responseData['data'][$i]['name'] = str_replace(".exe", "", $responseData['data'][$i]['name']);
+                    }
+                    if ($responseData['data'][$i]['type'] != 2) $responseData['data'][$i]['name'] = ucfirst($responseData['data'][$i]['name']);
+
+                }
+            }
+            $responseData['count'] = $response['data']['count'] ?? 0;
+            return $responseData;
         }
     }
      public function productivityUpdate(Request $request)

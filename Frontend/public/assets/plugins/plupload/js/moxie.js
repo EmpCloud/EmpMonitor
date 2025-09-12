@@ -866,7 +866,7 @@ define("moxie/core/utils/Env", [
 	            /\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]+)*/i                   // FreeBSD/NetBSD/OpenBSD/PC-BSD/DragonFly
 	            ], [NAME, VERSION],[
 
-	            /(ip[honead]+)(?:.*os\s*([\w]+)*\slike\smac|;\sopera)/i             // iOS
+	            /(ip[honead]+)(?:.*os\s*([\w]+?)\slike\smac|;\sopera)/i             // iOS
 	            ], [[NAME, 'iOS'], [VERSION, /_/g, '.']], [
 
 	            /(mac\sos\sx)\s?([\w\s\.]+\w)*/i,

@@ -375,7 +375,7 @@ function createTask() {
 
     let newTodoData = {
         name: $('#newTaskName').val(),
-        description: ($('#newTaskDescription').val() == "") ? "NA" : $('#newTaskDescription').val().replace("'","&quot;"),
+        description: ($('#newTaskDescription').val() == "") ? "NA" : $('#newTaskDescription').val().replace(/'/g, "&quot;"),
         start_date: $('#newTaskStartDate').val(),
         end_date: $('#newTaskEndDate').val(),
         project_id: $('#editProject').attr('value'),

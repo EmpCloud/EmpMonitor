@@ -39,7 +39,7 @@ async adminRegister(req, res) {
       return res.status(403).json({ message: 'Forbidden: Admin role required for this action.' });
         }
         const { firstName, lastName, email, password, mobileNumber, employeeCode, timeZone, departmentId, locationId } = req.body;
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        if (!email || email.split('@').length !== 2 || !/^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/.test(email)) {
             return res.status(400).json({ error: 'Invalid email format.' });
         }
         if (!firstName || !lastName || !email || !password) {
@@ -229,7 +229,7 @@ async getAttendanceById(req, res) {
 
 async getWebAppActivity(req, res) {
   try {
-    let { employeeId, startDate, endDate, type = 1 } = req.query;
+    let { employeeId, startDate, endDate, type = 1 } = req.body;
     startDate = moment(startDate).format('YYYY-MM-DD');
     if(moment(startDate).isSame(endDate)) endDate = moment(endDate).endOf('day').format('YYYY-MM-DD');
     if (!employeeId) {
@@ -405,7 +405,7 @@ async deleteLocation(req, res) {
   async getReports(req, res) {
     try {
       let { id: organization_id } = req.user;
-      let { employee_id, department_id, location_id, start_date, end_date, skip, limit } = req.query;
+      let { employee_id, department_id, location_id, start_date, end_date, skip, limit } = req.body;
       start_date = moment(start_date).format("YYYY-MM-DD");
       end_date = moment(end_date).add(1, 'day').format("YYYY-MM-DD");
       let [employeeData] = await EmployeeModel.filterEmployee({ employee_id, department_id, location_id, organization_id });
@@ -447,7 +447,6 @@ async deleteLocation(req, res) {
   async getLocalizationData(req, res) {
     try {
       let { id: organization_id } = req.user;
-      console.log(organization_id)
       let data = await AdminModel.getLocalizationData(organization_id);
       return res.status(200).json({ code: 200, data, message: 'Success' });
     } catch (error) {

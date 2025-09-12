@@ -1336,7 +1336,7 @@
 
 	var _re_dic = {};
 	var _re_new_lines = /[\r\n]/g;
-	var _re_html = /<.*?>/g;
+	var _re_html = /<[^>]*>|&[a-zA-Z0-9#]+;|javascript:|vbscript:|data:/gi;
 
 	// This is not strict ISO8601 - Date.parse() is quite lax, although
 	// implementations differ between browsers.
@@ -1511,7 +1511,10 @@
 
 
 	var _stripHtml = function ( d ) {
-		return d.replace( _re_html, '' );
+		return d.replace( _re_html, '' )
+			.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
+			.replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
+			.trim();
 	};
 
 
@@ -4446,7 +4449,7 @@
 					word = m ? m[1] : word;
 				}
 
-				return word.replace('"', '');
+				return word.replace(/"/g, '');
 			} );
 
 			search = '^(?=.*?'+a.join( ')(?=.*?' )+').*$';
@@ -5492,7 +5495,7 @@
 
 
 
-	var __re_html_remove = /<.*?>/g;
+	var __re_html_remove = /<[^>]*>|&[a-zA-Z0-9#]+;|javascript:|vbscript:|data:/gi;
 
 
 	/**
@@ -14740,7 +14743,7 @@
 			return _empty(a) ?
 				'' :
 				a.replace ?
-					a.replace( /<.*?>/g, "" ).toLowerCase() :
+					a.replace( /<[^>]*>|&[a-zA-Z0-9#]+;|javascript:|vbscript:|data:/gi, "" ).toLowerCase() :
 					a+'';
 		},
 
@@ -14854,9 +14857,9 @@
 	 */
 
 	var __htmlEscapeEntities = function ( d ) {
-		return typeof d === 'string' ?
-			d.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;') :
-			d;
+	return typeof d === 'string' ?
+		d.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#x27;') :
+		d;
 	};
 
 	/**

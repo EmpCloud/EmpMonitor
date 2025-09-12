@@ -90,7 +90,7 @@ async getLoginUserData(req) {
             if (rows.length === 0) return null;
             return rows[0].license;
         } catch (error) {
-            console.error(`Error in getAdminLicenseCount for adminId ${adminId}: `, error);
+            console.error('Error in getAdminLicenseCount for adminId:', adminId, error);
             throw error;
         }
     }
@@ -102,7 +102,7 @@ async getLoginUserData(req) {
             const [result] = await pool.execute(query, [newLicense, adminId]);
             return result.affectedRows > 0;
         } catch (error) {
-            console.error(`Error updating admin license for adminId ${adminId}: `, error);
+            console.error('Error updating admin license for adminId:', adminId, error);
             throw error;
         }
     }
