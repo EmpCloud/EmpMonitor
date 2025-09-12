@@ -25,7 +25,7 @@ class EmployeeModel {
       );
       return rows[0];
     } catch (error) {
-      console.error(`Error getting employee by id ${id}:`, error);
+      console.error('Error getting employee by id:', id, error);
       throw error;
     }
   }
@@ -44,7 +44,7 @@ class EmployeeModel {
           'Database Authentication Error: Incorrect Authentication Plugin. Please check server logs.'
         );
       }
-      console.error(`Error getting employee by email ${email}:`, error);
+      console.error('Error getting employee by email:', email, error);
       throw error;
     }
   }
@@ -58,7 +58,7 @@ class EmployeeModel {
         [firstName, lastName, role, mobileNumber, employeeCode, timeZone, id]
       );
     } catch (error) {
-      console.error(`Error updating employee with id ${id}:`, error);
+      console.error('Error updating employee with id:', id, error);
       throw error;
     }
   }
@@ -125,7 +125,7 @@ class EmployeeModel {
       await pool.query('DELETE FROM employee_attendance WHERE employee_id = ?', [id]);
       await pool.query('DELETE FROM employees WHERE id = ?', [id]);
     } catch (error) {
-      console.error(`Error deleting employee with id ${id}:`, error);
+      console.error('Error deleting employee with id:', id, error);
       throw error;
     }
   }
@@ -261,7 +261,7 @@ class EmployeeModel {
       const pool = await mySqlSingleton.getPool();
       await pool.query('UPDATE departments SET name = ? WHERE id = ?', [departmentName, id]);
     } catch (error) {
-      console.error(`Error updating department with id ${id}:`, error);
+      console.error('Error updating department with id:', id, error);
       throw error;
     }
   }
@@ -271,7 +271,7 @@ class EmployeeModel {
       const pool = await mySqlSingleton.getPool();
       await pool.query('DELETE FROM departments WHERE id = ?', [id]);
     } catch (error) {
-      console.error(`Error deleting department with id ${id}:`, error);
+      console.error('Error deleting department with id:', id, error);
       throw error;
     }
   }
@@ -282,7 +282,7 @@ class EmployeeModel {
       const [rows] = await pool.query('SELECT * FROM departments WHERE name = ?', [name]);
       return rows[0];
     } catch (error) {
-      console.error(`Error getting department by name ${name}:`, error);
+      console.error('Error getting department by name:', name, error);
       throw error;
     }
   }
@@ -293,7 +293,7 @@ class EmployeeModel {
       const [rows] = await pool.query('SELECT COUNT(*) AS count FROM employees WHERE department_id = ?', [departmentId]);
       return rows[0].count > 0;
     } catch (error) {
-      console.error(`Error checking if department with id ${departmentId} is used:`, error);
+      console.error('Error checking if department with id is used:', departmentId, error);
       throw error;
     }
   }

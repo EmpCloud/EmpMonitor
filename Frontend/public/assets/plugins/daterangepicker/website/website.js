@@ -148,7 +148,7 @@ $(document).ready(function() {
           + "        'This Month': [moment().startOf('month'), moment().endOf('month')],\n"
           + "        'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]\n"
           + "    }";
-      option_text = option_text.replace(new RegExp('"ranges"\: \{\}', 'g'), replacement);
+      option_text = option_text.replace(new RegExp('"ranges": {}', 'g'), replacement);
 
       $('#config-text').val("$('#demo').daterangepicker(" + option_text + ", function(start, end, label) {\n  console.log('New date range selected: ' + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD') + ' (predefined range: ' + label + ')');\n});");
 

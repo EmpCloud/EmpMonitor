@@ -835,7 +835,7 @@ function removeRowNet() {
     $('.inputFormRowNetwork').remove();
 }
 let latlngVal = /^([-+]?([1-8]?\d(\.\d+)?|90(\.0+)?),\s*[-+]?(180(\.0+)?|((1[0-7]\d)|([1-9]?\d))(\.\d+)?))$/;
-let locVal = /^[a-zA-Z-,]+(\s{0,1}[a-zA-Z-, ])*$/;
+let locVal = /^[a-zA-Z-,]+(\s[a-zA-Z-, ]*)?$/;
 //  Checking Regex for longitude
 function longitude(value, id) {
     id = id.replace(/\D/g, "");

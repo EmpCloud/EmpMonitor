@@ -22,7 +22,7 @@ class AdminRoutes {
         this.myRoutes.delete('/employee-delete-multiple', adminController.deleteEmployees);
         this.myRoutes.post('/attendance', adminController.getAttendance);
         this.myRoutes.post('/attendance/:id', adminController.getAttendanceById);
-        this.myRoutes.get('/web-app-activity', adminController.getWebAppActivity);
+        this.myRoutes.post('/web-app-activity', adminController.getWebAppActivity);
         this.myRoutes.put('/update-employee', adminController.updateEmployee);
 
         this.myRoutes.get('/get-departments', adminController.getDepartments);
@@ -35,7 +35,7 @@ class AdminRoutes {
         this.myRoutes.put('/locations/:id', adminController.updateLocation);
         this.myRoutes.delete('/locations/:id', adminController.deleteLocation);
 
-        this.myRoutes.get("/report", adminController.getReports);
+        this.myRoutes.post("/report", adminController.getReports);
 
         this.myRoutes.post("/localization", adminController.updateLocalizationData);
         this.myRoutes.get("/localization", adminController.getLocalizationData);

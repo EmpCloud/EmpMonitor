@@ -9,11 +9,11 @@ let inputValidations = {
         return /\S+/.test(str);  // returns a boolean
     },
     isEmail: (email) => {
-        const pattern = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+        const pattern = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,3}$/;
         return pattern.test(email);
     },
     isEmailValid: (event, id) => {
-        const pattern = /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/;
+        const pattern = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,3}$/;
         return pattern.test($(id).val()) ? $(id).val() : $(id).val('');
     },
     isPasswordValid: (event, id) => {

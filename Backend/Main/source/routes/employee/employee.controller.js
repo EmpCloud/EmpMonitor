@@ -57,7 +57,7 @@ async function getEmployee(req, res) {
 async function getWebAppActivity(req, res) {
   try {
     let employeeId = +req.user.id;
-    let { startDate, endDate, type = 1 } = req.query;
+    let { startDate, endDate, type = 1 } = req.body;
     startDate = moment(startDate).format('YYYY-MM-DD');
     if(moment(startDate).isSame(endDate)) endDate = moment(endDate).endOf('day').format('YYYY-MM-DD');
     if (!employeeId) {
