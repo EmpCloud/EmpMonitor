@@ -586,20 +586,20 @@
 
     <!-- Javascripts -->
     <!-- Javascripts -->
-    {{--    <script src="../assets/plugins/jquery/jquery-3.1.0.min.js"></script>--}}
-    {{--    <script src="../assets/plugins/bootstrap/popper.min.js"></script>--}}
+    {{--    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>--}}
+    {{--    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>--}}
     {{--    <script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>--}}
-    {{--    <script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>--}}
+    {{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>--}}
     {{--    <script src="../assets/js/concept.min.js"></script>--}}
 
-    <!-- <script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script> -->
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="../assets/plugins/select2/js/select2.min.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script src="../assets/plugins/amcharts/core.js"></script>
-    <script src="../assets/plugins/amcharts/charts.js"></script>
-    <script src="../assets/plugins/amcharts/themes/animated.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
     {{--    for pdf download--}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"

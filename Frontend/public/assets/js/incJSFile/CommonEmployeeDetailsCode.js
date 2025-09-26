@@ -101,7 +101,18 @@ function timeSheetData(response) {
                         "previous": "&lsaquo;"
                     }
                 },
+                "columns": [
+                    { "data": 0, "orderable": true },   // Clock In
+                    { "data": 1, "orderable": true },   // Clock Out
+                    { "data": 2, "orderable": true },   // Total Hours
+                    { "data": 3, "orderable": true },   // Active Hours
+                    { "data": 4, "orderable": true },   // Idle Hours
+                    { "data": 5, "orderable": true },   // Productive Hours
+                    { "data": 6, "orderable": true },   // Unproductive Hours
+                    { "data": 7, "orderable": true }    // Neutral Hours
+                ],
                 "order": [],
+                "destroy": true,
                 "initComplete": function () {
                     $("#timeSheetDataTable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
                 },
@@ -124,7 +135,17 @@ function timeSheetData(response) {
                         "previous": "&lsaquo;"
                     }
                 },
-                "bDestroy": true
+                "columns": [
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" }
+                ],
+                "destroy": true
             });
         }
     } else if (response.code === 400) {
@@ -144,7 +165,17 @@ function timeSheetData(response) {
                     "previous": "&laquo;"
                 }
             },
-            "bDestroy": true
+            "columns": [
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" }
+            ],
+            "destroy": true
         });
     } else if (response.code === 500) {
         // Destroy existing DataTable if it exists
@@ -152,7 +183,7 @@ function timeSheetData(response) {
             $('#timeSheetDataTable').DataTable().destroy();
         }
         $('#timeSheetsData').empty();
-        $('#timeSheetsData').append('<tr><td colspan="8" style="text-align: center; color: red"><b>" + EMPLOYEE_FULL_DETAILS_ERROR.errWhileFetching + " <br/> <a href="#" onclick="loadTimeSheetData()">" + EMPLOYEE_FULL_DETAILS_ERROR.reloadSection + " </a> </b></td></tr>');
+        $('#timeSheetsData').append('<tr><td colspan="8" style="text-align: center; color: red"><b>' + EMPLOYEE_FULL_DETAILS_ERROR.errWhileFetching + ' <br/> <a href="#" onclick="loadTimeSheetData()">' + EMPLOYEE_FULL_DETAILS_ERROR.reloadSection + ' </a> </b></td></tr>');
         $("#timeSheetDataTable").DataTable({
             "language": {
                 "url": DATATABLE_LANG,
@@ -163,7 +194,17 @@ function timeSheetData(response) {
                     "previous": "&laquo;"
                 }
             },
-            "bDestroy": true
+            "columns": [
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" }
+            ],
+            "destroy": true
         });
         TIME_SHEET_CHECK = false;
     } else {
@@ -177,7 +218,17 @@ function timeSheetData(response) {
                     "previous": "&laquo;"
                 }
             },
-            "bDestroy": true
+            "columns": [
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" }
+            ],
+            "destroy": true
         });
         TIME_SHEET_CHECK = false;
         return errorHandler(response.msg);

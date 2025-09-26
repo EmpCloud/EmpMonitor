@@ -1132,14 +1132,14 @@
 @endsection
 @section('post-load-scripts')
 
-    <script src="../assets/plugins/amcharts/core.js"></script>
-    <script src="../assets/plugins/amcharts/charts.js"></script>
-    <script src="../assets/plugins/amcharts/themes/animated.js"></script>
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js"></script>
-    <script src="//unpkg.com/xlsx/dist/xlsx.full.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" type="text/javascript"></script>
 
     {{--    Firebase   replace by Websocket - code is of separate files  --}}
 
@@ -1150,7 +1150,7 @@
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-messaging.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.19.1/firebase-analytics.js"></script>
     <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
-    <link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet"/>
+    <link href="../assets/plugins/css/bootstrap/loader.css" rel="stylesheet"/>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"
             integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
 

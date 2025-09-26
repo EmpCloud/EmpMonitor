@@ -4,7 +4,7 @@
             get-details?id={{Session::get((new App\Modules\User\helper)->getHostName())['token']['user_id']}}
         <?php }else{?>dashboard<?php }?>"
            class="logo-box">
-            <img src="../assets/images/logos/{{ md5($_SERVER['HTTP_HOST']) }}.png" class="img-fluid"/>
+            <img src="https://empmonitor.com/wp-content/uploads/2023/12/emp.webp" class="img-fluid"/>
         </a>
     </div>
     <div class="secondary-sidebar-menu">

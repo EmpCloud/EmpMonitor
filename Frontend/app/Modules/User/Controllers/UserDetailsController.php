@@ -52,6 +52,7 @@ class UserDetailsController extends Controller
             $result['msg'] = $response['message']; 
             return $result;
         } catch (\Exception $e) {
+            dd($e);
              return $this->helper->errorHandler($e, ' UserDetailsController =>getBrowserHistory => Method-get ');
         }
     } 

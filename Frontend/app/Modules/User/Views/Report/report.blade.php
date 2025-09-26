@@ -8,7 +8,7 @@
 @endsection
 
 @section('extra-style-links')
-<link rel="stylesheet" type="text/css" href="../assets/plugins/daterangepicker/daterangepicker.css" />
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" />
 <style>
     .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter {
@@ -321,10 +321,10 @@
 
 @section('post-load-scripts')
 <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-<script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-<script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
-<script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-<script src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.11/jspdf.plugin.autotable.min.js"></script>
 @endsection

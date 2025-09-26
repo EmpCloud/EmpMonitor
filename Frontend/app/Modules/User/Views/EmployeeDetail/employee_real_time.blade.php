@@ -485,9 +485,9 @@
 @endphp
 
 @section('post-load-scripts')
-    <script src="../assets/plugins/select2/js/select2.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
     <script>
         const minRange = document.getElementById("dual-min-range");
         const maxRange = document.getElementById("dual-max-range");

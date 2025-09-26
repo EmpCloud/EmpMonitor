@@ -1,9 +1,10 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <div class="secondary-sidebar">
     <div class="secondary-sidebar-bar">
         <a href="{{route('dashboard',(new App\Modules\User\helper())->getHostName()) }}" class="logo-box">
-            <img src="../assets/images/logos/{{ md5($_SERVER['HTTP_HOST']) }}.png" class="img-fluid" />
-            <!-- <img src="../assets/images/logos/icon.png" class="img-fluid"/>
-            <img src="../assets/images/logos/Logo.png" class="img-fluid"/> -->
+            <!-- <img src="https://empmonitor.com/wp-content/uploads/2023/12/emp.webp" class="img-fluid" /> -->
+            <img src="../assets/images/logos/icon.png" class="img-fluid"/>
+            <img src="../assets/images/logos/Logo.png" class="img-fluid"/>
         </a>
     </div>
     <div class="secondary-sidebar-menu">
@@ -12,7 +13,7 @@
         @if(Session::has('admin_session'))
             <li>
                 <a href="#">
-                    <i class="menu-icon icon-users"
+                   <i class="menu-icon fa-solid fa-users"
                        title="{{ __('messages.employee') }}"></i><span>{{ __('messages.employee') }}</span>
                     <i class="accordion-icon fas fa-angle-left"></i>
                 </a>
@@ -25,7 +26,7 @@
             </li>
             <li>
                 <a href="#">
-                    <i class="menu-icon icon-cog"
+                    <i class=" menu-icon fa-solid fa-gear"
                        title="{{ __('messages.employee') }}"></i><span>{{ __('messages.settings') }}</span>
                     <i class="accordion-icon fas fa-angle-left"></i>
                 </a>
@@ -59,12 +60,12 @@
                         title="{{ __('messages.timesheets') }}"></i><span>{{ __('messages.timesheets') }}</span>
                 </a>
                 <a href="{{ route('reports', (new App\Modules\User\helper())->getHostName()) }}">
-                    <i class="menu-icon icon-file-text"
+                    <i class= "menu-icon fa-solid fa-book"
                        title="{{ __('messages.reports') }}"></i><span>{{ __('messages.reports') }}</span>
                 </a> 
                  <a href="{{route('productivity',(new App\Modules\User\helper)->getHostName())}}"
                                    title="{{ __('messages.productivityRules') }}"> <i class="menu-icon fas fa-tasks"
-                                       title="{{ __('messages.productivityRules') }}"></i>{{ __('messages.productivityRules') }}</a>
+                                       title="{{ __('messages.productivityRules') }}"></i><span>{{ __('messages.productivityRules') }}</span></a>
                 @endif
             </li>
         </ul>

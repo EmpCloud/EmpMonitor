@@ -7,18 +7,16 @@
 
 @section('extra-style-links')
     <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
-    <link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet"/>
-    <link href="../assets/plugins/intel-tel-input/intlTelInput.css" rel="stylesheet">
+    <link href="../assets/plugins/css/bootstrap/loader.css" rel="stylesheet"/>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" rel="stylesheet">
     <link href="../assets/css/jqpagination.css" rel="stylesheet">
     <link href="../assets/css/datatables-custom-pagination.css" rel="stylesheet">
     <!-- Add fancyBox -->
-    <link rel="stylesheet" href="../assets/plugins/fancybox2/source/jquery.fancybox.css?v=2.1.7" type="text/css"
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.5.7/jquery.fancybox.min.css" type="text/css"
           media="screen"/>
     <!-- Optionally add helpers - button, thumbnail and/or media -->
-    <link rel="stylesheet" href="../assets/plugins/fancybox2/source/helpers/jquery.fancybox-buttons.css?v=1.0.5"
-          type="text/css" media="screen"/>
-    <link rel="stylesheet" href="../assets/plugins/fancybox2/source/helpers/jquery.fancybox-thumbs.css?v=1.0.7"
-          type="text/css" media="screen"/>
+    <!-- Fancybox buttons CSS included in main fancybox CSS -->
+    <!-- Fancybox thumbs CSS included in main fancybox CSS -->
 @endsection
 
 @section('page-style')
@@ -92,7 +90,7 @@
 @endsection
 
 @section('page-scripts')
-    <script src="../assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" type="text/javascript"></script>
     {{--    remove common js files and scripts and using from external file     --}}
     @include('User::EmployeeFullDetailsPage._pageScripts') 
     <script>
