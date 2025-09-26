@@ -67,8 +67,12 @@ $(function () {
 function timeSheetData(response) {
     if (response.code === 200) {
         if (response.data && response.data.data.length > 0) {
-            $('#timeSheetDataTable').dataTable().fnDestroy();
+            // Destroy existing DataTable if it exists
+            if ($.fn.DataTable.isDataTable('#timeSheetDataTable')) {
+                $('#timeSheetDataTable').DataTable().destroy();
+            }
             $('#timeSheetsData').empty();
+            
             response.data.data.map(timeSheet => {
                 let startTime = moment(timeSheet.start_time).tz('Asia/Kolkata').format('DD-MM-YYYY HH:mm:ss');
                 let endTime = moment(timeSheet.end_time).tz('Asia/Kolkata').format('DD-MM-YYYY HH:mm:ss');
@@ -84,31 +88,148 @@ function timeSheetData(response) {
 
                 $('#timeSheetsData').append('<tr class="text-center">\n' + ' <td>' + startTime + '</td><td>' + endTime + '</td><td title="' +  total_hours + '">' + total_hours + '</td><td>' + active_hours + '</td><td>' + idle_hours + `</td> <td>${productive_hours}</td> <td>${unproductive_hours}</td> <td>${neutral_hours}</td> </tr>` );
             });
+            
+            // Initialize DataTable after data is loaded
             $("#timeSheetDataTable").DataTable({
                 "lengthMenu": [[10, 25, 50, 100, 200], [10, 25, 50, 100, 200]],
-                "language": {"url": DATATABLE_LANG}, // declared in _scripts.blade file
+                "language": {
+                    "url": DATATABLE_LANG,
+                    "paginate": {
+                        "first": "&laquo;",
+                        "last": "&raquo;",
+                        "next": "&rsaquo;",
+                        "previous": "&lsaquo;"
+                    }
+                },
+                "columns": [
+                    { "data": 0, "orderable": true },   // Clock In
+                    { "data": 1, "orderable": true },   // Clock Out
+                    { "data": 2, "orderable": true },   // Total Hours
+                    { "data": 3, "orderable": true },   // Active Hours
+                    { "data": 4, "orderable": true },   // Idle Hours
+                    { "data": 5, "orderable": true },   // Productive Hours
+                    { "data": 6, "orderable": true },   // Unproductive Hours
+                    { "data": 7, "orderable": true }    // Neutral Hours
+                ],
                 "order": [],
+                "destroy": true,
                 "initComplete": function () {
                     $("#timeSheetDataTable").wrap("<div style='overflow:auto; width:100%;position:relative;'></div>");
                 },
             });
             TIME_SHEET_CHECK = true;
         } else {
+            // Destroy existing DataTable if it exists
+            if ($.fn.DataTable.isDataTable('#timeSheetDataTable')) {
+                $('#timeSheetDataTable').DataTable().destroy();
+            }
             $('#timeSheetsData').empty();
-            $('#timeSheetsData').append('<tr><td colspan="11" style="text-align: center; color: red"><b>' + EMPLOYEE_FULL_DETAILS_ERROR.timeSheetNotFound + ' </b></td></tr>');
-            $("#timeSheetDataTable").DataTable({"language": {"url": DATATABLE_LANG}, "bDestroy": true});
+            $('#timeSheetsData').append('<tr><td colspan="8" style="text-align: center; color: red"><b>' + EMPLOYEE_FULL_DETAILS_ERROR.timeSheetNotFound + ' </b></td></tr>');
+            $("#timeSheetDataTable").DataTable({
+                "language": {
+                    "url": DATATABLE_LANG,
+                    "paginate": {
+                        "first": "&laquo;",
+                        "last": "&raquo;",
+                        "next": "&rsaquo;",
+                        "previous": "&lsaquo;"
+                    }
+                },
+                "columns": [
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" },
+                    { "data": null, "orderable": false, "defaultContent": "" }
+                ],
+                "destroy": true
+            });
         }
     } else if (response.code === 400) {
+        // Destroy existing DataTable if it exists
+        if ($.fn.DataTable.isDataTable('#timeSheetDataTable')) {
+            $('#timeSheetDataTable').DataTable().destroy();
+        }
         $('#timeSheetsData').empty();
-        $('#timeSheetsData').append('<tr><td colspan="11" style="text-align: center; color: red"><b>' + EMPLOYEE_FULL_DETAILS_ERROR.timeSheetNotFound + '  </b></td></tr>');
-        $("#timeSheetDataTable").DataTable({"language": {"url": DATATABLE_LANG}, "bDestroy": true});
+        $('#timeSheetsData').append('<tr><td colspan="8" style="text-align: center; color: red"><b>' + EMPLOYEE_FULL_DETAILS_ERROR.timeSheetNotFound + '  </b></td></tr>');
+        $("#timeSheetDataTable").DataTable({
+            "language": {
+                "url": DATATABLE_LANG,
+                "paginate": {
+                    "first": "&laquo;&laquo;",
+                    "last": "&raquo;&raquo;",
+                    "next": "&raquo;",
+                    "previous": "&laquo;"
+                }
+            },
+            "columns": [
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" }
+            ],
+            "destroy": true
+        });
     } else if (response.code === 500) {
+        // Destroy existing DataTable if it exists
+        if ($.fn.DataTable.isDataTable('#timeSheetDataTable')) {
+            $('#timeSheetDataTable').DataTable().destroy();
+        }
         $('#timeSheetsData').empty();
-        $('#timeSheetsData').append('<tr><td colspan="11" style="text-align: center; color: red"><b>" + EMPLOYEE_FULL_DETAILS_ERROR.errWhileFetching + " <br/> <a href="#" onclick="loadTimeSheetData()">" + EMPLOYEE_FULL_DETAILS_ERROR.reloadSection + " </a> </b></td></tr>');
-        $("#timeSheetDataTable").DataTable({"language": {"url": DATATABLE_LANG}, "bDestroy": true});
+        $('#timeSheetsData').append('<tr><td colspan="8" style="text-align: center; color: red"><b>' + EMPLOYEE_FULL_DETAILS_ERROR.errWhileFetching + ' <br/> <a href="#" onclick="loadTimeSheetData()">' + EMPLOYEE_FULL_DETAILS_ERROR.reloadSection + ' </a> </b></td></tr>');
+        $("#timeSheetDataTable").DataTable({
+            "language": {
+                "url": DATATABLE_LANG,
+                "paginate": {
+                    "first": "&laquo;&laquo;",
+                    "last": "&raquo;&raquo;",
+                    "next": "&raquo;",
+                    "previous": "&laquo;"
+                }
+            },
+            "columns": [
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" }
+            ],
+            "destroy": true
+        });
         TIME_SHEET_CHECK = false;
     } else {
-        $("#timeSheetDataTable").DataTable({"language": {"url": DATATABLE_LANG}, "bDestroy": true});
+        $("#timeSheetDataTable").DataTable({
+            "language": {
+                "url": DATATABLE_LANG,
+                "paginate": {
+                    "first": "&laquo;&laquo;",
+                    "last": "&raquo;&raquo;",
+                    "next": "&raquo;",
+                    "previous": "&laquo;"
+                }
+            },
+            "columns": [
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" },
+                { "data": null, "orderable": false, "defaultContent": "" }
+            ],
+            "destroy": true
+        });
         TIME_SHEET_CHECK = false;
         return errorHandler(response.msg);
     }
@@ -129,9 +250,8 @@ function browserHistoryData(response) {
             $('#browserHistoryTableLoader').css('display', 'none');
             // $('#browserHistoryTable').empty();
             // $('#browserHistoryDataTableData').empty();
-            // $('#browserHistoryTableId').dataTable().fnClearTable();
-            // $('#browserHistoryTableId').dataTable().fnDraw();
-            // $('#browserHistoryTableId').dataTable().fnDestroy();
+            // $('#browserHistoryTableId').DataTable().clear().draw();
+            // $('#browserHistoryTableId').DataTable().destroy();
             response.data.map(webData => { 
                 let startDate = moment(new Date(webData.start_time)).format('YYYY-MM-DD HH:mm:ss');
                 let endDate = moment(new Date(webData.end_time)).format('YYYY-MM-DD HH:mm:ss');
@@ -145,12 +265,20 @@ function browserHistoryData(response) {
             $("#browserHistoryTableId").DataTable({
                 "lengthMenu": [[10, 25, 50, 100, 200], [10, 25, 50, 100, 200]],
                 "order": [[3, "desc"]],
-                "language": {"url": DATATABLE_LANG}
+                "language": {
+                    "url": DATATABLE_LANG,
+                    "paginate": {
+                        "first": "&laquo;&laquo;",
+                        "last": "&raquo;&raquo;",
+                        "next": "&raquo;",
+                        "previous": "&laquo;"
+                    }
+                }
             });
             WEB_HISTORY_CHECK = true;
         } else {
             // $('#browserHistoryDataTableData').empty();
-            $('#browserHistoryDataTableData').append('<tr><td colspan="10" style="text-align: center"> ' + EMPLOYEE_FULL_DETAILS_ERROR.browserHistoryNotFound + ' </td></tr>');
+            $('#browserHistoryDataTableData').append('<tr><td colspan="14" style="text-align: center"> ' + EMPLOYEE_FULL_DETAILS_ERROR.browserHistoryNotFound + ' </td></tr>');
             $('#webHistoryChart').empty();
             $('#webHistoryChartLoader').css('display', 'none');
             $('#browserHistoryTableLoader').css('display', 'none');
@@ -177,7 +305,7 @@ function applicationHistoryData(response) {
     if (response.code == 200) {
         if (response.data && response.data.length > 0) {
             $('#appHistoryTable').empty();
-            $('#applicationHistoryTableId').dataTable().fnDestroy();
+            $('#applicationHistoryTableId').DataTable().destroy();
             $('#applicationHistoryDataTableData').empty();
             response.data.map(appData => { 
                 $('#appHistoryTable').append('<tr><td class="td-url" title="' + appData.application_name + '" style="text-transform: capitalize"><i class="fas fa-mobile-alt mr-2"></i>' + appData.application_name + '</td></tr>');
@@ -190,20 +318,28 @@ function applicationHistoryData(response) {
             $("#applicationHistoryTableId").DataTable({
                 "lengthMenu": [[10, 25, 50, 100, 200], [10, 25, 50, 100, 200]],
                 "order": [[2, "desc"]],
-                "language": {"url": DATATABLE_LANG}
+                "language": {
+                    "url": DATATABLE_LANG,
+                    "paginate": {
+                        "first": "&laquo;&laquo;",
+                        "last": "&raquo;&raquo;",
+                        "next": "&raquo;",
+                        "previous": "&laquo;"
+                    }
+                }
             });
             APP_HISTORY_CHECK = true;
         } else {
             $('#appHistoryTable').empty();
             $('#applicationHistoryDataTableData').empty();
-            $('#applicationHistoryDataTableData').append('<tr><td colspan="10" style="text-align: center"> ' + EMPLOYEE_FULL_DETAILS_ERROR.appHistoryNotFound + '</td></tr>'); 
+            $('#applicationHistoryDataTableData').append('<tr><td colspan="13" style="text-align: center"> ' + EMPLOYEE_FULL_DETAILS_ERROR.appHistoryNotFound + '</td></tr>'); 
         }
     } else if (response.code == 400) {
         $('#appHistoryTable').empty(); 
     } else if (response.code == 500) {
         $('#appHistoryTable').empty();
         $('#applicationHistoryDataTableData').empty();
-        $('#applicationHistoryDataTableData').append('<tr><td colspan="7" style="text-align: center"> ' + EMPLOYEE_FULL_DETAILS_ERROR.appHistoryNotFound + '</td></tr>'); 
+        $('#applicationHistoryDataTableData').append('<tr><td colspan="13" style="text-align: center"> ' + EMPLOYEE_FULL_DETAILS_ERROR.appHistoryNotFound + '</td></tr>'); 
         APP_HISTORY_CHECK = false;
     } else {
         APP_HISTORY_CHECK = false;

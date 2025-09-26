@@ -7,7 +7,7 @@
 
 @section('extra-style-links')
     {{-- <link href="../assets/plugins/switchery/switchery.min.css" rel="stylesheet" /> --}}
-    <link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
 @endsection
 
 @section('page-style')
@@ -307,7 +307,7 @@
 
 @section('page-scripts')
     <!-- ===============================  // Add ranking  ============================== -->
-    <script src="../assets/plugins/DataTables/datatables.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
     <script src="../assets/js/pages/dashboard.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.15/lodash.min.js"
             integrity="sha256-VeNaFBVDhoX3H+gJ37DpT/nTuZTdjYro9yBruHjVmoQ=" crossorigin="anonymous"></script>
@@ -326,14 +326,14 @@
     <link href="../assets/css/jqpagination.css" rel="stylesheet">
     <link href="../assets/css/jqpaginationInside.css" rel="stylesheet">
     <script src="../assets/js/incJSFile/ProductivityRanking.js"></script>
-    <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="../assets/plugins/select2/js/select2.min.js"></script>
-    <script src="../assets/plugins/DataTables/datatables.min.js"></script>
-    <link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
+    <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <script src="../assets/js/incJSFile/_timeConvertions.js"></script>
     <script src="../assets/js/incJSFile/_dataFiltration.js"></script>
 @endsection

@@ -19,16 +19,16 @@
         rel="stylesheet"
     />
     <link
-        href="../assets/plugins/bootstrap/css/bootstrap.min.css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
     />
     <link
-        href="../assets/plugins/font-awesome/css/all.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         rel="stylesheet"
     />
-    <link href="../assets/plugins/icomoon/style.css" rel="stylesheet"/>
+    <link href="../assets/plugins/css/icomoon.css" rel="stylesheet"/>
     <link
-        href="../assets/plugins/switchery/switchery.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css"
         rel="stylesheet"
     />
 
@@ -270,11 +270,11 @@
     </div>
 </div>
 <!-- Javascripts -->
-<script src="../assets/plugins/jquery/jquery-3.1.0.min.js"></script>
-<script src="../assets/plugins/bootstrap/popper.min.js"></script>
-<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<script src="../assets/plugins/switchery/switchery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
 <script src="../assets/js/concept.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript">

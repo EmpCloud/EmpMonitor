@@ -64,7 +64,7 @@ $(".toggle-password-show-edit, .toggle-password-show-edit-c").click(function () 
 // // Vanilla Javascript
 let tel = document.querySelector("#telephone");
 let iti = window.intlTelInput(tel, {
-    utilsScript: "../assets/plugins/intel-tel-input/utils.js",
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     initialCountry: "in",
     separateDialCode: true,
     customContainer: "col-md-12 no-padding intelinput-styles"
@@ -364,9 +364,8 @@ function getUsers(showEntries, skipvalue, searchText, sortName, sortOrder, activ
         beforeSend: function () { 
             if(CollapseMerge !== 1) {
                 $('#fetch_Details').empty();
-                $('#empDetails_Table').dataTable().fnClearTable();
-                $('#empDetails_Table').dataTable().fnDraw();
-                $('#empDetails_Table').dataTable().fnDestroy();
+                $('#empDetails_Table').DataTable().clear().draw();
+                $('#empDetails_Table').DataTable().destroy();
                 UserCompleteList = [];
                 $("#loader").css('display', 'block');
             }

@@ -229,7 +229,7 @@ async getAttendanceById(req, res) {
 
 async getWebAppActivity(req, res) {
   try {
-    let { employeeId, startDate, endDate, type = 1 } = req.body;
+    let { employeeId, startDate, endDate, type = 1 } = req.query;
     startDate = moment(startDate).format('YYYY-MM-DD');
     if(moment(startDate).isSame(endDate)) endDate = moment(endDate).endOf('day').format('YYYY-MM-DD');
     if (!employeeId) {
@@ -405,7 +405,7 @@ async deleteLocation(req, res) {
   async getReports(req, res) {
     try {
       let { id: organization_id } = req.user;
-      let { employee_id, department_id, location_id, start_date, end_date, skip, limit } = req.body;
+      let { employee_id, department_id, location_id, start_date, end_date, skip, limit } = req.query;
       start_date = moment(start_date).format("YYYY-MM-DD");
       end_date = moment(end_date).add(1, 'day').format("YYYY-MM-DD");
       let [employeeData] = await EmployeeModel.filterEmployee({ employee_id, department_id, location_id, organization_id });

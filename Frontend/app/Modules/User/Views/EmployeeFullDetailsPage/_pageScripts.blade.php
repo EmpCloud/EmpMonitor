@@ -32,7 +32,7 @@
 <script src="../assets/js/final-timezone.js"></script>
 <script src="../assets/js/incJSFile/EmployeeDetailJs/commonFunction_Forms.js"></script>
 <script src="../assets/js/incJSFile/EmployeeDetailJs/EmployeeLoginFullDetails.js"></script>
-<script src="../assets/plugins/vue-apexcharts/vue.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

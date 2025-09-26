@@ -282,7 +282,7 @@
 </main>
 @include('User::Layout._scripts')
 <script src="../assets/plugins/dropify-master/js/dropify.min.js"></script>
-<script src="../assets/plugins/DataTables/datatables.min.js"></script>
+<script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
 <script>
     $("#downloadPageBack").on('click',function(){

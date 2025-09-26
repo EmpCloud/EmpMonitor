@@ -22,21 +22,21 @@
         rel="stylesheet"
         />
 <link
-        href="../assets/plugins/bootstrap/css/bootstrap.min.css"
+        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
         />
 <link
-        href="../assets/plugins/font-awesome/css/all.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         rel="stylesheet"
         />
-<link href="../assets/plugins/icomoon/style.css" rel="stylesheet"/>
+<!-- icomoon replaced with Font Awesome -->
 <link
-        href="../assets/plugins/switchery/switchery.min.css"
+        href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css"
         rel="stylesheet"
         />
-{{--<link href="../assets/plugins/DataTables/datatables.min.css" rel="stylesheet"/>--}}
+{{--<link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>--}}
 
-<link href="../assets/plugins/select2/css/select2.min.css"
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css"
         rel="stylesheet"
         />
 {{--<link--}}
@@ -45,9 +45,9 @@
 {{--/>--}}
 
 
-<link href="../assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
+<link href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" rel="stylesheet" />
 
-<link href="../assets/plugins/jquery-ui/jquery-ui.css" rel="stylesheet"/>
+<link href="https://code.jquery.com/ui/1.13.2/themes/ui-lightness/jquery-ui.css" rel="stylesheet"/>
 
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
 <!-- Theme Styles -->

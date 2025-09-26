@@ -323,7 +323,7 @@ let clearErrorMsgs = (field) => {
 // // Vanilla Javascript
 let edit_tel = document.querySelector("#Edittelephones");
 let edititi= window.intlTelInput(edit_tel, {
-    utilsScript: "../assets/plugins/intel-tel-input/utils.js",
+    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
     initialCountry: "in",
     separateDialCode: true,
     customContainer: "col-md-12 no-padding intelinput-styles"

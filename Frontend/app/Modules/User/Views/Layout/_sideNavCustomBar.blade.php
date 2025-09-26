@@ -1,10 +1,10 @@
 <div class="secondary-sidebar">
     <div class="secondary-sidebar-bar">
-        <a href="{{route('dashboard',(new App\Modules\User\helper)->getHostName())}}" class="logo-box">
-            <img src="../assets/images/logos/{{ md5($_SERVER['HTTP_HOST']) }}.png" class="img-fluid"/>
+        <!-- <a href="{{route('dashboard',(new App\Modules\User\helper)->getHostName())}}" class="logo-box"> -->
+            <img src="https://empmonitor.com/wp-content/uploads/2023/12/emp.webp" class="img-fluid"/>
             <!-- <img src="../assets/images/logos/icon.png" class="img-fluid"/>
             <img src="../assets/images/logos/Logo.png" class="img-fluid"/> -->
-        </a>
+        <!-- </a> -->
     </div>
     <div class="secondary-sidebar-menu">
         <ul class="accordion-menu" id="sidebar_menus">

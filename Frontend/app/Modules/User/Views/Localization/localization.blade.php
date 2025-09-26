@@ -106,8 +106,8 @@
 @section('page-scripts')
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <!-- <script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script> -->
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="../assets/js/final-timezone.js"></script>
     <script>
         let LOCALIZE_ERROR = JSON.parse('{{__('messages.localizeJs')}}'.replace(/&quot;/g, '"'));
