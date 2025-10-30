@@ -1,10 +1,25 @@
+<style>
+    /* Minimal text styling only - no layout changes */
+    .secondary-sidebar .accordion-menu > li > a {
+        font-weight: 500;
+    }
+    
+    .secondary-sidebar .accordion-menu .menu-icon {
+        margin-right: 10px;
+    }
+    
+    .secondary-sidebar .sub-menu li a {
+        font-weight: 500;
+    }
+</style>
+
 <div class="secondary-sidebar">
     <div class="secondary-sidebar-bar">
         <a href="<?php if(Session::has(env('Employee'))){?>
             get-details?id={{Session::get((new App\Modules\User\helper)->getHostName())['token']['user_id']}}
         <?php }else{?>dashboard<?php }?>"
            class="logo-box">
-            <img src="https://empmonitor.com/wp-content/uploads/2023/12/emp.webp" class="img-fluid"/>
+            <img src="../assets/images/logos/{{ md5($_SERVER['HTTP_HOST']) }}.png" class="img-fluid"/>
         </a>
     </div>
     <div class="secondary-sidebar-menu">

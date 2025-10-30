@@ -16,6 +16,19 @@ The **Main Service** is the core part of the [EmpMonitor platform](https://www.e
 
 The Main Service has a few important functions. First, it provides Frontend APIs, which help the user interface get and show important information like reports and activity logs. Second, it processes User Analytics & Reporting, turning raw data into useful insights that help administrators see how productive their team is and spot trends. Lastly, it manages Authentication & Access Control, making sure that only the right people, like admins and employees, can access certain parts of the dashboard based on their permissions. This way, the Main Service keeps everything running well and securely.
 
+## 📚 Architecture Documentation
+
+This service follows a **clean 3-layer architecture** with proper separation of concerns:
+
+- 📖 **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Comprehensive guide to the architecture pattern, layers, and best practices
+- 📋 **[QUICK_REFERENCE.md](./QUICK_REFERENCE.md)** - Quick reference guide with code snippets and decision trees
+- ✅ **[REFACTORING_SUMMARY.md](./REFACTORING_SUMMARY.md)** - Details of the recent refactoring and improvements
+
+**Key Principles:**
+- **Routes** → Define endpoints only
+- **Controllers** → Handle ALL business logic
+- **Models** → Handle ONLY database operations
+
 
 
 #### Core functionalities of the Main Service:

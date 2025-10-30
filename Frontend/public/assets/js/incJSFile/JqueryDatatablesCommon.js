@@ -1,6 +1,14 @@
 //function for pagination setup
 let paginationSetup = (modal) => {
     // modal 0 --> if main module    pass  2----------> if inside modal of module
+    // Ensure DATATABLE_LOCALIZE_MSG is defined with defaults
+    if (typeof DATATABLE_LOCALIZE_MSG === 'undefined') {
+        DATATABLE_LOCALIZE_MSG = {showing: 'Showing', to: 'to', of: 'of'};
+    }
+    // Ensure TOTAL_COUNT_EMAILS is a number
+    TOTAL_COUNT_EMAILS = parseInt(TOTAL_COUNT_EMAILS) || 0;
+    SHOW_ENTRIES = parseInt(SHOW_ENTRIES) || 10;
+    
     let PageNumbers = (TOTAL_COUNT_EMAILS % SHOW_ENTRIES) !== 0 ? Math.floor(TOTAL_COUNT_EMAILS / SHOW_ENTRIES) + 1 : Math.floor(TOTAL_COUNT_EMAILS / SHOW_ENTRIES);
     if(TOTAL_COUNT_EMAILS == 0) PageNumbers = 1;
     PAGE_COUNT_CALL = false;
@@ -28,6 +36,13 @@ let paginationSetup = (modal) => {
 
 //pagination setup intialization
 function PaginationInitialize(page, modal) {
+    // Ensure DATATABLE_LOCALIZE_MSG is defined with defaults
+    if (typeof DATATABLE_LOCALIZE_MSG === 'undefined') {
+        DATATABLE_LOCALIZE_MSG = {showing: 'Showing', to: 'to', of: 'of'};
+    }
+    // Ensure variables are numbers
+    TOTAL_COUNT_EMAILS = parseInt(TOTAL_COUNT_EMAILS) || 0;
+    SHOW_ENTRIES = parseInt(SHOW_ENTRIES) || 10;
     ACTIVE_PAGE = parseInt(page);
     ENTRIES_DELETED = (TOTAL_COUNT_EMAILS < SHOW_ENTRIES * page) ? TOTAL_COUNT_EMAILS : SHOW_ENTRIES * page;
     CalledUserFunction(((page - 1) * SHOW_ENTRIES), $("#SearchTextField").val(), modal);

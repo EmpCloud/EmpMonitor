@@ -776,7 +776,7 @@ table.dataTable.no-footer {
     color: #706f6f;
     /* padding: 10px 10px; */
     border-radius: 5px;
-    line-height: 6px;
+    /* line-height: 6px; */
     /*height: 45px;*/
     background: #fff;
 }
@@ -1505,7 +1505,8 @@ table.dataTable thead .sorting {
 }
 
 .fa-info-circle {
-    color: #2e91e5;
+    /* color: #2e91e5; */
+    color: #ffffff;
 }
 
 .btn_gray_white {

@@ -1,7 +1,7 @@
 .pagination {
   display: inline-block;
   border: 1px solid #CDCDCD;
-  border-radius: 3px; }
+  border-radius: 8px; }
 
 .pagination a {
   display: block;
@@ -38,11 +38,11 @@
 
 .pagination a:first-child {
   border: none;
-  border-radius: 2px 0 0 2px; }
+  border-radius: 8px 0 0 8px; }
 
 .pagination a:last-child {
   border: none;
-  border-radius: 0 2px 2px 0; }
+  border-radius: 0 8px 8px 0; }
 
 .pagination input {
   float: left;

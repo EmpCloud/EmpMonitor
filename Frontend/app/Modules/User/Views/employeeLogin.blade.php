@@ -19,22 +19,181 @@
         rel="stylesheet"
     />
     <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+        href="../assets/plugins/bootstrap/css/bootstrap.min.css"
         rel="stylesheet"
     />
     <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        href="../assets/plugins/font-awesome/css/all.min.css"
         rel="stylesheet"
     />
-    <link href="../assets/plugins/css/icomoon.css" rel="stylesheet"/>
+    <link href="../assets/plugins/icomoon/style.css" rel="stylesheet"/>
     <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.css"
+        href="../assets/plugins/switchery/switchery.min.css"
         rel="stylesheet"
     />
 
     <!-- Theme Styles -->
     <link href="../assets/css/concept.css" rel="stylesheet"/>
     <link href="../assets/css/custom.css" rel="stylesheet"/>
+
+    <!-- Modern UI Enhancements -->
+    <style>
+        .login-box {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            padding: 2.5rem;
+        }
+        
+        .login-box:hover {
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+        }
+        
+        .login-header {
+            margin-bottom: 2rem;
+        }
+        
+        .login-header h3 {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #2c3e50;
+        }
+        
+        .login-logo {
+            max-width: 180px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-control {
+            height: 46px;
+            border-radius: 8px;
+            border: 1.5px solid #e0e6ed;
+            padding: 10px 16px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control::placeholder {
+            color: #a0aec0;
+        }
+        
+        .form-control:focus {
+            border-color: #4c8bf5;
+            box-shadow: 0 0 0 0.2rem rgba(76, 139, 245, 0.15);
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .input-group .form-control {
+            width: 100%;
+            padding-right: 45px;
+        }
+        
+        .input-group-append {
+            position: absolute;
+            right: 0;
+            top: 0;
+            z-index: 10;
+        }
+        
+        .toggle-password {
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            padding: 12px 15px;
+            color: #6c757d;
+            height: 46px;
+        }
+        
+        .toggle-password:hover {
+            color: #495057;
+        }
+        
+        .btn-primary {
+            height: 46px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s ease;
+            border: none;
+            width: 100%;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 139, 245, 0.3);
+        }
+        
+        .custom-control-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+        
+        .m-t-sm a {
+            font-size: 14px;
+            text-decoration: none;
+            color: #4c8bf5;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .m-t-sm a:hover {
+            color: #3a7ae0;
+            text-decoration: none;
+        }
+        
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+        }
+        
+        .modal-header {
+            border-bottom: 1px solid #f0f0f0;
+            padding: 1.5rem;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+            font-size: 18px;
+        }
+        
+        .modal-body {
+            padding: 1.5rem;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #f0f0f0;
+            padding: 1rem 1.5rem;
+        }
+        
+        .modal-footer .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1.5rem;
+            font-weight: 500;
+        }
+        
+        .error {
+            font-size: 13px;
+            margin-top: 5px;
+        }
+        
+        #login-error {
+            font-size: 14px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            margin-top: 10px;
+        }
+        
+        .login-body {
+            margin-top: 1.5rem;
+        }
+    </style>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -270,11 +429,11 @@
     </div>
 </div>
 <!-- Javascripts -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
+<script src="../assets/plugins/jquery/jquery-3.1.0.min.js"></script>
+<script src="../assets/plugins/bootstrap/popper.min.js"></script>
+<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="../assets/plugins/switchery/switchery.min.js"></script>
 <script src="../assets/js/concept.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript">

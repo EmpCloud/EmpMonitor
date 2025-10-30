@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Circle Gauge Chart</title>
+
+
+  <link href="../../assets/styles.css" rel="stylesheet" />
+
+  <style>
+    #chart {
+            max-width: 650px;
+            margin: 35px auto;
+        }
+    </style>
+</head>
+
+<body>
+  <div id="chart">
+    <apexchart type=radialBar height=350 :options="chartOptions" :series="series" />
+  </div>
+
+  <!-- Below element is just for displaying source code. it is not required. DO NOT USE -->
+  <div id="html">
+    &lt;div id="chart">
+      &lt;apexchart type=radialBar height=350 :options="chartOptions" :series="series" />
+    &lt;/div>
+  </div>
+  
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
+
+  <script>
+    new Vue({
+      el: '#chart',
+      components: {
+        apexchart: VueApexCharts,
+      },
+      data: {
+        series: [67],
+        chartOptions: {
+          plotOptions: {
+            radialBar: {
+              hollow: {
+                margin: 15,
+                size: '70%',
+                image: '../../assets/images/clock.png',
+                imageWidth: 64,
+                imageHeight: 64,
+                imageClipped: false
+              },
+              dataLabels: {
+                name: {
+                  show: false,
+                  color: '#fff'
+                },
+                value: {
+                  show: true,
+                  color: '#333',
+                  offsetY: 70,
+                  fontSize: '22px'
+
+                }
+              }
+            }
+          },
+          fill: {
+            type: 'image',
+            image: {
+              src: ['../../assets/images/4274635880_809a4b9d0d_z.jpg'],
+            }
+          },
+          stroke: {
+            lineCap: 'round'
+          },
+          labels: ['Volatility'],
+        }
+      },
+
+    })
+  </script>
+
+</body>
+
+</html>

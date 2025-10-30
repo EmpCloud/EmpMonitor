@@ -7,13 +7,17 @@
 @endsection
 
 @section('page-style')
+    @include('User::Layout._modernStyles')
     <style>
+        /* Page Specific Styles Only */
         #addLocationModal{
             z-index: 9999999 !important;
         }
+        
         #deleteDepartmentsModal{
             z-index: 9999999 !important;
         }
+        
         .select2-container {
             width: 100% !important;
         }
@@ -31,17 +35,12 @@
         .select2-results__option[aria-selected=true] {
             display: none;
         }
+        
         @media (max-width: 767px){
-        #dropdownMenuLink {
-            padding: 2px 10px;
+            #dropdownMenuLink {
+                padding: 2px 10px;
+            }
         }
-    }
-
-        /*.alert {*/
-        /*    padding: 10px;*/
-        /*    background-color: #2196F3;*/
-        /*    color: white;*/
-        /*}*/
 
         .closebtn {
             margin-left: 15px;
@@ -61,10 +60,11 @@
         .modal-open[style] {
             padding-right: 0px !important;
         }
+        
         .dept_new{
             border: 1px solid #479fff5c;
             padding: 8px;
-            border-radius: 3px;
+            border-radius: 8px;
             display: inline-flex;
         }
     </style>
@@ -72,9 +72,9 @@
 
 @section('post-load-scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="../assets/plugins/datetimepicker/js/gijgo.min.js" type="text/javascript"></script>
     {{--    <script src="../assets/js/pages/dashboard.js"></script>--}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="../assets/plugins/select2/js/select2.min.js"></script>
 
 @endsection
 
@@ -148,6 +148,7 @@
                                                   {{ $departments['name'] }}
                                         </td>
                                         <td>
+                                         <a class="" data-toggle="modal" data-target="#updateDepartmentModal" onclick="updateDepartment({{ $departments['id'] }}, '{{ $departments['name'] }}', {{ $departments['location_id'] ?? 0 }});"><i class="far fa-edit text-success" title="Edit"></i></a>
                                          <a id="" class="" data-toggle="modal" onclick="deleteDepartment({{ $departments['id'] }});"><i class="far fa-trash-alt text-danger" title="Delete"></i></a>
                                         </td>
                                         </tr>
@@ -207,6 +208,47 @@
                 </div>
             </div>
         </div>
+        
+        {{--============= update department ============== --}}
+        <div class="modal fade" id="updateDepartmentModal" tabindex="-1" role="dialog" aria-labelledby="updateDepartmentLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="open-addLocModal modal-title " id="updateDepartmentModalLabel">{{ __('messages.update') }} {{ __('messages.department') }}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="">
+                            <input type="hidden" id="editDeptID"/>
+                            <div class="form-group">
+                                <select class="form-control mb-2" id="editLocationID">
+                                    <option>Select Location</option>
+                                      @if(isset($location_departmnet['code']) && $location_departmnet['code'] == 200)
+                                    @if(!empty($location_departmnet['data']))
+                                      @foreach($location_departmnet['data'] as $location)
+                                      <option value="{{ $location['id'] }}">  {{ $location['location_name'] }} </option>
+                                      @endforeach
+                                      @endif
+                                      @endif
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="text" class="form-control mb-2" name="editDepartmentName" id="editDepartmentName"
+                                       placeholder="{{ __('messages.update') }} {{ __('messages.department') }}"/>
+                                <div class="error" style="color: red;" id="deptError2"></div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal"> {{ __('messages.cancel') }} </button>
+                            <button type="submit" id="updateDeptId" class="btn btn-primary" onclick="updateDepartmentFun()">{{ __('messages.update') }} {{ __('messages.department') }} </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
    
    
@@ -240,7 +282,40 @@
     })
     }
       
-function updateDepartment(id) {
+function updateDepartment(id, name, locationId) {
+    $('#editDeptID').val(id);
+    $('#editDepartmentName').val(name);
+    $('#editLocationID').val(locationId);
+}
+
+function updateDepartmentFun() {
+    $.ajax({
+        url: "/" + userType + '/update-department',
+        type: 'POST',
+        data: {
+            id: $('#editDeptID').val(),
+            departmentName: $('#editDepartmentName').val(),
+            locationId: $('#editLocationID').val(),
+        },
+        beforeSend: function () {
+            $('#deptError2').html("");
+            $('#updateDeptId').attr("disabled", true);
+        },
+        success: function (response) {
+            if (response.statusCode === 200 || response.code === 200) {
+                successSwal(response.message);
+                location.reload();
+            } else {
+                errorSwal(response.message ?? 'Something went wrong');
+            }
+        },
+        error: function () {
+            errorSwal('Failed to update department. Please try again.');
+        },
+        complete: function () {
+            $('#updateDeptId').attr("disabled", false);
+        }
+    });
 }
    
     function deleteDepartment(id) {

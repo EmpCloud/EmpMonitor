@@ -1,11 +1,11 @@
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+<script src="../assets/plugins/jquery/jquery-3.1.0.min.js"></script>
+<script src="../assets/plugins/bootstrap/popper.min.js"></script>
+<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script>
+<script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script src="../assets/js/concept.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+<script src="../assets/plugins/daterangepicker/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
@@ -17,7 +17,7 @@
     if (window.location.href.includes('kongvisions')) $('.logo-box img').css('height', '100%');
     let DASHBOARD_JS = JSON.parse('{{__('messages.js')}}'.replace(/&quot;/g, '"'));
     let DASHBOARD_JS_ERROR = JSON.parse('{{__('messages.dashboardJsError')}}'.replace(/&quot;/g, '"'));
-    let DYNAMIC_LOGO = 'https://empmonitor.com/wp-content/uploads/2023/12/emp.webp';
+    let DYNAMIC_LOGO = '../assets/images/logos/{{ md5($_SERVER['HTTP_HOST']) }}.png';
      var lblProductive="{{ __('messages.productive') }}";
      var lblUnProductive="{{ __('messages.unproductive') }}";
      var lblNeutral="{{ __('messages.neutral') }}";
@@ -75,6 +75,11 @@
     let ATTENDANCEREPORT = JSON.parse('{{__('messages.ATTENDANCEREPORTTEXT')}}'.replace(/&quot;/g, '"'));
     let is_admin = "<?php if(Session::has(env('Admin')) && (new App\Modules\User\helper)->getHostName() == env('Admin')) echo true ?>";
    
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof $.fn.dataTable !== 'undefined') {
+            $.fn.dataTable.ext.errMode = 'none';
+        }
+    });
     
 </script>
 

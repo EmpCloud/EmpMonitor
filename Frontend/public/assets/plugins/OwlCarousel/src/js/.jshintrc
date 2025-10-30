@@ -1,0 +1,15 @@
+{
+    "asi"      : true,
+    "boss"     : true,
+    "browser"  : true,
+    "debug"    : true,
+    "devel"    : true,
+    "eqeqeq"   : false,
+    "eqnull"   : true,
+    "expr"     : true,
+    "laxbreak" : true,
+    "unused"   : false,
+    "validthis": true,
+    "esversion": 6,
+    "esversion": 9
+}

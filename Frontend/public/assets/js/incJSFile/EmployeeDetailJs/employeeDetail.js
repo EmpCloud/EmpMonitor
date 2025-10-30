@@ -64,7 +64,7 @@ $(".toggle-password-show-edit, .toggle-password-show-edit-c").click(function () 
 // // Vanilla Javascript
 let tel = document.querySelector("#telephone");
 let iti = window.intlTelInput(tel, {
-    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    utilsScript: "../assets/plugins/intel-tel-input/utils.js",
     initialCountry: "in",
     separateDialCode: true,
     customContainer: "col-md-12 no-padding intelinput-styles"
@@ -148,10 +148,10 @@ function getLocationsRegistrationS() {
         success: function (response) {
             if (response.code == 200) {
                 var locationData = response.data;
-                var location;
-                var departementID;
-                location += '<option selected disabled=true>' + SELECT_MSG + '' + LOCATION_MSG + '</option>';
-                for (var i = 0; i < locationData.length; i++) location += '<option id="' + locationData[i].id + '">' + locationData[i].name + '</option>';
+                var location = '<option value="" selected disabled>' + SELECT_MSG + ' ' + LOCATION_MSG + '</option>';
+                for (var i = 0; i < locationData.length; i++) {
+                    location += '<option id="' + locationData[i].id + '" value="' + locationData[i].id + '">' + (locationData[i].location_name || locationData[i].name) + '</option>';
+                }
                 $('#locations-addEmp').append(location);
             }
         },
@@ -496,6 +496,7 @@ function planValidate(value) {
     $('#Join').text("");
     $('#ErrorTimeZone').text("");
     $("#emp-register").trigger("reset");
+    getLocationsRegistrationS();  // Load locations for add employee
     $('#addEmpModal').modal('show');
     
 }
@@ -525,14 +526,38 @@ $(document).on("click", ".open-deleteModal", function () {
 //employee reg submit add new employeee
 $(document).on('submit', '#emp-register', function (e) {
     e.preventDefault(); 
+    
+    // Validate location and department selection
+    let locId = $("#locations-addEmp option:selected").attr('id');
+    let depId = $("#EmpReg_departments option:selected").attr('id');
+    
+    if (!locId || locId === '' || locId === 'undefined' || isNaN(parseInt(locId))) {
+        $('#ErrorLocation').text('Please select a location');
+        errorSwal('Please select a location');
+        return false;
+    }
+    
+    if (!depId || depId === '' || depId === 'undefined' || isNaN(parseInt(depId))) {
+        $('#ErrorDepartment').text('Please select a department');
+        errorSwal('Please select a department');
+        return false;
+    }
+    
+    // Clear any previous errors
+    $('#ErrorLocation').text('');
+    $('#ErrorDepartment').text('');
+    
     let form = document.getElementById('emp-register');
     let formData = new FormData(form); 
     let TimeZoneOffset = $('#timeZoneAppend option:selected').attr('data-offset');
     let TimeZoneName = $('#timeZoneAppend option:selected').attr('data-zone');
     let ContactCheck = $("#validContact").val(); 
+    
     formData.append('TimeZoneOffset', TimeZoneOffset);
     formData.append('TimeZoneName', TimeZoneName);
-    formData.append('ContactCheck', ContactCheck); 
+    formData.append('ContactCheck', ContactCheck);
+    formData.append('locId', parseInt(locId));
+    formData.append('depId', parseInt(depId)); 
 
     $.ajax({
         type: "post",

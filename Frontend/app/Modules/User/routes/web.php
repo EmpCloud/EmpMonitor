@@ -5,6 +5,7 @@ use App\Modules\User\Controllers\EmployeeController;
 use App\Modules\User\Controllers\EmployeeDetailsController;
 use App\Modules\User\Controllers\TimeAttendanceController;
 use App\Modules\User\Controllers\LocalizationController;
+use App\Modules\User\Controllers\MonitoringControlController;
 Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\Modules\User\Controllers'], function () {
     Route::group(['middleware' => ['LocaleMiddleware']], function () {
     Route::get('/login', [UserController::class,'login']);
@@ -41,6 +42,10 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::post('/add-department', [UserController::class,'addDepartment']);
             Route::post('/delete-department', [UserController::class,'deleteDepartment']);
             Route::post('/update-department', [UserController::class,'updateDepartment']);
+            Route::get('/get-all-locations', [UserController::class,'getLocationsDept']);
+            Route::get('/get-department-by-location', [UserController::class,'getDepartmentsByLocation']);
+            Route::get('/Manager-list', [UserController::class,'getManagerList']);
+            Route::get('/to-assigned-details', [UserController::class,'getAssignedDetails']);
             Route::get('/reports', [UserController::class,'getReports'])->name('reports');
             Route::post('/get-report-data', [UserController::class,'getReportData'])->name('getReportData');
 
@@ -50,20 +55,30 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::post('/productivity-update', [UserController::class,'productivityUpdate']);
             Route::post('/productivity', [UserController::class,'productivityRanking'])->name('productivity');
 
-            }); 
-        });
+            // Monitoring Control Routes
+            Route::get('/monitoring-control', [MonitoringControlController::class,'monitoringRules'])->name('monitoring-control');
+            Route::get('/monitoring-rules/get', [MonitoringControlController::class,'getRules']);
+            Route::post('/monitoring-rules/create', [MonitoringControlController::class,'createRule']);
+            Route::post('/monitoring-rules/update', [MonitoringControlController::class,'updateRule']);
+            Route::post('/monitoring-rules/delete', [MonitoringControlController::class,'deleteRule']);
+            Route::get('/monitoring-rules/employees', [MonitoringControlController::class,'getRuleEmployees']);
+            Route::post('/monitoring-rules/assign', [MonitoringControlController::class,'assignEmployees']);
+            Route::get('/monitoring-rules/unassigned', [MonitoringControlController::class,'getUnassignedEmployees']);
+            Route::get('/monitoring-rules/all-employees', [MonitoringControlController::class,'getAllEmployees']);
 
+        }); 
+    });
 
-        Route::group(['middleware' => ['authenticateEmployee']], function () {
-            Route::group(array('prefix' => '{role}'), function ($role) {
-                Route::get('/myTimeline', [EmployeeController::class,'employeeFullDetailsPage'])->name('myTimeline');
-                Route::get('/employee-logout', [EmployeeController::class,'logoutEmployee'])->name('employee-logout');
-                Route::post('/get-web-app-histories', [UserDetailsController::class,'getWebAppHistory']);
-                Route::post('/get-time-sheets-data-employee', [UserDetailsController::class,'getTimeSheetData']);
-                Route::get('/attendance-history-employee', [TimeAttendanceController::class,'attendanceHistoryEmployee'])->name('attendance-history-employee');
-                Route::post('/attendance-history-employee', [TimeAttendanceController::class,'attendanceHistoryEmployee']);
-            });
+    Route::group(['middleware' => ['authenticateEmployee']], function () {
+        Route::group(array('prefix' => '{role}'), function ($role) {
+            Route::get('/myTimeline', [EmployeeController::class,'employeeFullDetailsPage'])->name('myTimeline');
+            Route::get('/employee-logout', [EmployeeController::class,'logoutEmployee'])->name('employee-logout');
+            Route::post('/get-web-app-histories', [UserDetailsController::class,'getWebAppHistory']);
+            Route::post('/get-time-sheets-data-employee', [UserDetailsController::class,'getTimeSheetData']);
+            Route::get('/attendance-history-employee', [TimeAttendanceController::class,'attendanceHistoryEmployee'])->name('attendance-history-employee');
+            Route::post('/attendance-history-employee', [TimeAttendanceController::class,'attendanceHistoryEmployee']);
         });
+    });
 
 });
 });

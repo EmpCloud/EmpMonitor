@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Monochrome Pie</title>
+
+
+  <link href="../../assets/styles.css" rel="stylesheet" />
+
+  <style>
+    #chart {
+        max-width: 380px;
+        margin: 35px auto;
+    }
+    </style>
+</head>
+
+<body>
+  <div id="chart">
+    <apexchart type=pie width='100%' :options="chartOptions" :series="series" />
+  </div>
+
+  <!-- Below element is just for displaying source code. it is not required. DO NOT USE -->
+  <div id="html">
+    &lt;div id="chart">
+      &lt;apexchart type=pie width='100%' :options="chartOptions" :series="series" />
+    &lt;/div>
+  </div>
+
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
+
+  <script>
+    new Vue({
+      el: '#chart',
+      components: {
+        apexchart: VueApexCharts,
+      },
+      data: {
+        series: [25, 15, 44, 55, 41, 17],
+        chartOptions: {
+          labels: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          theme: {
+            monochrome: {
+              enabled: true
+            }
+          },
+          title: {
+            text: "Number of leads"
+          },
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                position: 'bottom'
+              }
+            }
+          }]
+        }
+      },
+
+    })
+  </script>
+
+</body>
+
+</html>

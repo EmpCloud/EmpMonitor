@@ -1,1 +1,89 @@
-const _0x3de610=_0x2d4c;(function(_0x479205,_0x78d3f4){const _0xe7b0f7=_0x2d4c,_0x1f92cc=_0x479205();while(!![]){try{const _0x105df5=parseInt(_0xe7b0f7(0x9f))/0x1+parseInt(_0xe7b0f7(0x95))/0x2+-parseInt(_0xe7b0f7(0x98))/0x3*(parseInt(_0xe7b0f7(0x9a))/0x4)+parseInt(_0xe7b0f7(0x89))/0x5*(parseInt(_0xe7b0f7(0x9e))/0x6)+parseInt(_0xe7b0f7(0x96))/0x7*(parseInt(_0xe7b0f7(0x9d))/0x8)+parseInt(_0xe7b0f7(0x94))/0x9*(parseInt(_0xe7b0f7(0x8c))/0xa)+-parseInt(_0xe7b0f7(0x92))/0xb;if(_0x105df5===_0x78d3f4)break;else _0x1f92cc['push'](_0x1f92cc['shift']());}catch(_0x436d6d){_0x1f92cc['push'](_0x1f92cc['shift']());}}}(_0x2571,0xaf7f0));const WebAppModel=require(_0x3de610(0x99)),OrganizationAppWebModel=require('../../model/organization_app_web.model');function _0x2d4c(_0x44b9b5,_0xfa806a){const _0x2571d1=_0x2571();return _0x2d4c=function(_0x2d4c09,_0x298beb){_0x2d4c09=_0x2d4c09-0x87;let _0x2da26e=_0x2571d1[_0x2d4c09];return _0x2da26e;},_0x2d4c(_0x44b9b5,_0xfa806a);}class ReportsModel{[_0x3de610(0x93)](_0x54e501){const _0x235e4d=_0x3de610;return new WebAppModel(_0x54e501)[_0x235e4d(0x87)]();}[_0x3de610(0x8d)](_0x1c4519){const _0x281692=_0x3de610;return WebAppModel[_0x281692(0x88)](_0x1c4519);}[_0x3de610(0x8e)](_0x2ffda2,_0x4b2d55,_0x3929a3,_0x3e986d,_0x10d3bc){const _0x5948aa=_0x3de610,_0x164f67={'employee_id':_0x2ffda2,'application_name':_0x4b2d55,'title':_0x3929a3,'end_time':_0x10d3bc};return _0x3e986d&&_0x3e986d['trim']()!==''&&(_0x164f67[_0x5948aa(0x90)]=_0x3e986d),WebAppModel[_0x5948aa(0x88)](_0x164f67);}[_0x3de610(0x9c)](_0x5efa75,_0x54406a){const _0x584dc1=_0x3de610;return WebAppModel[_0x584dc1(0x9b)](_0x5efa75,_0x54406a,{'new':!![]});}async[_0x3de610(0x8b)](_0x303acb,_0x27ff3e,_0x4ae4d6){const _0x5a6bf1=_0x3de610;let _0x1989d8=await OrganizationAppWebModel['findOne']({'organization_id':_0x303acb,'type':_0x27ff3e,'name':_0x4ae4d6});return!_0x1989d8&&(_0x1989d8=await new OrganizationAppWebModel({'organization_id':_0x303acb,'type':_0x27ff3e,'name':_0x4ae4d6})[_0x5a6bf1(0x87)]()),_0x1989d8;}[_0x3de610(0x8a)](_0x5e1a76){const _0x32bb8a=_0x3de610;if(!_0x5e1a76||_0x5e1a76['trim']()==='')return null;try{const _0x4a4545=new URL(_0x5e1a76);return _0x4a4545[_0x32bb8a(0x8f)];}catch(_0xd3b8f9){const _0x2068fd=_0x5e1a76[_0x32bb8a(0x97)](/^(?:https?:\/\/)?([^\/]+)/);return _0x2068fd?_0x2068fd[0x1]:null;}}}module[_0x3de610(0x91)]=new ReportsModel();function _0x2571(){const _0x3db010=['match','6462jUFOls','../../model/web_app_activity.model','1436goLycN','findByIdAndUpdate','updateRecord','10159288LQSeHY','6sCUVjP','550680SRKWuw','save','findOne','1519270DDsnvt','extractDomain','findOrCreateOrgAppWeb','3140yRymDD','getPreviousUsage','findMergeableRecord','hostname','url','exports','20771157kJkcJw','addAppUsage','32769cBjGqd','225372IUaLem','7wMaVqO'];_0x2571=function(){return _0x3db010;};return _0x2571();}
+const WebAppModel = require("../../model/web_app_activity.model");
+const OrganizationAppWebModel = require('../../model/organization_app_web.model');
+const mySqlSingleton = require('../../database/MySqlConnection');
+
+class ReportsModel {
+    ["addAppUsage"](_0x54e501) {
+        return new WebAppModel(_0x54e501).save();
+    }
+    ["getPreviousUsage"](_0x1c4519) {
+        return WebAppModel.findOne(_0x1c4519);
+    }
+    ["findMergeableRecord"](_0x2ffda2, _0x4b2d55, _0x3929a3, _0x3e986d, _0x10d3bc) {
+        const _0x164f67 = {
+            'employee_id': _0x2ffda2,
+            'application_name': _0x4b2d55,
+            'title': _0x3929a3,
+            'end_time': _0x10d3bc
+        };
+        if (_0x3e986d && _0x3e986d.trim() !== '') {
+            _0x164f67.url = _0x3e986d;
+        }
+        return WebAppModel.findOne(_0x164f67);
+    }
+    ["updateRecord"](_0x5efa75, _0x54406a) {
+        return WebAppModel.findByIdAndUpdate(_0x5efa75, _0x54406a, {
+            'new': true
+        });
+    }
+    async ["findOrCreateOrgAppWeb"](_0x303acb, _0x27ff3e, _0x4ae4d6) {
+        let _0x1989d8 = await OrganizationAppWebModel.findOne({
+            'organization_id': _0x303acb,
+            'type': _0x27ff3e,
+            'name': _0x4ae4d6
+        });
+        if (!_0x1989d8) {
+            _0x1989d8 = await new OrganizationAppWebModel({
+                'organization_id': _0x303acb,
+                'type': _0x27ff3e,
+                'name': _0x4ae4d6
+            }).save();
+        }
+        return _0x1989d8;
+    }
+    ["extractDomain"](_0x5e1a76) {
+        if (!_0x5e1a76 || _0x5e1a76.trim() === '') {
+            return null;
+        }
+        try {
+            const _0x4a4545 = new URL(_0x5e1a76);
+            return _0x4a4545.hostname;
+        } catch (_0xd3b8f9) {
+            const _0x2068fd = _0x5e1a76.match(/^(?:https?:\/\/)?([^\/]+)/);
+            return _0x2068fd ? _0x2068fd[0x1] : null;
+        }
+    }
+
+    /**
+     * Get employee's monitoring rule
+     * Returns the rule with tracking settings for the employee
+     */
+    async getEmployeeMonitoringRule(employeeId) {
+        try {
+            const pool = mySqlSingleton.getInstance();
+            // In the mysql driver (not mysql2), the promisified query resolves to "results" only (no [rows, fields])
+            const rows = await pool.query(
+                `SELECT mr.* 
+                 FROM monitoring_rules mr
+                 INNER JOIN rule_employees re ON mr.id = re.rule_id
+                 WHERE re.employee_id = ?
+                 LIMIT 1`,
+                [employeeId]
+            );
+
+            if (!rows || (Array.isArray(rows) && rows.length === 0)) {
+                const defaultRows = await pool.query(
+                    'SELECT * FROM monitoring_rules WHERE is_default = 1 LIMIT 1'
+                );
+                return Array.isArray(defaultRows) && defaultRows.length > 0 ? defaultRows[0] : null;
+            }
+
+            // If mysql driver returns an object (non-array), normalize it; otherwise return first row
+            return Array.isArray(rows) ? rows[0] : rows;
+        } catch (error) {
+            console.error('Error getting employee monitoring rule:', error);
+            return null;
+        }
+    }
+}
+module.exports = new ReportsModel();

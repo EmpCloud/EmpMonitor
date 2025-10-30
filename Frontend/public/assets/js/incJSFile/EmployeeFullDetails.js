@@ -47,17 +47,7 @@ function loadTimeSheetData() {
                             "previous": "&lsaquo;"
                         }
                     },
-                    "columns": [
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" }
-                    ],
-                    "destroy": true
+                    "bDestroy": true
                 });
                 $("#ErrorMsgForUnaccess").html(jqXHR.responseJSON.error)
             } else {
@@ -75,17 +65,7 @@ function loadTimeSheetData() {
                             "previous": "&lsaquo;"
                         }
                     },
-                    "columns": [
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" },
-                        { "data": null, "orderable": false, "defaultContent": "" }
-                    ],
-                    "destroy": true
+                    "bDestroy": true
                 });
                 return errorHandler(EMPLOYEE_FULL_DETAILS_ERROR.somethingWrong);
             }

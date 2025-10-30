@@ -7,13 +7,17 @@
 @endsection
 
 @section('page-style')
+    @include('User::Layout._modernStyles')
     <style>
+        /* Page Specific Styles Only */
         #addLocationModal{
             z-index: 9999999 !important;
         }
+        
         #deleteDepartmentsModal{
             z-index: 9999999 !important;
         }
+        
         .select2-container {
             width: 100% !important;
         }
@@ -31,17 +35,12 @@
         .select2-results__option[aria-selected=true] {
             display: none;
         }
+        
         @media (max-width: 767px){
-        #dropdownMenuLink {
-            padding: 2px 10px;
+            #dropdownMenuLink {
+                padding: 2px 10px;
+            }
         }
-    }
-
-        /*.alert {*/
-        /*    padding: 10px;*/
-        /*    background-color: #2196F3;*/
-        /*    color: white;*/
-        /*}*/
 
         .closebtn {
             margin-left: 15px;
@@ -61,10 +60,11 @@
         .modal-open[style] {
             padding-right: 0px !important;
         }
+        
         .dept_new{
             border: 1px solid #479fff5c;
             padding: 8px;
-            border-radius: 3px;
+            border-radius: 8px;
             display: inline-flex;
         }
     </style>
@@ -72,9 +72,9 @@
 
 @section('post-load-scripts')
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="../assets/plugins/datetimepicker/js/gijgo.min.js" type="text/javascript"></script>
     {{--    <script src="../assets/js/pages/dashboard.js"></script>--}}
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="../assets/plugins/select2/js/select2.min.js"></script>
 
 @endsection
 
@@ -259,6 +259,9 @@
       
 function updateLocation(id) {
     $('#locID').val(id);
+    // Get the location name from the table and prefill it
+    let locationName = $('#location' + id).text().trim();
+    $('#editlocationName').val(locationName);
 }
    
     function deleteLocation(id) {

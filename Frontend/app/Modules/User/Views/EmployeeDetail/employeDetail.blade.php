@@ -9,17 +9,19 @@
 
 @section('extra-style-links')
 
-    <link href="../assets/plugins/css/bootstrap/loader.css" type="text/css" rel="stylesheet"/>
+    <link href="../assets/plugins/bootstrap/css/loader.css" type="text/css" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" type="text/css" rel="stylesheet"/>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/css/intlTelInput.css" type="text/css" rel="stylesheet">
-    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" type="text/css" rel="stylesheet"/>
+    <link href="../assets/plugins/intel-tel-input/intlTelInput.css" type="text/css" rel="stylesheet">
+    <link href="../assets/plugins/datetimepicker/css/gijgo.min.css" type="text/css" rel="stylesheet" type="text/css"/>
     <link href="../assets/css/jqpagination.css" type="text/css" rel="stylesheet">
     <link href="../assets/css/datatables-custom-pagination.css" type="text/css" rel="stylesheet">
 
 @endsection
 
 @section('page-style')
+    @include('User::Layout._modernStyles')
     <style>
+        /* Page Specific Styles Only */
         .modal-open[style] {
             padding-right: 0px !important;
         }
@@ -48,19 +50,6 @@
         label.custom-file-label {
             z-index: 2;
         }
-        .modal-footer button[type=button].btn-secondary {
-
-            color: #fff;
-            background-color: #8c86ff;
-            border-color: #8a87ff;
-            box-shadow: 0px 4px 5px #a7a4eb;
-        }
-        .modal-footer button[type=button].btn-secondary:hover {
-            color: #fff;
-            background-color: #7771eb !important;
-            border-color: #7771eb !important;
-        }
-
     </style>
 @endsection
 
@@ -185,7 +174,7 @@
                                             <tr class="table-primary">
                                                 <th class="stickyCol-sticky-col"><input name="select_all" id="SelectAllCheckBox" class="multipleCheck mr-4"
                                                                                         type="checkbox">
-                                                    <a onclick="sort('Full Name', 'NameSort')"> {{ __('messages.fullName') }} </a>
+                                                    <a style="cursor: pointer; color: black;" onclick="sort('Full Name', 'NameSort')"> {{ __('messages.fullName') }} </a>
                                                     <span class="float-right"><i id="NameSort"
                                                                                  class="fas fa-long-arrow-alt-up text-light"></i>
                                                 </span></th>
@@ -515,12 +504,12 @@
 
 
 @section('post-load-scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js" type="text/javascript"></script>
+    <script src="../assets/plugins/switchery/switchery.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" type="text/javascript"></script>
+    <script src="../assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>
     {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> --}}
-    <script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/intlTelInput.min.js"></script>
+    <script src="../assets/plugins/datetimepicker/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="../assets/plugins/intel-tel-input/intlTelInput.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @endsection
 
@@ -586,15 +575,15 @@
     
     </script>
     <script src="../assets/js/final-timezone.js" type="text/javascript"></script>
-    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" type="text/javascript"></script>
+    <script src="//unpkg.com/xlsx/dist/xlsx.full.min.js" type="text/javascript"></script>
     <script src="../assets/js/incJSFile/SuccessAndErrorHandlers/_swalHandlers.js" type="text/javascript"></script>
     <script src="../assets/js/incJSFile/EmployeeDetailJs/employeeDetail.js" type="text/javascript"></script>
     <script src="../assets/js/incJSFile/_dataFiltration.js" type="text/javascript"></script>
     <script src="../assets/js/incJSFile/JqueryDatatablesCommon.js" type="text/javascript"></script>
     <script src="../assets/js/JqueryPagination/jquery.jqpagination.js" type="text/javascript"></script>
     <script src="../assets/js/incJSFile/EmployeeDetailJs/commonFunction_Forms.js" type="text/javascript"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
+    <script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
+    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
 
 @endsection

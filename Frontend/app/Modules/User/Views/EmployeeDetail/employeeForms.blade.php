@@ -1,7 +1,7 @@
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" type="text/css" rel="stylesheet"/>
 
 <script src="../assets/js/JqueryPagination/jquery.jqpagination.js" type="text/javascript"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js" type="text/javascript"></script>
+<script src="../assets/plugins/jquery/jquery-3.1.0.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
 <style>
@@ -181,6 +181,26 @@
                       
                         <div class="col-md-6">
                             <div class="form-group">
+                                <label for="locations-addEmp"><b>{{ __('messages.Location') }} *</b></label>
+                                <select name="location" id="locations-addEmp" class="form-control" onchange="getDepartmentsEdit($('#locations-addEmp option:selected').attr('id'), 0); $('#ErrorLocation').text('');" required>
+                                    <option value="" selected disabled>{{ __('messages.select') }} {{ __('messages.Location') }}</option>
+                                </select>
+                                <div class="error" id="ErrorLocation"
+                                     style="color: red;">{{ $errors->first('ErrorLocation') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="EmpReg_departments"><b>{{ __('messages.department') }} *</b></label>
+                                <select name="department" id="EmpReg_departments" class="form-control" onchange="$('#ErrorDepartment').text('');" required>
+                                    <option value="" selected disabled>{{ __('messages.select') }} {{ __('messages.department') }}</option>
+                                </select>
+                                <div class="error" id="ErrorDepartment"
+                                     style="color: red;">{{ $errors->first('ErrorDepartment') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
                                 <label for="date_join"><b>{{ __('messages.timezone') }} *</b></label>
                                 <select name="TimeZone" id="timeZoneAppend" class="form-control " onchange="clearErrorMsgs('TZ')">
                                        <option id="" data-offset="" disabled="" selected="">Select Timezone</option>
@@ -345,6 +365,26 @@
                             </div>
                         </div>
                      
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="locations-editEmp"><b>{{ __('messages.Location') }} *</b></label>
+                                <select name="location" id="locations-editEmp" class="form-control" onchange="getDepartmentsEdit($('#locations-editEmp option:selected').attr('id'), 0)">
+                                    <option selected disabled>{{ __('messages.select') }} {{ __('messages.Location') }}</option>
+                                </select>
+                                <div class="error" id="ErrorLocationEdit"
+                                     style="color: red;">{{ $errors->first('ErrorLocationEdit') }}</div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="Empedit_departments"><b>{{ __('messages.department') }} *</b></label>
+                                <select name="department" id="Empedit_departments" class="form-control">
+                                    <option selected disabled>{{ __('messages.select') }} {{ __('messages.department') }}</option>
+                                </select>
+                                <div class="error" id="ErrorDepartmentEdit"
+                                     style="color: red;">{{ $errors->first('ErrorDepartmentEdit') }}</div>
+                            </div>
+                        </div>
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label><b>{{ __('messages.timezone') }} *</b></label>
