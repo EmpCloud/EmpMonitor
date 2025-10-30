@@ -11,7 +11,36 @@
 @endsection
 
 @section('page-style')
+    @include('User::Layout._modernStyles')
     <style>
+        /* Page Specific Styles Only */
+        /* Radio Buttons */
+        .form-check-inline {
+            margin-right: 1.5rem;
+        }
+        
+        .form-check-label {
+            font-weight: 500;
+            cursor: pointer;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-check-label:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+        }
+        
+        .form-check-input:checked + .form-check-label {
+            font-weight: 600;
+        }
+        
+        /* Spinner */
+        .spinner-border {
+            border-radius: 50%;
+        }
+        
+        /* Misc */
         input#upload-bulk {
             cursor: pointer;
         }
@@ -24,20 +53,25 @@
         label.custom-file-label {
             z-index: 2;
         }
+        
         .suspended_user {
             line-height: 1.6;
             margin-bottom: -24px;
         }
+        
         .suspended_user i{
             color: #fff9b2;
         }
+        
         .toolbar {
             text-align: center;
         }
+        
         dl, ol, ul {
             margin-top: 0;
             margin-bottom: 0.5rem;
         }
+        
         #ExportBtn, #UpdateBtn, #ExportDiv button[type=button]{
             margin-bottom: 10px;
         }
@@ -49,6 +83,7 @@
                 top: 5%;
             }
         }
+        
         @media screen and (max-width: 991px) {
             .suspended_user {
                 position: static !important;
@@ -56,6 +91,7 @@
                 margin-bottom: 20px
             }
         }
+        
         @media screen and (max-width: 767px) {
             .suspended_user {
                 position: static !important;
@@ -63,20 +99,15 @@
                 margin-bottom: 12px;
             }
             #All{
-            height: 50px;
+                height: 50px;
+            }
+            #showPageNumbers {
+                margin-bottom: 12px !important;
+            }
         }
-        #showPageNumbers {
-            margin-bottom: 12px !important;
-        }
-        }
-    </style>
-    <style>
+        
         .pickerStyles {
             text-align: inherit !important;
-            /* padding-right: 20px; */
-            /* box-sizing: border-box; */
-            /* width: 100%; */
-            /* margin: 0; */
             cursor: text;
         }
 
@@ -97,8 +128,6 @@
             transform: translateY(0px);
             height: 9.5px !important;
         }
-
-
     </style>
 @endsection
 
@@ -326,12 +355,12 @@
     <link href="../assets/css/jqpagination.css" rel="stylesheet">
     <link href="../assets/css/jqpaginationInside.css" rel="stylesheet">
     <script src="../assets/js/incJSFile/ProductivityRanking.js"></script>
-    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
+    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="../assets/plugins/select2/js/select2.min.js"></script>
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
     <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <script src="../assets/js/incJSFile/_timeConvertions.js"></script>

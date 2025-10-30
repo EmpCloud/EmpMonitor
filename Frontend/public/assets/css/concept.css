@@ -1012,14 +1012,6 @@ input {
     border-spacing: 0;
 }
 
-.stickyCol-table thead th {
-    border: none;
-padding: 10px;
-text-align: left;
-text-shadow: 1px 1px 1px #fff;
-white-space: nowrap;
-font-size: 12px;
-}
 
 .stickyCol-table tbody td {
     border-bottom: solid 1px #DDEFEF;
@@ -1043,14 +1035,15 @@ font-size: 12px;
 
 .stickyCol-table .stickyCol-sticky-col {
     border-left: solid 1px #DDEFEF;
-    border-right: solid 1px #DDEFEF;
+    /* border-right: solid 1px #DDEFEF; */
     left: 0;
     position: absolute;
     top: auto;
-    width: 180px;
+    width: 185px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    background: linear-gradient(135deg, #667eea 0%, #667eea 100%);
 }
 
 .stickyCol-4-table {
@@ -5456,4 +5449,10 @@ Supriya css starts here
 }
 .menu-icon.custom_image_menu_icon{
     height: 16px;
+}
+.row{
+    margin-bottom:20px;
+}
+.breadcrumb{
+    align-items: center;
 }

@@ -1,10 +1,24 @@
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+    /* Minimal text styling only - no layout changes */
+    .secondary-sidebar .accordion-menu > li > a {
+        font-weight: 500;
+    }
+    
+    .secondary-sidebar .accordion-menu .menu-icon {
+        margin-right: 10px;
+    }
+    
+    .secondary-sidebar .sub-menu li a {
+        font-weight: 500;
+    }
+</style>
+
 <div class="secondary-sidebar">
     <div class="secondary-sidebar-bar">
         <a href="{{route('dashboard',(new App\Modules\User\helper())->getHostName()) }}" class="logo-box">
-            <!-- <img src="https://empmonitor.com/wp-content/uploads/2023/12/emp.webp" class="img-fluid" /> -->
-            <img src="../assets/images/logos/icon.png" class="img-fluid"/>
-            <img src="../assets/images/logos/Logo.png" class="img-fluid"/>
+            <img src="../assets/images/logos/{{ md5($_SERVER['HTTP_HOST']) }}.png" class="img-fluid" />
+            <!-- <img src="../assets/images/logos/icon.png" class="img-fluid"/>
+            <img src="../assets/images/logos/Logo.png" class="img-fluid"/> -->
         </a>
     </div>
     <div class="secondary-sidebar-menu">
@@ -13,7 +27,7 @@
         @if(Session::has('admin_session'))
             <li>
                 <a href="#">
-                   <i class="menu-icon fa-solid fa-users"
+                    <i class="menu-icon icon-users"
                        title="{{ __('messages.employee') }}"></i><span>{{ __('messages.employee') }}</span>
                     <i class="accordion-icon fas fa-angle-left"></i>
                 </a>
@@ -26,7 +40,7 @@
             </li>
             <li>
                 <a href="#">
-                    <i class=" menu-icon fa-solid fa-gear"
+                    <i class="menu-icon icon-cog"
                        title="{{ __('messages.employee') }}"></i><span>{{ __('messages.settings') }}</span>
                     <i class="accordion-icon fas fa-angle-left"></i>
                 </a>
@@ -38,8 +52,11 @@
                   <a href="{{ route('manageDepartment', (new App\Modules\User\helper())->getHostName()) }}">
                    <span>Add {{ __('messages.department') }}</span>
                 </a>
-                <a href="localization">
+                <a href="/{{ (new App\Modules\User\helper())->getHostName() }}/localization">
                     <span title="{{ __('messages.localization') }}">{{ __('messages.localization') }}</span>
+                </a>
+                <a href="/{{ (new App\Modules\User\helper())->getHostName() }}/monitoring-control">
+                    <span title="Monitoring Control">Monitoring Control</span>
                 </a> 
             </li> 
                 </ul>
@@ -60,12 +77,12 @@
                         title="{{ __('messages.timesheets') }}"></i><span>{{ __('messages.timesheets') }}</span>
                 </a>
                 <a href="{{ route('reports', (new App\Modules\User\helper())->getHostName()) }}">
-                    <i class= "menu-icon fa-solid fa-book"
+                    <i class="menu-icon icon-file-text"
                        title="{{ __('messages.reports') }}"></i><span>{{ __('messages.reports') }}</span>
                 </a> 
                  <a href="{{route('productivity',(new App\Modules\User\helper)->getHostName())}}"
                                    title="{{ __('messages.productivityRules') }}"> <i class="menu-icon fas fa-tasks"
-                                       title="{{ __('messages.productivityRules') }}"></i><span>{{ __('messages.productivityRules') }}</span></a>
+                                       title="{{ __('messages.productivityRules') }}"></i>{{ __('messages.productivityRules') }}</a>
                 @endif
             </li>
         </ul>

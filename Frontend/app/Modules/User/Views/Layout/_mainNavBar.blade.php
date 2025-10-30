@@ -18,11 +18,11 @@
             <div class="navbar-header">
                 <div class="logo-sm">
                     <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fas fa-bars"></i></a>
-                    <!-- <a class="logo-box" href="/dashboard"> -->
+                    <a class="logo-box" href="/dashboard">
                         <span>
-                            <img src="https://empmonitor.com/wp-content/uploads/2023/12/emp.webp" class="h-75">
+                            <img src="../assets/images/logos/{{ md5($_SERVER['HTTP_HOST']) }}.png" class="h-75">
                         </span>
-                    <!-- </a> -->
+                    </a>
                 </div>
                 <button type="button" class="navbar-toggler collapsed" data-toggle="collapse" aria-expanded="false"
                         id="toggleNav">

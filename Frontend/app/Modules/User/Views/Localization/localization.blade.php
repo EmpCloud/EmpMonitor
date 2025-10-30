@@ -5,6 +5,34 @@
                            {{env('WEBSITE_TITLE')}} | @endif @endif  {{__('messages.localization')}}</title>
 @endsection
 @section('page-style')
+    @include('User::Layout._modernStyles')
+    <style>
+        /* Page Specific Styles Only */
+        .card-body {
+            padding: 2rem;
+        }
+        
+        .text-uppercase {
+            letter-spacing: 0.5px;
+        }
+        
+        /* Form Groups with separators */
+        .form-group.row {
+            align-items: center;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .form-group.row:last-child {
+            border-bottom: none;
+        }
+        
+        /* Submit Button */
+        input[type="button"].btn-primary {
+            height: 46px;
+            font-size: 15px;
+        }
+    </style>
 @endsection
 @section('content')
 
@@ -106,8 +134,8 @@
 @section('page-scripts')
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <!-- <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script> -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <!-- <script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script> -->
+    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
     <script src="../assets/js/final-timezone.js"></script>
     <script>
         let LOCALIZE_ERROR = JSON.parse('{{__('messages.localizeJs')}}'.replace(/&quot;/g, '"'));

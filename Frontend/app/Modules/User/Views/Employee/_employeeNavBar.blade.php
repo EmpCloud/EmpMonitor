@@ -1,3 +1,11 @@
+<!-- Minimal Employee Header Text Styling Only -->
+<style>
+    /* Text styling only - no layout changes */
+    .page-header .navbar-nav li a {
+        font-weight: 500;
+    }
+</style>
+
 <div class="page-header">
     <div class="search-form">
         <form action="#" method="GET">

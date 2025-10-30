@@ -20,6 +20,7 @@
     "moment-timezone": "^0.5.48",
     "mongoose": "^8.13.0",
     "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
     "swagger-ui-express": "^5.0.1",
     "underscore": "^1.13.7"
   }

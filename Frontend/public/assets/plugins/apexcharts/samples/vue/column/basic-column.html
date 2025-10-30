@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Basic Column - Grouped</title>
+
+
+  <link href="../../assets/styles.css" rel="stylesheet" />
+
+  <style>
+    #chart {
+        max-width: 650px;
+        margin: 35px auto;
+    }
+    </style>
+</head>
+
+<body>
+  <div id="chart">
+    <apexchart type=bar height=350 :options="chartOptions" :series="series" />
+  </div>
+
+  <!-- Below element is just for displaying source code. it is not required. DO NOT USE -->
+  <div id="html">
+    &lt;div id="chart">
+      &lt;apexchart type=bar height=350 :options="chartOptions" :series="series" />
+    &lt;/div>
+  </div>
+
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
+
+  <script>
+    new Vue({
+      el: '#chart',
+      components: {
+        apexchart: VueApexCharts,
+      },
+      data: {
+        series: [{
+          name: 'Net Profit',
+          data: [44, 55, 57, 56, 61, 58, 63, 60, 66]
+        }, {
+          name: 'Revenue',
+          data: [76, 85, 101, 98, 87, 105, 91, 114, 94]
+        }, {
+          name: 'Free Cash Flow',
+          data: [35, 41, 36, 26, 45, 48, 52, 53, 41]
+        }],
+        chartOptions: {
+          plotOptions: {
+            bar: {
+              horizontal: false,
+              columnWidth: '55%',
+              endingShape: 'rounded'	
+            },
+          },
+          dataLabels: {
+            enabled: false
+          },
+          stroke: {
+            show: true,
+            width: 2,
+            colors: ['transparent']
+          },
+
+          xaxis: {
+            categories: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+          },
+          yaxis: {
+            title: {
+              text: '$ (thousands)'
+            }
+          },
+          fill: {
+            opacity: 1
+
+          },
+          tooltip: {
+            y: {
+              formatter: function (val) {
+                return "$ " + val + " thousands"
+              }
+            }
+          }
+        }
+      }
+    })
+  </script>
+
+</body>
+
+</html>

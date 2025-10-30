@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Simple Pie</title>
+
+
+  <link href="../../assets/styles.css" rel="stylesheet" />
+
+  <style>
+    #chart {
+        max-width: 480px;
+        margin: 35px auto;
+    }
+    .actions {
+        margin-top: -80px;
+        text-align: center;
+        position: relative;
+        z-index: 10;
+        left: -60px;
+    }
+    button {
+        color: #fff;
+        background: #20b2aa;
+        padding: 5px 10px;
+        margin: 5px;
+        font-weight: bold;
+        font-size: 13px;
+        border-radius: 5px;
+    }
+
+    @media only screen and (max-width: 480px) {
+        .actions {
+            margin-top: 0;
+            left: 0
+        }
+
+    }
+    </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="chart-wrap">
+      <div id="chart">
+        <apexchart type=donut width=380 :options="chartOptions" :series="series" />
+      </div>
+    </div>
+  
+    <div class="actions">
+      <button @click="randomize">RANDOMIZE</button>
+      <button @click="appendData">ADD</button>
+      <button @click="removeData">REMOVE</button>
+      <button @click="reset">RESET</button>
+    </div>
+  </div>
+
+  <!-- Below element is just for displaying source code. it is not required. DO NOT USE -->
+  <div id="html">
+    &lt;div id="app">
+      &lt;div class="chart-wrap">
+        &lt;div id="chart">
+          &lt;apexchart type=donut width=380 :options="chartOptions" :series="series" />
+        &lt;/div>
+      &lt;/div>
+
+      &lt;div class="actions">
+        &lt;button @click="randomize">RANDOMIZE&lt;/button>
+        &lt;button @click="appendData">ADD&lt;/button>
+        &lt;button @click="removeData">REMOVE&lt;/button>
+        &lt;button @click="reset">RESET&lt;/button>
+      &lt;/div>
+    &lt;/div>
+  </div>
+
+
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
+
+  <script>
+    new Vue({
+      el: '#app',
+      components: {
+        apexchart: VueApexCharts,
+      },
+      data: {
+        series: [44, 55, 13, 33],
+        chartOptions: {
+          dataLabels: {
+            enabled: false
+          },
+
+          responsive: [{
+            breakpoint: 480,
+            options: {
+              chart: {
+                width: 200
+              },
+              legend: {
+                show: false
+              }
+            }
+          }],
+          legend: {
+              position: 'right',
+              offsetY: 0,
+              height: 230,
+          }
+        }
+      },
+      methods: {
+        appendData: function () {
+          var arr = this.series.slice()
+          arr.push(Math.floor(Math.random() * (100 - 1 + 1)) + 1)
+          this.series = arr
+        },
+
+        removeData: function () {
+          if(this.series.length === 1) return
+          var arr = this.series.slice()
+          arr.pop()
+          this.series = arr
+        },
+
+        randomize: function () {
+          this.series = this.series.map(() => {
+            return Math.floor(Math.random() * (100 - 1 + 1)) + 1
+          })
+        },
+
+        reset: function () {
+          this.series = [44, 55, 13, 33]
+        }
+      }
+    })
+  </script>
+
+</body>
+
+
+</html>

@@ -36,6 +36,23 @@ class UserController extends Controller
     }
 
   
+    public function dashboard(Request $request)
+    {
+         return redirect('admin/employee-details');
+    }
+
+    public function licenseCountExceed(Request $request)
+    {
+        try {
+            $role = Session::get('role');
+            return view('User::permission_deniedPage', compact('role'))
+                ->with('message', 'License limit exceeded. Please contact administrator.');
+        } catch (\Exception $e) {
+            Log::info('Exception in licenseCountExceed: ' . $e->getMessage());
+            return redirect('/admin-login');
+        }
+    }
+
     public function loginpageWhitelabel(Request $request, $username = null, $password = null)
     {
         try {  
@@ -224,6 +241,8 @@ class UserController extends Controller
             // "confirmPassword" => 'required_with:passwd|same:password',
             "empCode" => 'required|', 
             "TimeZoneOffset" => 'required',
+            "locId" => 'required|numeric|min:1',
+            "depId" => 'required|numeric|min:1',
         );
 
         try {
@@ -234,6 +253,12 @@ class UserController extends Controller
                 // 'c_passwd.same' => __('messages.Password_missmatch'),
                 'username.regex' => __('messages.Username_alphanumeric'),
                 'first_name.regex' => __('messages.special_characters'),
+                'locId.required' => 'Location is required',
+                'locId.numeric' => 'Please select a valid location',
+                'locId.min' => 'Please select a valid location',
+                'depId.required' => 'Department is required', 
+                'depId.numeric' => 'Please select a valid department',
+                'depId.min' => 'Please select a valid department',
             ];
             $validator = Validator::make($request->all(), $rules, $customMessage);
             if ($validator->fails()) {
@@ -247,7 +272,9 @@ class UserController extends Controller
                 $data['password'] = $request->input('password');
                 $data['employeeCode'] = $request->input('empCode'); 
                 $data['mobileNumber'] = $request->input('number'); 
-                $data['timeZone'] = $request->input("TimeZoneOffset"); 
+                $data['timeZone'] = $request->input("TimeZoneOffset");
+                $data['departmentId'] = (int)$request->input('depId');
+                $data['locationId'] = (int)$request->input('locId'); 
                
                 $response = $this->helper->postApiCall($method, $api_url, $data); 
                 if ($response['statusCode'] == 201) {
@@ -363,6 +390,9 @@ class UserController extends Controller
         $data['employeeCode']=$request->input('EmpCode');
         $data['employeeId']=(int) $request->input('hideId');
         $data['employeeRole']="employee";
+        // Note: Department and location updates not currently supported by backend API
+        // $data['departmentId'] = (int)$request->input('depId');
+        // $data['locationId'] = (int)$request->input('locId');
       
         $method = "put";
         $api_url = env('MAIN_API') . 'admin/update-employee';
@@ -371,7 +401,7 @@ class UserController extends Controller
            return $response;
             }
          catch (\Exception $e) {
-            return $this->ExceptionErrorHandler($e, "404", ' UserController => editEmployee => Method-delete');
+            return $this->ExceptionErrorHandler($e, "404", ' UserController => editEmployee => Method-put');
         }
     }
 
@@ -656,6 +686,83 @@ class UserController extends Controller
             return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartments => Method-get');
         }
     }
+    
+    public function getDepartmentsByLocation(Request $request)
+    {
+        try {
+            $locationId = $request->input('id', 0);
+            $api_url = env('MAIN_API').'admin/get-departments';
+            $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, []);
+            
+            if ($response['code'] == 200 && !empty($response['data'])) {
+                // Filter departments by location if locationId is provided
+                if ($locationId && $locationId != 0) {
+                    $filteredDepts = array_filter($response['data'], function($dept) use ($locationId) {
+                        return isset($dept['location_id']) && $dept['location_id'] == $locationId;
+                    });
+                    $response['data'] = array_values($filteredDepts);
+                }
+            }
+            
+            return $response;
+        } catch (\Exception $e) {
+            return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartmentsByLocation => Method-get');
+        }
+    }
+    
+    public function getManagerList(Request $request)
+    {
+        try {
+            $roleId = $request->input('RoleId', 0);
+            $assignedId = $request->input('AssignedId');
+            
+            // Get all employees to filter for potential managers
+            $api_url = env('MAIN_API').'admin/employees?skip=0&limit=1000';
+            $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, []);
+            
+            if (isset($response['employees']) && !empty($response['employees'])) {
+                $employees = $response['employees'];
+                // Format employee data for manager selection
+                $managers = array_map(function($emp) {
+                    return [
+                        'id' => $emp['id'],
+                        'full_name' => ($emp['first_name'] ?? '') . ' ' . ($emp['last_name'] ?? ''),
+                        'email' => $emp['email'] ?? ''
+                    ];
+                }, $employees);
+                
+                return ['code' => 200, 'data' => $managers, 'message' => 'Success'];
+            }
+            
+            return ['code' => 200, 'data' => [], 'message' => 'No managers found'];
+        } catch (\Exception $e) {
+            return $this->ExceptionErrorHandler($e, "400", ' UserController => getManagerList => Method-get');
+        }
+    }
+    
+    public function getAssignedDetails(Request $request)
+    {
+        try {
+            $userId = $request->input('user_id');
+            $roleId = $request->input('role_id', 0);
+            
+            // Return empty assignment details for now
+            // This would typically fetch assigned manager/superior relationships from the database
+            return [
+                'code' => 200,
+                'data' => [
+                    'user_id' => $userId,
+                    'superior_id' => null,
+                    'role_id' => $roleId
+                ],
+                'message' => 'Success'
+            ];
+        } catch (\Exception $e) {
+            return $this->ExceptionErrorHandler($e, "400", ' UserController => getAssignedDetails => Method-get');
+        }
+    }
       public function addDepartment(Request $request)
     {
         try {
@@ -680,16 +787,18 @@ class UserController extends Controller
             return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartments => Method-get');
         }
     }
-     public function updateDepartments(Request $request)
+     public function updateDepartment(Request $request)
     {
         try {
             $data['departmentName'] = $request->input('departmentName');
+            $data['locationId'] = (int)$request->input('locationId');
+            $data['id'] = (int)$request->input('id');
             $api_url = env('MAIN_API') . 'admin/update-department';
             $method = "put";
-            $response = $this->helper->postApiCall($method, $api_url, []);
+            $response = $this->helper->postApiCall($method, $api_url, $data);
             return $response;
              } catch (\Exception $e) {
-            return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartments => Method-get');
+            return $this->ExceptionErrorHandler($e, "400", ' UserController => updateDepartment => Method-put');
         }
     }
 

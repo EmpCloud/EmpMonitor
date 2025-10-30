@@ -10,29 +10,55 @@
 @section('extra-style-links')
 <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet" />
 <link href="../assets/css/jqpagination.css" rel="stylesheet">
-<link href="../assets/plugins/css/bootstrap/loader.css" rel="stylesheet" />
+<link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet" />
 @endsection
 
 @section('page-style')
-<style>
-    ::-webkit-scrollbar {
-        height: 6px !important;
-    }
-
-    ::-webkit-scrollbar-track {
-        box-shadow: inset 0 0 5px grey;
-    }
-
-    ::-webkit-scrollbar-thumb {
-        background: #62adee;
-    }
-
-    ::-webkit-scrollbar-thumb:hover {
-        background: #2682d4;
-    }
-
+    @include('User::Layout._modernStyles')
+    <style>
+    /* Page Specific Styles Only */
     .ad_tab th {
         white-space: nowrap;
+    }
+    
+    .ad_tab tbody tr {
+        transition: all 0.2s ease;
+    }
+    
+    .ad_tab tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.001);
+    }
+    
+    .ad_tab tbody td {
+        padding: 0.85rem 0.75rem;
+        vertical-align: middle;
+        border-color: #f0f0f0;
+        font-size: 13px;
+    }
+    
+    /* Icon Button */
+    .add-tab-icon {
+        cursor: pointer;
+        font-size: 18px;
+        padding: 10px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+    }
+    
+    .add-tab-icon:hover {
+        background-color: #f8f9fa;
+        transform: scale(1.1);
+    }
+    
+    /* Dropdown Menu in Table */
+    .dropdown-menu li {
+        padding: 0.5rem 1rem;
+        transition: all 0.2s ease;
+    }
+    
+    .dropdown-menu li:hover {
+        background-color: #f8f9fa;
     }
 
     #cover-spin {
@@ -76,12 +102,22 @@
         width: 40px;
         height: 40px;
         border-style: solid;
-        border-color: black;
+        border-color: #667eea;
         border-top-color: transparent;
         border-width: 4px;
         border-radius: 50%;
         -webkit-animation: spin .8s linear infinite;
         animation: spin .8s linear infinite;
+    }
+    
+    /* Info Icon */
+    .toDateLimitInfo {
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .toDateLimitInfo:hover {
+        transform: scale(1.2);
     }
 </style>
 @endsection
@@ -93,8 +129,8 @@
         <div id="main-wrapper">
             <div class="content-header">
                 <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb breadcrumb-style-1">
-                        <li class="breadcrumb-item"><a href="employee-details" style="color: #0686d8;font-weight: 500;">
+                    <ol class="breadcrumb breadcrumb-style-1" >
+                        <li class="breadcrumb-item" ><a href="employee-details" style="color: #0686d8;font-weight: 500; ">
                                 {{ __('messages.home') }}</a></li>
                         <li class="breadcrumb-item" aria-current="page">
                             {{ __('messages.timesheets') }}
@@ -122,7 +158,7 @@
                         <div class="card-body bg-light ">
                             <div class="row">
 
-                                <div class="col-sm">
+                                <div class="col-sm col-md-4">
                                     <input type="text" style="display:none" id="hiddenVal" />
                                     <div class="form-group">
                                         <label class="font-weight-bold" for="location_option">
@@ -222,6 +258,7 @@
                                         <thead>
                                             <tr class="table-primary">
                                                 <th class="stickyCol-sticky-col"><label class="d-flex mb-0"><a
+                                                            style="cursor: pointer;"
                                                             class="w-100" onclick="sort('Full Name','NamesSort')">
                                                             {{ __('messages.name') }} </a>
                                                         <span class="float-right"><i id="NamesSort"
@@ -345,21 +382,21 @@
 @section('post-load-scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
-<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
-<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
-<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
+<script src="../assets/plugins/daterangepicker/moment.min.js"></script>
+<script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="../assets/plugins/amcharts/core.js"></script>
+<script src="../assets/plugins/amcharts/charts.js"></script>
+<script src="../assets/plugins/amcharts/themes/animated.js"></script>
+<script src="../assets/plugins/select2/js/select2.min.js"></script>
+<script src="../assets/plugins/switchery/switchery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
     integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous">
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.11/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/moment-timezone/0.5.43/moment-timezone-with-data.min.js"></script>
+<script src="../assets/plugins/daterangepicker/moment.min.js"></script>
+<script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
 @endsection
 
 @section('page-scripts')

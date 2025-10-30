@@ -42,6 +42,9 @@ function getdetails(id, test, details) {
             $("#timezoneAddendEdit option[value='" + data.time_zone + "']").attr('selected', 'selected');
             
             current_Emp = data.id;
+            
+            // Load locations and departments for edit employee
+            getLocationsEdit(data.location_id, data.department_id);
          },
         error: function () {
             errorSwal()
@@ -205,18 +208,52 @@ function getDepartmentsEdit(LocationId, deptId) {
         success: function (response) {
             if (response.code == 200) {
                 let departmentsDropdown = '';
-                $('#EmpReg_departments').append('<option selected>'+EMP_DROPDOWN_TEXT.selDept+'</option>')
-                $('#Empedit_departments').append('<option selected>'+EMP_DROPDOWN_TEXT.selDept+'</option>')
+                $('#EmpReg_departments').append('<option value="" selected disabled>'+EMP_DROPDOWN_TEXT.selDept+'</option>')
+                $('#Empedit_departments').append('<option value="" selected disabled>'+EMP_DROPDOWN_TEXT.selDept+'</option>')
                 let departmentsData = response.data;
                 for (let i = 0; i < departmentsData.length; i++) {
-                    departmentsDropdown += '<option id="' + departmentsData[i].department_id + '"  value="' + departmentsData[i].name  + '"> ' + departmentsData[i].name + '</option>';
+                    let departmentId = departmentsData[i].id || departmentsData[i].department_id;
+                    departmentsDropdown += '<option id="' + departmentId + '" value="' + departmentId + '"> ' + departmentsData[i].name + '</option>';
                 }
                 $('#Empedit_departments').append(departmentsDropdown);
                 $('#EmpReg_departments').append(departmentsDropdown);
-                if (deptId != 0) $("#Empedit_departments option[id='" + deptId + "']").attr("selected", "selected");
+                // Pre-select department if provided
+                if (deptId != 0 && deptId) {
+                    $("#Empedit_departments option[id='" + deptId + "']").attr("selected", "selected");
+                }
             } else {
-                $('#EmpReg_departments').append('<option selected disabled>'+noValue+' '+DEPARTMENT_MSG+'</option>')
-                $('#Empedit_departments').append('<option selected disabled>'+noValue+' '+DEPARTMENT_MSG+'</option>')
+                $('#EmpReg_departments').append('<option value="" selected disabled>'+noValue+' '+DEPARTMENT_MSG+'</option>')
+                $('#Empedit_departments').append('<option value="" selected disabled>'+noValue+' '+DEPARTMENT_MSG+'</option>')
+            }
+        },
+        error: function () {
+            errorSwal()
+        }
+    });
+}
+
+//for getting the locations in edit form
+function getLocationsEdit(locationId, deptId) {
+    $.ajax({
+        type: "get",
+        url: "/" + userType + '/get-all-locations',
+        beforeSend: function () {
+            $('#locations-editEmp').empty();
+        },
+        success: function (response) {
+            if (response.code == 200) {
+                let locationData = response.data;
+                let locationDropdown = '<option value="" selected disabled>' + SELECT_MSG + ' ' + LOCATION_MSG + '</option>';
+                for (let i = 0; i < locationData.length; i++) {
+                    locationDropdown += '<option id="' + locationData[i].id + '" value="' + locationData[i].id + '">' + (locationData[i].location_name || locationData[i].name) + '</option>';
+                }
+                $('#locations-editEmp').append(locationDropdown);
+                // Pre-select the current location
+                if (locationId) {
+                    $("#locations-editEmp option[id='" + locationId + "']").attr("selected", "selected");
+                    // Load departments for this location
+                    getDepartmentsEdit(locationId, deptId);
+                }
             }
         },
         error: function () {
@@ -323,7 +360,7 @@ let clearErrorMsgs = (field) => {
 // // Vanilla Javascript
 let edit_tel = document.querySelector("#Edittelephones");
 let edititi= window.intlTelInput(edit_tel, {
-    utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.8/js/utils.js",
+    utilsScript: "../assets/plugins/intel-tel-input/utils.js",
     initialCountry: "in",
     separateDialCode: true,
     customContainer: "col-md-12 no-padding intelinput-styles"

@@ -149,7 +149,7 @@
 @endsection
 
 @section('post-load-scripts')
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
+    <script src="../assets/plugins/switchery/switchery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @endsection
 

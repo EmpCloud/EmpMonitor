@@ -126,6 +126,51 @@ INSERT INTO `employee_attendance` (`id`, `employee_id`, `date`, `start_time`, `e
 (1, 1, '2025-04-01', '2025-04-01 12:06:47', '2025-04-01 13:40:48'),
 (2, 1, '2025-04-02', '2025-04-02 05:46:19', '2025-04-02 06:28:18');
 
+-- ----------------------------------------------------
+-- Table: monitoring_rules
+-- Monitoring Control: Define what to track for employees
+-- ----------------------------------------------------
+CREATE TABLE `monitoring_rules` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `rule_name` VARCHAR(255) NOT NULL UNIQUE,
+  `description` TEXT DEFAULT NULL,
+  `track_applications` TINYINT(1) DEFAULT 1 COMMENT '1 = enabled, 0 = disabled',
+  `track_websites` TINYINT(1) DEFAULT 1 COMMENT '1 = enabled, 0 = disabled',
+  `track_keystrokes` TINYINT(1) DEFAULT 1 COMMENT '1 = enabled, 0 = disabled',
+  `track_screenshots` TINYINT(1) DEFAULT 1 COMMENT '1 = enabled, 0 = disabled',
+  `track_mouse_clicks` TINYINT(1) DEFAULT 1 COMMENT '1 = enabled, 0 = disabled',
+  `is_default` TINYINT(1) DEFAULT 0 COMMENT '1 = default rule, 0 = custom rule',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX `idx_rule_name` (`rule_name`),
+  INDEX `idx_is_default` (`is_default`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Sample Data: Default Rule
+INSERT INTO `monitoring_rules` (`id`, `rule_name`, `description`, `track_applications`, `track_websites`, `track_keystrokes`, `track_screenshots`, `track_mouse_clicks`, `is_default`) VALUES
+(1, 'Default Rule', 'Default monitoring rule for all employees. All tracking features enabled.', 1, 1, 1, 1, 1, 1);
+
+-- ----------------------------------------------------
+-- Table: rule_employees
+-- Monitoring Control: Maps employees to monitoring rules
+-- Each employee can only be assigned to ONE rule at a time
+-- ----------------------------------------------------
+CREATE TABLE `rule_employees` (
+  `id` INT AUTO_INCREMENT PRIMARY KEY,
+  `rule_id` INT NOT NULL,
+  `employee_id` BIGINT(20) UNSIGNED NOT NULL,
+  `assigned_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (`rule_id`) REFERENCES `monitoring_rules`(`id`) ON DELETE CASCADE,
+  FOREIGN KEY (`employee_id`) REFERENCES `employees`(`id`) ON DELETE CASCADE,
+  UNIQUE KEY `unique_employee_rule` (`employee_id`),
+  INDEX `idx_rule_id` (`rule_id`),
+  INDEX `idx_employee_id` (`employee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Sample Data: Assign existing employees to default rule
+INSERT INTO `rule_employees` (`rule_id`, `employee_id`) VALUES
+(1, 1);
+
 COMMIT;
 
 -- Restore character settings
