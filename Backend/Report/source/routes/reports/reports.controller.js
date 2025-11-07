@@ -4,7 +4,7 @@ const _ = require("underscore");
 class ReportsController {
     async ["addData"](_0x4c6104, _0x2a9f04, _0x4ee776) {
         let _0x2541c5 = _0x4c6104.user;
-        console.log(_0x2541c5);
+
         try {
             // Get employee's monitoring rule to check what to track
             let monitoringRule = await ReportModel.getEmployeeMonitoringRule(_0x2541c5.id);
@@ -22,7 +22,7 @@ class ReportsController {
             }
 
             let {
-                ..._0x372751
+                attendanceId, ..._0x372751
             } = _0x4c6104.body;
             let _0x20247b = {
                 'employee_id': _0x2541c5.id,
@@ -120,7 +120,8 @@ class ReportsController {
                             'idle_seconds': _0x2e194c - _0x226487,
                             'neutral_seconds': _0x191bec && _0x191bec.category == 0x0 ? _0x226487 : 0x0,
                             'productive_seconds': _0x191bec && _0x191bec.category == 0x1 ? _0x226487 : 0x0,
-                            'unproductive_seconds': _0x191bec && _0x191bec.category == 0x2 ? _0x226487 : 0x0
+                            'unproductive_seconds': _0x191bec && _0x191bec.category == 0x2 ? _0x226487 : 0x0,
+                            'attendance_id': attendanceId
                         };
                         
                         // Only save application data if enabled

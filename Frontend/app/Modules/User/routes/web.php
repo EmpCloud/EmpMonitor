@@ -6,6 +6,7 @@ use App\Modules\User\Controllers\EmployeeDetailsController;
 use App\Modules\User\Controllers\TimeAttendanceController;
 use App\Modules\User\Controllers\LocalizationController;
 use App\Modules\User\Controllers\MonitoringControlController;
+use App\Modules\User\Controllers\DashboardController;
 Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\Modules\User\Controllers'], function () {
     Route::group(['middleware' => ['LocaleMiddleware']], function () {
     Route::get('/login', [UserController::class,'login']);
@@ -27,7 +28,13 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::post('/show_details', [UserController::class,'show_details']);
             Route::post('/get-web-app-history', [UserDetailsController::class,'getWebAppHistory']);
             Route::get('/employee-details', [UserController::class,'EmpDetails'])->name('employee-details');
-            Route::get('/dashboard', [UserController::class,'dashboard'])->name('dashboard');
+            Route::get('/dashboard', [DashboardController::class,'index'])->name('dashboard');
+            Route::get('/dashboard/employee-stats', [DashboardController::class,'getEmployeeStats']);
+            Route::get('/dashboard/top-applications', [DashboardController::class,'getTopApplications']);
+            Route::get('/dashboard/top-websites', [DashboardController::class,'getTopWebsites']);
+            Route::get('/dashboard/employees-active-hours', [DashboardController::class,'getEmployeesByActiveHours']);
+            Route::get('/dashboard/employees-productive-hours', [DashboardController::class,'getEmployeesByProductiveHours']);
+            Route::get('/dashboard/all-stats', [DashboardController::class,'getDashboardStats']);
             Route::post('/get-time-sheets-data', [UserDetailsController::class,'getTimeSheetData']);
             Route::get('/attendance-history', [TimeAttendanceController::class,'attendanceHistory'])->name('attendance-history');
             Route::post('/attendance-history', [TimeAttendanceController::class,'attendanceHistory']);

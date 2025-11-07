@@ -7,7 +7,7 @@ class ActivityController {
         let user = req.user;
         try {
             let { sign, data } = req.body;
-
+            let attendanceId;
             for (const e of data) {
                 let date = moment(e.dataId).format('YYYY-MM-DD');
                 let start_time = moment.utc(e.dataId).format('YYYY-MM-DD HH:mm:ss');
@@ -15,14 +15,17 @@ class ActivityController {
                 let [previousAttendance] = await ReportModel.getEmployeeAttendance(user.id, date);
                 if(previousAttendance) {
                     let res = await ReportModel.updateEmployeeAttendance(previousAttendance.id, end_time);
+                    attendanceId = previousAttendance.id;
                 }
                 else {
                     let res = await ReportModel.addEmployeeAttendance(user.id, date, start_time, end_time);
+                    attendanceId = res.insertId;
                 }
             }
-
+            data.attendanceId = attendanceId;
             await axios.post(process.env.REPORT_SERVER_URL, {
-                data: data
+                data: data,
+                attendanceId: attendanceId
             }, {
                 headers: {
                     Authorization: `Bearer ${user.token}`

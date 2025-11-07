@@ -77,10 +77,14 @@ class EmployeeModel {
   /**
    * Get filtered web app activity
    */
-  async getWebAppActivityFiltered(employeeId, startDate, endDate, type) {
+  async getWebAppActivityFiltered(employeeId, startDate, endDate, type, attendanceIds = []) {
     const query = {
       employee_id: employeeId,
     };
+    
+    if (attendanceIds.length > 0) {
+      query.attendance_id = { $in: attendanceIds };
+    }
     
     if (startDate) {
       query.yyyymmdd = { $gte: startDate.split('-').join('') };

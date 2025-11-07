@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const adminRoutes = require('./source/routes/admin/admin.routes');
 const employeeRoutes = require('./source/routes/employee/employee.routes');
+const dashboardRoutes = require('./source/routes/dashboard/dashboard.routes');
 const swaggerUi = require('swagger-ui-express');
 const swaggerDocument = require('./source/utils/swagger/swagger.json');
 const mongoDB = require('./source/database/MongoConnection');
@@ -28,6 +29,7 @@ const initServer = async () => {
   
     app.use('/admin', new adminRoutes().getRouters());
     app.use('/employee', new employeeRoutes().getRouters());
+    app.use('/dashboard', new dashboardRoutes().getRouters());
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
   
     app.listen(port, () => {

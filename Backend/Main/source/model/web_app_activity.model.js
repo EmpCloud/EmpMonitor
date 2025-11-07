@@ -3,6 +3,10 @@ const Schema = mongoose.Schema;
 
 const WebAppActivitySchema = new Schema({
     employee_id: { type: Number, required: true },
+    organization_id: { type: Number },
+    attendance_id: { type: Number },
+    application_id: { type: mongoose.Schema.Types.ObjectId, ref: 'organization_app_web' },
+    domain_id: { type: mongoose.Schema.Types.ObjectId, ref: 'organization_app_web' },
     start_time: { type: String, required: true },
     end_time: { type: String, },
     yyyymmdd: { type: Number, required: true },
@@ -20,7 +24,7 @@ const WebAppActivitySchema = new Schema({
     productive_seconds: { type: Number, default: 0 },
     unproductive_seconds: { type: Number, default: 0 },
 }, { timestamps: true });
-WebAppActivitySchema.index({ organization_id: 1, employee_id: 1 });
+WebAppActivitySchema.index({ organization_id: 1, employee_id: 1, attendance_id: 1 });
 
 const WebAppActivityModel = mongoose.model('web-app-activity', WebAppActivitySchema);
 

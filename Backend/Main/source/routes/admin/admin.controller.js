@@ -338,11 +338,14 @@ class AdminController {
         AdminModel.getAllAttendance(start_date, end_date, null, null, employee_id, name, 1)
       ]);
 
+
       let empIds = _.pluck(attendanceRecords, 'employee_id');
-      let totalUsage = await AdminModel.getTotalUsage(empIds, start_date, end_date);
+      let attendanceIds = _.pluck(attendanceRecords, 'attendance_id');
+
+      let totalUsage = await AdminModel.getTotalUsage(empIds, attendanceIds);
 
       attendanceRecords = attendanceRecords.map(record => {
-        let tempUsage = totalUsage.find(i => i._id === record.employee_id);
+        let tempUsage = totalUsage.find(i => i._id === record.employee_id && i.attendance_id === record.attendance_id);
         return {
           ...record,
           ...tempUsage,
@@ -412,15 +415,27 @@ class AdminController {
         return res.status(400).json({ message: 'employeeId and startDate are required.' });
       }
 
+      // Run both queries in parallel
+      let [attendanceRecords, attendanceRecordCount] = await Promise.all([
+        AdminModel.getAllAttendance(startDate, endDate, 0, 5000, employeeId, "", 0),
+        AdminModel.getAllAttendance(startDate, endDate, null, null, employeeId, "", 1)
+      ]);
+
+
+      let empIds = _.pluck(attendanceRecords, 'employee_id');
+      let attendanceIds = _.pluck(attendanceRecords, 'attendance_id');
+
       const activityRecords = await AdminModel.getWebAppActivityFiltered(
         parseInt(employeeId),
         startDate,
         endDate,
-        +type
+        +type,
+        attendanceIds
       );
       
       return res.json({ code: 200, data: activityRecords, error: null, message: 'Success' });
     } catch (error) {
+      console.error('Error during getWebAppActivity:', error);
       return res.status(500).json({ message: 'Internal server error', error: error.message });
     }
   }
@@ -629,9 +644,13 @@ class AdminController {
       let [employeeData] = await AdminModel.filterEmployee({ employee_id, department_id, location_id, organization_id });
       let emp_ids = _.pluck(employeeData, 'id');
       
+      // Fetch attendance records to get attendanceIds
+      let attendanceRecords = await AdminModel.getAllAttendance(start_date, end_date, 0, 5000, null, "", 0);
+      let attendanceIds = _.pluck(attendanceRecords, 'attendance_id');
+      
       let [data, count] = await Promise.all([
-        AdminModel.getReports({ employee_id: emp_ids, start_date, end_date }),
-        AdminModel.getReportsCount({ employee_id: emp_ids, start_date, end_date }),
+        AdminModel.getReports({ employee_id: emp_ids, start_date, end_date, attendanceIds }),
+        AdminModel.getReportsCount({ employee_id: emp_ids, start_date, end_date, attendanceIds }),
       ]);
       
       data = data.map(i => {
