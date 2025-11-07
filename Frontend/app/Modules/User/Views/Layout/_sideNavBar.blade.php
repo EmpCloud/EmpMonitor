@@ -26,6 +26,10 @@
          
         @if(Session::has('admin_session'))
             <li>
+            <a href="{{ route('dashboard', (new App\Modules\User\helper())->getHostName()) }}">
+                    <i class="menu-icon fas fa-tachometer-alt"
+                       title="Dashboard"></i><span>Dashboard</span>
+                </a>
                 <a href="#">
                     <i class="menu-icon icon-users"
                        title="{{ __('messages.employee') }}"></i><span>{{ __('messages.employee') }}</span>

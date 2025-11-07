@@ -145,7 +145,7 @@ class AdminModel {
     if (count) {
       query = 'SELECT COUNT(*) AS total FROM employee_attendance ea JOIN employees e ON e.id = ea.employee_id WHERE date BETWEEN ? AND ?';
     } else {
-      query = 'SELECT * FROM employee_attendance ea JOIN employees e ON e.id = ea.employee_id WHERE date BETWEEN ? AND ?';
+      query = 'SELECT *, ea.id as attendance_id FROM employee_attendance ea JOIN employees e ON e.id = ea.employee_id WHERE date BETWEEN ? AND ?';
     }
     
     const params = [start_date, end_date];
@@ -201,12 +201,12 @@ class AdminModel {
   /**
    * Get total usage from MongoDB
    */
-  getTotalUsage(empIds, start_date, end_date) {
+  getTotalUsage(empIds, attendanceIds) {
     return WebAppActivityModel.aggregate([
       {
         $match: {
           employee_id: { $in: empIds },
-          yyyymmdd: { $gte: +start_date.split("-").join(""), $lte: +end_date.split("-").join("") }
+          attendance_id: { $in: attendanceIds }
         }
       },
       {
@@ -218,6 +218,7 @@ class AdminModel {
           productive_usage: { $sum: "$productive_seconds" },
           unproductive_usage: { $sum: "$unproductive_seconds" },
           neutral_usage: { $sum: "$neutral_seconds" },
+          attendance_id: { $first: "$attendance_id" }
         }
       }
     ]);
@@ -228,18 +229,11 @@ class AdminModel {
   /**
    * Get filtered web app activity
    */
-  async getWebAppActivityFiltered(employeeId, startDate, endDate, type) {
+  async getWebAppActivityFiltered(employeeId, startDate, endDate, type, attendanceIds = []) {
     const query = {
       employee_id: employeeId,
+      attendance_id: { $in: attendanceIds }
     };
-    
-    if (startDate) {
-      query.yyyymmdd = { $gte: startDate.split('-').join('') };
-    }
-
-    if (endDate) {
-      query.end_time = { $lte: endDate.split('-').join('') };
-    }
 
     if (type === 1) {
       query.url = { $ne: null, $eq: "" };
@@ -440,27 +434,39 @@ class AdminModel {
   /**
    * Get reports from MongoDB
    */
-  getReports({ employee_id, start_date, end_date }) {
-    return WebAppActivityModel.find({
+  getReports({ employee_id, start_date, end_date, attendanceIds = [] }) {
+    const query = {
       employee_id: { "$in": employee_id },
       yyyymmdd: {
         "$gte": +start_date.split("-").join(""),
         "$lte": +end_date.split("-").join(""),
       }
-    }).populate('employee_id').lean();
+    };
+
+    if (attendanceIds.length > 0) {
+      query.attendance_id = { "$in": attendanceIds };
+    }
+
+    return WebAppActivityModel.find(query).populate('employee_id').lean();
   }
 
   /**
    * Get reports count from MongoDB
    */
-  getReportsCount({ employee_id, start_date, end_date }) {
-    return WebAppActivityModel.countDocuments({
+  getReportsCount({ employee_id, start_date, end_date, attendanceIds = [] }) {
+    const query = {
       employee_id: { "$in": employee_id },
       yyyymmdd: {
         "$gte": +start_date.split("-").join(""),
         "$lte": +end_date.split("-").join(""),
       }
-    });
+    };
+
+    if (attendanceIds.length > 0) {
+      query.attendance_id = { "$in": attendanceIds };
+    }
+
+    return WebAppActivityModel.countDocuments(query);
   }
 
   // ============= LOCALIZATION OPERATIONS =============

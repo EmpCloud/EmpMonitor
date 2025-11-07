@@ -204,11 +204,22 @@ class EmployeeController {
         return res.status(400).json({ message: 'employeeId and startDate are required.' });
       }
 
+      // Fetch attendance records to get attendanceIds
+      const attendanceRecords = await EmployeeModel.getAllAttendanceById(
+        employeeId,
+        startDate,
+        endDate,
+        0,
+        5000
+      );
+      const attendanceIds = attendanceRecords.map(record => record.id);
+
       const activityRecords = await EmployeeModel.getWebAppActivityFiltered(
         employeeId,
         startDate,
         endDate,
-        +type
+        +type,
+        attendanceIds
       );
       
       return res.json({ code: 200, data: activityRecords, error: null, message: 'Success' });

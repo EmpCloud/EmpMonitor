@@ -22,6 +22,7 @@ const WebAppActivitySchema = new Schema({
     neutral_seconds: { type: Number, default: 0 },
     productive_seconds: { type: Number, default: 0 },
     unproductive_seconds: { type: Number, default: 0 },
+    attendance_id: { type: Number, required: true },
 }, { timestamps: true });
 WebAppActivitySchema.index({ organization_id: 1, employee_id: 1 });
 
