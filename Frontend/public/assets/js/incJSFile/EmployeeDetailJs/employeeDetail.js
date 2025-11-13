@@ -64,7 +64,7 @@ $(".toggle-password-show-edit, .toggle-password-show-edit-c").click(function () 
 // // Vanilla Javascript
 let tel = document.querySelector("#telephone");
 let iti = window.intlTelInput(tel, {
-    utilsScript: "../assets/plugins/intel-tel-input/utils.js",
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
     initialCountry: "in",
     separateDialCode: true,
     customContainer: "col-md-12 no-padding intelinput-styles"

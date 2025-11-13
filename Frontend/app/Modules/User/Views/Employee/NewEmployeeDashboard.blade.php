@@ -63,17 +63,11 @@
 @endsection
 
 @section('post-load-scripts')
-    <script type="text/javascript" src="../assets/plugins/fancybox2/source/jquery.fancybox.pack.js?v=2.1.7"></script>
-    <script type="text/javascript"
-            src="../assets/plugins/fancybox/source/helpers/jquery.fancybox-buttons.js?v=1.0.5"></script>
-    <script type="text/javascript"
-            src="../assets/plugins/fancybox2/source/helpers/jquery.fancybox-media.js?v=1.0.6"></script>
-    <script type="text/javascript"
-            src="../assets/plugins/fancybox/source/helpers/jquery.fancybox-thumbs.js?v=1.0.7"></script>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js"></script>
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="https://www.amcharts.com/lib/4/core.js"></script>
     <script src="https://www.amcharts.com/lib/4/charts.js"></script>
     <script src="//www.amcharts.com/lib/4/themes/animated.js"></script>
@@ -110,7 +104,7 @@
     <script src="../assets/js/final-timezone.js"></script>
 
     <script>let SiteIndicator = '{{env("APP_ENV")}}';   // to know whether dev or main site</script>
-    <script src="../assets/plugins/vue-apexcharts/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue-apexcharts"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.13.6/underscore-min.js" integrity="sha512-2V49R8ndaagCOnwmj8QnbT1Gz/rie17UouD9Re5WxbzRVUGoftCu5IuqqtAM9+UC3fwfHCSJR1hkzNQh/2wdtg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>

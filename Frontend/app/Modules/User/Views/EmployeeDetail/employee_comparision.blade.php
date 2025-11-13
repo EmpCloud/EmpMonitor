@@ -267,9 +267,9 @@
     <!-- Javascripts -->
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
-    <script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
     <script src="../assets/js/incJSFile/_timeConvertions.js"></script>
 @endsection
 
@@ -283,7 +283,7 @@
     <script src="../assets/js/incJSFile/SuccessAndErrorHandlers/_swalHandlers.js" type="text/javascript"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
                 <script src="http://html2canvas.hertzen.com/dist/html2canvas.js"></script>
-    <script src="../assets/plugins/select2/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <!-- daterange -->
     <script type="text/javascript">

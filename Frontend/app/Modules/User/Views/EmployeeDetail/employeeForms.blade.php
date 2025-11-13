@@ -1,7 +1,7 @@
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" type="text/css" rel="stylesheet"/>
 
 <script src="../assets/js/JqueryPagination/jquery.jqpagination.js" type="text/javascript"></script>
-<script src="../assets/plugins/jquery/jquery-3.1.0.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js" type="text/javascript"></script>
 <script src="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/js/bootstrap4-toggle.min.js"></script>
 
 <style>

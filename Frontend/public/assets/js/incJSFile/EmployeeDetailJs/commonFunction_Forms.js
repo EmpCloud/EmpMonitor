@@ -360,7 +360,7 @@ let clearErrorMsgs = (field) => {
 // // Vanilla Javascript
 let edit_tel = document.querySelector("#Edittelephones");
 let edititi= window.intlTelInput(edit_tel, {
-    utilsScript: "../assets/plugins/intel-tel-input/utils.js",
+    utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
     initialCountry: "in",
     separateDialCode: true,
     customContainer: "col-md-12 no-padding intelinput-styles"

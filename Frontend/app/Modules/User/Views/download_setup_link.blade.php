@@ -281,7 +281,7 @@
     </section>
 </main>
 @include('User::Layout._scripts')
-<script src="../assets/plugins/dropify-master/js/dropify.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dropify@0.2.2/dist/js/dropify.min.js"></script>
 <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
 
 <script>

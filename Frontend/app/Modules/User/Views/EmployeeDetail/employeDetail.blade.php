@@ -11,7 +11,7 @@
 
     <link href="../assets/plugins/bootstrap/css/loader.css" type="text/css" rel="stylesheet"/>
     <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" type="text/css" rel="stylesheet"/>
-    <link href="../assets/plugins/intel-tel-input/intlTelInput.css" type="text/css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css" type="text/css" rel="stylesheet">
     <link href="../assets/plugins/datetimepicker/css/gijgo.min.css" type="text/css" rel="stylesheet" type="text/css"/>
     <link href="../assets/css/jqpagination.css" type="text/css" rel="stylesheet">
     <link href="../assets/css/datatables-custom-pagination.css" type="text/css" rel="stylesheet">
@@ -22,6 +22,57 @@
     @include('User::Layout._modernStyles')
     <style>
         /* Page Specific Styles Only */
+        
+        /* Fix intlTelInput styling and padding */
+        .iti {
+            width: 100%;
+            display: block;
+        }
+        
+        .iti--allow-dropdown .iti__flag-container, .iti--separate-dial-code .iti__flag-container {
+            right: auto;
+            left: 16px;
+        }
+        
+        .iti__flag-container {
+            padding: 0;
+        }
+        
+        .iti__selected-flag {
+            padding: 0 8px 0 8px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .iti input, .iti input[type=text], .iti input[type=tel] {
+            width: 100%;
+            padding: 10px 10px 10px 80px !important;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 14px;
+            height: 38px;
+            box-sizing: border-box;
+        }
+        
+        .iti input:focus {
+            border-color: #80bdff;
+            outline: 0;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        
+        #error-msg, #error-msgs {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            padding-left: 2px;
+        }
+        
+        #valid-msg, #valid-msgs {
+            color: #28a745;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            padding-left: 2px;
+        }
         .modal-open[style] {
             padding-right: 0px !important;
         }
@@ -504,12 +555,12 @@
 
 
 @section('post-load-scripts')
-    <script src="../assets/plugins/switchery/switchery.min.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js" type="text/javascript"></script>
-    <script src="../assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" type="text/javascript"></script>
     {{-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> --}}
-    <script src="../assets/plugins/datetimepicker/js/gijgo.min.js" type="text/javascript"></script>
-    <script src="../assets/plugins/intel-tel-input/intlTelInput.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/intlTelInput.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 @endsection
 
@@ -582,8 +633,8 @@
     <script src="../assets/js/incJSFile/JqueryDatatablesCommon.js" type="text/javascript"></script>
     <script src="../assets/js/JqueryPagination/jquery.jqpagination.js" type="text/javascript"></script>
     <script src="../assets/js/incJSFile/EmployeeDetailJs/commonFunction_Forms.js" type="text/javascript"></script>
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 
 @endsection
