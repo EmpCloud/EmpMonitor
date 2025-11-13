@@ -471,11 +471,11 @@
     </div>
 </div>
 <!-- Javascripts -->
-<script src="../assets/plugins/jquery/jquery-3.1.0.min.js"></script>
-<script src="../assets/plugins/bootstrap/popper.min.js"></script>
-<script src="../assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-<script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>
-<script src="../assets/plugins/switchery/switchery.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
 <script src="../assets/js/concept.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script type="text/javascript">

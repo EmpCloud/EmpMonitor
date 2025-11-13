@@ -328,9 +328,9 @@
 
 @section('post-load-scripts')
 <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-<script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-<script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
-<script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <script src="//unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.11/jspdf.plugin.autotable.min.js"></script>

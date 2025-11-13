@@ -382,21 +382,21 @@
 @section('post-load-scripts')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 <script src="https://cdn.datatables.net/2.3.4/js/dataTables.min.js"></script>
-<script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-<script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-<script src="../assets/plugins/amcharts/core.js"></script>
-<script src="../assets/plugins/amcharts/charts.js"></script>
-<script src="../assets/plugins/amcharts/themes/animated.js"></script>
-<script src="../assets/plugins/select2/js/select2.min.js"></script>
-<script src="../assets/plugins/switchery/switchery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+<script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/switchery/0.8.2/switchery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"
     integrity="sha384-NaWTHo/8YCBYJ59830LTz/P4aQZK1sS0SneOgAvhsIl3zBu8r9RevNg5lHCHAuQ/" crossorigin="anonymous">
 </script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.2.11/jspdf.plugin.autotable.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.3.0/jszip.min.js"></script>
-<script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-<script src="../assets/plugins/daterangepicker/moment-timezone-with-data.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment-timezone@0.5.43/builds/moment-timezone-with-data.min.js"></script>
 @endsection
 
 @section('page-scripts')

@@ -2,6 +2,57 @@
 <style>
     /* Page Specific Styles Only */
     
+    /* Fix intlTelInput styling and padding */
+    .iti {
+        width: 100%;
+        display: block;
+    }
+    
+    .iti--allow-dropdown .iti__flag-container, .iti--separate-dial-code .iti__flag-container {
+        right: auto;
+        left: 16px;
+    }
+    
+    .iti__flag-container {
+        padding: 0;
+    }
+    
+    .iti__selected-flag {
+        padding: 0 8px 0 8px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .iti input, .iti input[type=text], .iti input[type=tel] {
+        width: 100%;
+        padding: 10px 10px 10px 80px !important;
+        border: 1px solid #ced4da;
+        border-radius: 4px;
+        font-size: 14px;
+        height: 38px;
+        box-sizing: border-box;
+    }
+    
+    .iti input:focus {
+        border-color: #80bdff;
+        outline: 0;
+        box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    }
+    
+    #error-msg, #error-msgs {
+        color: #dc3545;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        padding-left: 2px;
+    }
+    
+    #valid-msg, #valid-msgs {
+        color: #28a745;
+        font-size: 0.875rem;
+        margin-top: 0.25rem;
+        padding-left: 2px;
+    }
+    
     /* Nav Tabs */
     .nav-tabs {
         border-bottom: 2px solid #e9ecef;

@@ -592,14 +592,14 @@
     {{--    <script src="../assets/plugins/jquery-slimscroll/jquery.slimscroll.min.js"></script>--}}
     {{--    <script src="../assets/js/concept.min.js"></script>--}}
 
-    <!-- <script src="../assets/plugins/jquery-ui/jquery-ui.min.js"></script> -->
-    <script src="../assets/plugins/daterangepicker/moment.min.js"></script>
-    <script src="../assets/plugins/daterangepicker/daterangepicker.js"></script>
-    <script src="../assets/plugins/select2/js/select2.min.js"></script>
+    <!-- <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
-    <script src="../assets/plugins/amcharts/core.js"></script>
-    <script src="../assets/plugins/amcharts/charts.js"></script>
-    <script src="../assets/plugins/amcharts/themes/animated.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+    <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
 
     {{--    for pdf download--}}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.5.3/jspdf.debug.js"

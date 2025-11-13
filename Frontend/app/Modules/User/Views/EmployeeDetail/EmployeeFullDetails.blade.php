@@ -8,7 +8,7 @@
 @section('extra-style-links')
     <link href="https://cdn.datatables.net/2.3.4/css/dataTables.dataTables.min.css" rel="stylesheet"/>
     <link href="../assets/plugins/bootstrap/css/loader.css" rel="stylesheet"/>
-    <link href="../assets/plugins/intel-tel-input/intlTelInput.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/css/intlTelInput.css" rel="stylesheet">
     <link href="../assets/css/jqpagination.css" rel="stylesheet">
     <link href="../assets/css/datatables-custom-pagination.css" rel="stylesheet">
     <!-- Add fancyBox -->
@@ -92,7 +92,7 @@
 @endsection
 
 @section('page-scripts')
-    <script src="../assets/plugins/select2/js/select2.min.js" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js" type="text/javascript"></script>
     {{--    remove common js files and scripts and using from external file     --}}
     @include('User::EmployeeFullDetailsPage._pageScripts') 
     <script>
