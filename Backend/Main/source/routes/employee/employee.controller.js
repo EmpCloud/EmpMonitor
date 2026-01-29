@@ -6,7 +6,21 @@ require('dotenv').config();
 
 // Encryption setup
 const algorithm = 'aes-256-cbc';
-const key = crypto.createHash('sha256').update(process.env.JWT_SECRET).digest('base64').substr(0, 32);
+
+const getJwtSecret = () => {
+  if (typeof process.env.JWT_SECRET === 'string' && process.env.JWT_SECRET.trim().length) {
+    return process.env.JWT_SECRET.trim();
+  }
+  console.warn('JWT_SECRET not set. Falling back to a default secret (development only).');
+  return 'empmonitor_default_secret';
+};
+
+const deriveEncryptionKey = () => {
+  const source = Buffer.from(getJwtSecret(), 'utf8');
+  return crypto.createHash('sha256').update(source).digest('base64').substr(0, 32);
+};
+
+const key = deriveEncryptionKey();
 
 class EmployeeController {
   // ============= HELPER METHODS =============
@@ -36,7 +50,7 @@ class EmployeeController {
    * Generate JWT token
    */
   generateToken(payload) {
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
+    return jwt.sign(payload, getJwtSecret(), { expiresIn: '1d' });
   }
 
   /**
@@ -185,14 +199,14 @@ class EmployeeController {
   
   /**
    * Get web app activity
+   * Security: POST only - prevents sensitive data exposure in URLs/logs
    */
   async getWebAppActivity(req, res) {
     try {
       let employeeId = +req.user.id;
       
-      // Support both GET (query params) and POST (body params)
-      const params = req.method === 'GET' ? req.query : req.body;
-      let { startDate, endDate, type = 1 } = params;
+      // POST only - sensitive data should not be in query params
+      let { startDate, endDate, type = 1 } = req.body;
       
       startDate = moment(startDate).format('YYYY-MM-DD');
       

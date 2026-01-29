@@ -3,16 +3,132 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
 const _ = require('underscore');
+const XLSX = require('xlsx');
 require('dotenv').config();
 
 // Encryption setup
 const algorithm = 'aes-256-cbc';
-const key = crypto.createHash('sha256').update(process.env.JWT_SECRET).digest('base64').substr(0, 32);
+const getJwtSecret = () => {
+  if (typeof process.env.JWT_SECRET === 'string' && process.env.JWT_SECRET.trim().length) {
+    return process.env.JWT_SECRET.trim();
+  }
+  console.warn('JWT_SECRET not set. Falling back to a default secret (development only).');
+  return 'empmonitor_default_secret';
+};
+
+const deriveEncryptionKey = () => {
+  const source = Buffer.from(getJwtSecret(), 'utf8');
+  return crypto.createHash('sha256').update(source).digest('base64').substr(0, 32);
+};
+
+const key = deriveEncryptionKey();
 
 const DEFAULT_ADMIN_EMAIL = process.env.DEFAULT_ADMIN_EMAIL || 'admin@example.com';
 const DEFAULT_ADMIN_PASSWORD = process.env.DEFAULT_ADMIN_PASSWORD || 'password123';
 
 class AdminController {
+  constructor() {
+    this.bulkRegisterHeaders = [
+      'First Name',
+      'Last Name',
+      'Email',
+      'Password',
+      'Mobile Number',
+      'Employee Code',
+      'TimeZone',
+      'Department',
+      'Location'
+    ];
+
+    this.bulkUpdateHeaders = [
+      'Employee ID',
+      'First Name',
+      'Last Name',
+      'Email',
+      'Password',
+      'Mobile Number',
+      'Employee Code',
+      'TimeZone',
+      'Department',
+      'Location'
+    ];
+  }
+
+  normalizeValue(value) {
+    if (value === undefined || value === null) {
+      return '';
+    }
+    if (typeof value === 'number') {
+      return `${value}`.trim();
+    }
+    return `${value}`.trim();
+  }
+
+  normalizeRow(row) {
+    return Object.keys(row).reduce((acc, key) => {
+      acc[key.trim().toLowerCase()] = row[key];
+      return acc;
+    }, {});
+  }
+
+  getCellValue(row, aliases) {
+    for (const alias of aliases) {
+      if (Object.prototype.hasOwnProperty.call(row, alias)) {
+        return this.normalizeValue(row[alias]);
+      }
+    }
+    return '';
+  }
+
+  isValidEmail(email) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  }
+
+  parseExcelBuffer(buffer) {
+    const workbook = XLSX.read(buffer, { type: 'buffer', cellDates: false });
+    const sheetName = workbook.SheetNames[0];
+    if (!sheetName) {
+      return [];
+    }
+    const sheet = workbook.Sheets[sheetName];
+    return XLSX.utils.sheet_to_json(sheet, { defval: '' });
+  }
+
+  buildLocationMap(locations) {
+    return locations.reduce((acc, location) => {
+      if (location && location.location_name) {
+        acc.set(location.location_name.trim().toLowerCase(), location.id);
+      }
+      return acc;
+    }, new Map());
+  }
+
+  buildDepartmentCache(departments) {
+    return departments.reduce((acc, department) => {
+      if (department && department.name) {
+        const key = department.name.trim().toLowerCase();
+        if (!acc.has(key)) {
+          acc.set(key, []);
+        }
+        acc.get(key).push(department);
+      }
+      return acc;
+    }, new Map());
+  }
+
+  resolveDepartmentId(departmentCache, departmentName, locationId) {
+    if (!departmentName) return null;
+    const key = departmentName.trim().toLowerCase();
+    if (!departmentCache.has(key)) return null;
+    const candidates = departmentCache.get(key);
+    if (locationId) {
+      const match = candidates.find(dept => dept.location_id === locationId);
+      if (match) {
+        return match.id;
+      }
+    }
+    return candidates[0]?.id || null;
+  }
   // ============= HELPER METHODS =============
   
   /**
@@ -317,6 +433,301 @@ class AdminController {
     }
   }
 
+  /**
+   * Bulk register employees via Excel upload
+   */
+  async bulkRegisterEmployees(req, res) {
+    try {
+      const user = await this.getLoginUserData(req);
+      if (!user || user.role !== 'admin') {
+        return res.status(403).json({ message: 'Forbidden: Admin role required for this action.' });
+      }
+
+      if (!req.file || !req.file.buffer) {
+        return res.status(400).json({ message: 'Please upload a valid Excel file.' });
+      }
+
+      const rows = this.parseExcelBuffer(req.file.buffer);
+      if (!rows.length) {
+        return res.status(400).json({ message: 'Uploaded file is empty.' });
+      }
+
+      const [locations, departments, currentEmployeeCount, licenseLimit] = await Promise.all([
+        AdminModel.getLocations(),
+        AdminModel.getDepartments(),
+        AdminModel.countEmployees(),
+        AdminModel.getAdminLicenseCount(user.id)
+      ]);
+
+      if (licenseLimit !== null && currentEmployeeCount + rows.length > licenseLimit) {
+        return res.status(403).json({
+          message: `License limit of ${licenseLimit} employees reached. Please reduce the number of employees and try again.`
+        });
+      }
+
+      const locationMap = this.buildLocationMap(locations);
+      const departmentCache = this.buildDepartmentCache(departments);
+      const seenEmails = new Set();
+      const seenEmployeeCodes = new Set();
+      const summary = { total: rows.length, success: 0, failed: [] };
+
+      for (let index = 0; index < rows.length; index++) {
+        const rowNumber = index + 2;
+        try {
+          const normalizedRow = this.normalizeRow(rows[index]);
+          const firstName = this.getCellValue(normalizedRow, ['first name', 'first_name', 'firstname']);
+          const lastName = this.getCellValue(normalizedRow, ['last name', 'last_name', 'lastname']);
+          const email = this.getCellValue(normalizedRow, ['email', 'email address', 'email_id']);
+          const password = this.getCellValue(normalizedRow, ['password']);
+          const mobileNumber = this.getCellValue(normalizedRow, ['mobile number', 'mobile_number', 'phone']);
+          const employeeCode = this.getCellValue(normalizedRow, ['employee code', 'employee_code', 'emp-code']);
+          const timeZone = this.getCellValue(normalizedRow, ['timezone', 'time zone', 'time_zone']);
+          const departmentName = this.getCellValue(normalizedRow, ['department', 'department name']);
+          const locationName = this.getCellValue(normalizedRow, ['location', 'location name']);
+
+          if (!firstName || !lastName || !email || !password || !employeeCode || !timeZone || !departmentName || !locationName) {
+            throw new Error('Missing required fields (First Name, Last Name, Email, Password, Employee Code, TimeZone, Department, Location).');
+          }
+
+          if (!this.isValidEmail(email)) {
+            throw new Error(`Invalid email format: ${email}`);
+          }
+
+          const emailKey = email.toLowerCase();
+          if (seenEmails.has(emailKey)) {
+            throw new Error(`Duplicate email found in sheet: ${email}`);
+          }
+          seenEmails.add(emailKey);
+
+          if (await AdminModel.findEmployeeByEmail(email)) {
+            throw new Error(`Email already exists: ${email}`);
+          }
+
+          const codeKey = employeeCode.toLowerCase();
+          if (seenEmployeeCodes.has(codeKey)) {
+            throw new Error(`Duplicate employee code found in sheet: ${employeeCode}`);
+          }
+          seenEmployeeCodes.add(codeKey);
+
+          if (await AdminModel.findEmployeeByCode(employeeCode)) {
+            throw new Error(`Employee code already exists: ${employeeCode}`);
+          }
+
+          const locationId = locationMap.get(locationName.toLowerCase());
+          if (!locationId) {
+            throw new Error(`Invalid location: ${locationName}`);
+          }
+
+          const departmentId = this.resolveDepartmentId(departmentCache, departmentName, locationId);
+          if (!departmentId) {
+            throw new Error(`Invalid department "${departmentName}" for location "${locationName}".`);
+          }
+
+          const hashedPassword = this.encryptPassword(password);
+          await AdminModel.registerEmployee({
+            firstName,
+            lastName,
+            email,
+            password: hashedPassword,
+            mobileNumber,
+            employeeCode,
+            timeZone,
+            role: 'employee',
+            departmentId,
+            locationId
+          });
+          summary.success += 1;
+        } catch (error) {
+          summary.failed.push({ row: rowNumber, message: error.message || 'Unable to process the row.' });
+        }
+      }
+
+      return res.status(200).json({ message: 'Bulk register completed', summary });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
+  /**
+   * Bulk update employees via Excel upload
+   */
+  async bulkUpdateEmployees(req, res) {
+    try {
+      const user = await this.getLoginUserData(req);
+      if (!user || user.role !== 'admin') {
+        return res.status(403).json({ message: 'Forbidden: Admin role required for this action.' });
+      }
+
+      if (!req.file || !req.file.buffer) {
+        return res.status(400).json({ message: 'Please upload a valid Excel file.' });
+      }
+
+      const rows = this.parseExcelBuffer(req.file.buffer);
+      if (!rows.length) {
+        return res.status(400).json({ message: 'Uploaded file is empty.' });
+      }
+
+      const [locations, departments] = await Promise.all([
+        AdminModel.getLocations(),
+        AdminModel.getDepartments()
+      ]);
+      const locationMap = this.buildLocationMap(locations);
+      const departmentCache = this.buildDepartmentCache(departments);
+      const summary = { total: rows.length, success: 0, failed: [] };
+
+      for (let index = 0; index < rows.length; index++) {
+        const rowNumber = index + 2;
+        try {
+          const normalizedRow = this.normalizeRow(rows[index]);
+          const employeeIdValue = this.getCellValue(normalizedRow, ['employee id', 'employee_id', 'id']);
+          const employeeId = parseInt(employeeIdValue, 10);
+          if (!employeeId) {
+            throw new Error('Employee ID is required for updates.');
+          }
+
+          const employee = await AdminModel.getEmployeeById(employeeId);
+          if (!employee) {
+            throw new Error(`Employee not found for ID ${employeeId}.`);
+          }
+
+          const updates = {};
+          const firstName = this.getCellValue(normalizedRow, ['first name', 'first_name', 'firstname']);
+          const lastName = this.getCellValue(normalizedRow, ['last name', 'last_name', 'lastname']);
+          const email = this.getCellValue(normalizedRow, ['email', 'email address', 'email_id']);
+          const password = this.getCellValue(normalizedRow, ['password']);
+          const mobileNumber = this.getCellValue(normalizedRow, ['mobile number', 'mobile_number', 'phone']);
+          const employeeCode = this.getCellValue(normalizedRow, ['employee code', 'employee_code', 'emp-code']);
+          const timeZone = this.getCellValue(normalizedRow, ['timezone', 'time zone', 'time_zone']);
+          const departmentName = this.getCellValue(normalizedRow, ['department', 'department name']);
+          const locationName = this.getCellValue(normalizedRow, ['location', 'location name']);
+
+          if (firstName) updates.first_name = firstName;
+          if (lastName) updates.last_name = lastName;
+          if (mobileNumber) updates.mobile_number = mobileNumber;
+          if (timeZone) updates.time_zone = timeZone;
+
+          if (email && email.toLowerCase() !== employee.email.toLowerCase()) {
+            if (!this.isValidEmail(email)) {
+              throw new Error(`Invalid email format: ${email}`);
+            }
+            if (await AdminModel.findEmployeeByEmail(email, employeeId)) {
+              throw new Error(`Email already exists: ${email}`);
+            }
+            updates.email = email;
+          }
+
+          if (employeeCode && employeeCode.toLowerCase() !== (employee.employee_code || '').toLowerCase()) {
+            if (await AdminModel.findEmployeeByCode(employeeCode, employeeId)) {
+              throw new Error(`Employee code already exists: ${employeeCode}`);
+            }
+            updates.employee_code = employeeCode;
+          }
+
+          if (password) {
+            updates.password = this.encryptPassword(password);
+          }
+
+          if (locationName) {
+            const locationId = locationMap.get(locationName.toLowerCase());
+            if (!locationId) {
+              throw new Error(`Invalid location: ${locationName}`);
+            }
+            updates.location_id = locationId;
+          }
+
+          if (departmentName) {
+            const effectiveLocationId = updates.location_id || employee.location_id;
+            const departmentId = this.resolveDepartmentId(departmentCache, departmentName, effectiveLocationId);
+            if (!departmentId) {
+              throw new Error(`Invalid department "${departmentName}".`);
+            }
+            updates.department_id = departmentId;
+          }
+
+          if (!Object.keys(updates).length) {
+            throw new Error('No changes detected for this row.');
+          }
+
+          await AdminModel.patchEmployee(employeeId, updates);
+          summary.success += 1;
+        } catch (error) {
+          summary.failed.push({ row: rowNumber, message: error.message || 'Unable to process the row.' });
+        }
+      }
+
+      return res.status(200).json({ message: 'Bulk update completed', summary });
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
+  /**
+   * Download blank bulk register template
+   */
+  async downloadBulkRegisterTemplate(req, res) {
+    try {
+      const sheet = XLSX.utils.aoa_to_sheet([
+        this.bulkRegisterHeaders,
+        ['John', 'Doe', 'john@example.com', 'Pass@1234', '9876543210', 'EMP001', 'Asia/Kolkata', 'Engineering', 'Bangalore']
+      ]);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, sheet, 'Bulk Register');
+      const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+      res.setHeader('Content-Disposition', 'attachment; filename=bulk-register-template.xlsx');
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      return res.send(buffer);
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
+  /**
+   * Download bulk update template with current employee data
+   */
+  async downloadBulkUpdateTemplate(req, res) {
+    try {
+      const locations = await AdminModel.getLocations();
+      const locationById = locations.reduce((acc, location) => {
+        acc[location.id] = location.location_name;
+        return acc;
+      }, {});
+
+      const limit = 500;
+      let skip = 0;
+      const sheetData = [this.bulkUpdateHeaders];
+      while (true) {
+        const employees = await AdminModel.getAllEmployees(skip, limit, null, 0);
+        if (!employees.length) break;
+        employees.forEach(employee => {
+          sheetData.push([
+            employee.id,
+            employee.first_name,
+            employee.last_name,
+            employee.email,
+            '',
+            employee.mobile_number || '',
+            employee.employee_code || '',
+            employee.time_zone || '',
+            employee.department_name || '',
+            locationById[employee.location_id] || ''
+          ]);
+        });
+        if (employees.length < limit) break;
+        skip += limit;
+      }
+
+      const sheet = XLSX.utils.aoa_to_sheet(sheetData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, sheet, 'Bulk Update');
+      const buffer = XLSX.write(workbook, { type: 'buffer', bookType: 'xlsx' });
+      res.setHeader('Content-Disposition', 'attachment; filename=bulk-update-template.xlsx');
+      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+      return res.send(buffer);
+    } catch (error) {
+      return res.status(500).json({ message: 'Internal server error', error: error.message });
+    }
+  }
+
   // ============= ATTENDANCE =============
   
   /**
@@ -398,12 +809,12 @@ class AdminController {
 
   /**
    * Get web app activity
+   * Security: POST only - prevents sensitive data exposure in URLs/logs
    */
   async getWebAppActivity(req, res) {
     try {
-      // Support both GET (query params) and POST (body params)
-      const params = req.method === 'GET' ? req.query : req.body;
-      let { employeeId, startDate, endDate, type = 1 } = params;
+      // POST only - sensitive data should not be in query params
+      let { employeeId, startDate, endDate, type = 1 } = req.body;
       
       startDate = moment(startDate).format('YYYY-MM-DD');
       
@@ -629,14 +1040,14 @@ class AdminController {
   
   /**
    * Get reports
+   * Security: POST only - prevents sensitive data exposure in URLs/logs
    */
   async getReports(req, res) {
     try {
       let { id: organization_id } = req.user;
       
-      // Support both GET (query params) and POST (body params)
-      const params = req.method === 'GET' ? req.query : req.body;
-      let { employee_id, department_id, location_id, start_date, end_date, skip, limit } = params;
+      // POST only - sensitive data should not be in query params
+      let { employee_id, department_id, location_id, start_date, end_date, skip, limit } = req.body;
       
       start_date = moment(start_date).format("YYYY-MM-DD");
       end_date = moment(end_date).add(1, 'day').format("YYYY-MM-DD");

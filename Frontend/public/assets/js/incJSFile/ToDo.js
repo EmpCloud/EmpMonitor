@@ -56,8 +56,10 @@ $(document).ready(function () {
         $('#' + assigneeId).attr('selected', true);
         $('#taskUpdateStatus').val(currentDiv.find(".taskStatus").text());
         $('#taskUpdatePriority').val(currentDiv.find(".taskPriority").text());
-        document.getElementsByClassName("taskModuleName")[0].innerHTML = currentDiv.find(".moduleName").text().substring(0, 15)+((currentDiv.find(".moduleName").text().length > 15) ? "..." : "");
-        $("#taskModuleName").attr("title",currentDiv.find(".moduleName").text());
+        // Security: Use textContent instead of innerHTML to prevent XSS
+        let moduleText = currentDiv.find(".moduleName").text();
+        document.getElementsByClassName("taskModuleName")[0].textContent = moduleText.substring(0, 15) + ((moduleText.length > 15) ? "..." : "");
+        $("#taskModuleName").attr("title", moduleText);
         $('#taskUpdateName').val(currentDiv.find(".taskName").text());
         $('#taskUpdateDescription').val(currentDiv.find('.taskDescription').text());
         //date done

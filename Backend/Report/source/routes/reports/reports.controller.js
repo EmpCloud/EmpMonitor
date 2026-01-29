@@ -1,6 +1,7 @@
 const ReportModel = require('./reports.model');
 const moment = require("moment-timezone");
 const _ = require("underscore");
+const IDLE_THRESHOLD_SECONDS = 5 * 60;
 class ReportsController {
     async ["addData"](_0x4c6104, _0x2a9f04, _0x4ee776) {
         let _0x2541c5 = _0x4c6104.user;
@@ -175,34 +176,81 @@ class ReportsController {
 module.exports = new ReportsController();
 
 const calculateActivity = (_0x1cd9fb, _0x5320f5, _0x2eae06, _0x4bcf47) => {
+    // Validate and sanitize input parameters to prevent DoS attacks via loop bound injection
+    const MAX_DURATION_SECONDS = 86400; // 24 hours max
+    const safeStart = Math.max(0, Math.floor(Number(_0x1cd9fb) || 0));
+    const safeEnd = Math.max(0, Math.floor(Number(_0x5320f5) || 0));
+    
+    // Validate duration is within reasonable bounds
+    if (safeEnd - safeStart > MAX_DURATION_SECONDS || safeEnd - safeStart < 0) {
+        return {
+            'active_seconds': 0,
+            'total_seconds': 0,
+            'mouseclicks_count': 0,
+            'keystrokes_count': 0,
+            'mousemovement_count': 0,
+            'condition': false,
+            'chunkData': {
+                'buttonClickChunks': [],
+                'fakeActivityChunks': [],
+                'keystrokeChunks': [],
+                'mouseMovementChunks': []
+            }
+        };
+    }
+    
     let {
         buttonClicks: _0x2ef895,
         fakeActivities: _0x3ae7fa,
         keystrokes: _0x239a70,
         mouseMovements: _0x275df0
     } = _0x2eae06;
-    const _0x38b19c = _0x2ef895.length !== _0x4bcf47[_0x4bcf47.length - 0x1].end && _0x2ef895.length == _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1 && _0x4bcf47[_0x4bcf47.length - 0x1].end == _0x5320f5 && !(_0x2ef895.length - 0x1 == _0x1cd9fb);
+    
+    // Validate arrays exist and are actual arrays to prevent malicious length property
+    if (!Array.isArray(_0x2ef895)) _0x2ef895 = [];
+    if (!Array.isArray(_0x3ae7fa)) _0x3ae7fa = [];
+    if (!Array.isArray(_0x239a70)) _0x239a70 = [];
+    if (!Array.isArray(_0x275df0)) _0x275df0 = [];
+    
+    const _0x38b19c = _0x2ef895.length !== _0x4bcf47[_0x4bcf47.length - 0x1].end && _0x2ef895.length == _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1 && _0x4bcf47[_0x4bcf47.length - 0x1].end == safeEnd && !(_0x2ef895.length - 0x1 == safeStart);
     if (_0x38b19c) {
-        _0x2ef895 = _0x2ef895.slice(_0x1cd9fb, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
-        _0x3ae7fa = _0x3ae7fa.slice(_0x1cd9fb, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
-        _0x239a70 = _0x239a70.slice(_0x1cd9fb, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
-        _0x275df0 = _0x275df0.slice(_0x1cd9fb, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
+        _0x2ef895 = _0x2ef895.slice(safeStart, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
+        _0x3ae7fa = _0x3ae7fa.slice(safeStart, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
+        _0x239a70 = _0x239a70.slice(safeStart, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
+        _0x275df0 = _0x275df0.slice(safeStart, _0x4bcf47[_0x4bcf47.length - 0x1].end + 0x1);
     } else {
-        _0x2ef895 = _0x2ef895.slice(_0x1cd9fb, _0x5320f5);
-        _0x3ae7fa = _0x3ae7fa.slice(_0x1cd9fb, _0x5320f5);
-        _0x239a70 = _0x239a70.slice(_0x1cd9fb, _0x5320f5);
-        _0x275df0 = _0x275df0.slice(_0x1cd9fb, _0x5320f5);
+        _0x2ef895 = _0x2ef895.slice(safeStart, safeEnd);
+        _0x3ae7fa = _0x3ae7fa.slice(safeStart, safeEnd);
+        _0x239a70 = _0x239a70.slice(safeStart, safeEnd);
+        _0x275df0 = _0x275df0.slice(safeStart, safeEnd);
     }
     const _0x1c66ac = _.chunk(_0x2ef895, 0x3c);
     const _0x221d90 = _.chunk(_0x3ae7fa, 0x3c);
     const _0x27d82b = _.chunk(_0x239a70, 0x3c);
     const _0x21d1c3 = _.chunk(_0x275df0, 0x3c);
-    const _0x1d0df8 = _0x1c66ac.reduce((_0x37500b, _0x51935c, _0x19a167, _0x1390aa) => {
-        return _0x1c66ac[_0x19a167].some(_0x4faa02 => _0x4faa02 > 0x0) || _0x221d90[_0x19a167].some(_0x561da7 => _0x561da7 > 0x0) || _0x27d82b[_0x19a167].some(_0x6bc399 => _0x6bc399 > 0x0) || _0x21d1c3[_0x19a167].some(_0x43128f => _0x43128f > 0x0) ? _0x37500b + _0x51935c.length : _0x37500b + 0x0;
-    }, 0x0);
+    
+    // Use actual sliced array length to prevent unbounded loop - protects against DoS
+    const _0x3b2bed = Math.min(_0x2ef895.length, safeEnd - safeStart, MAX_DURATION_SECONDS);
+    let _0x4fd0dd = 0x0;
+    let _0x3f3aac = 0x0;
+    for (let _0x4c0281 = 0x0; _0x4c0281 < _0x3b2bed; _0x4c0281++) {
+        const _0x41a1b7 = (_0x2ef895[_0x4c0281] || 0x0) > 0x0 || (_0x3ae7fa[_0x4c0281] || 0x0) > 0x0 || (_0x239a70[_0x4c0281] || 0x0) > 0x0 || (_0x275df0[_0x4c0281] || 0x0) > 0x0;
+        if (_0x41a1b7) {
+            if (_0x3f3aac > IDLE_THRESHOLD_SECONDS) {
+                _0x4fd0dd += _0x3f3aac;
+            }
+            _0x3f3aac = 0x0;
+        } else {
+            _0x3f3aac += 0x1;
+        }
+    }
+    if (_0x3f3aac > IDLE_THRESHOLD_SECONDS) {
+        _0x4fd0dd += _0x3f3aac;
+    }
+    const _0x1d0df8 = Math.max(0x0, _0x3b2bed - _0x4fd0dd);
     return {
         'active_seconds': _0x1d0df8,
-        'total_seconds': _0x5320f5 - _0x1cd9fb,
+        'total_seconds': _0x3b2bed,
         'mouseclicks_count': _0x2ef895.filter(_0x173d77 => _0x173d77 !== 0x0).length,
         'keystrokes_count': _0x239a70.filter(_0x18fa2c => _0x18fa2c !== 0x0).length,
         'mousemovement_count': _0x275df0.filter(_0x2bcb35 => _0x2bcb35 !== 0x0).length,

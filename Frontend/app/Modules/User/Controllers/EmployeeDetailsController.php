@@ -4,6 +4,7 @@ namespace App\Modules\User\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Modules\User\helper;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -2009,6 +2010,88 @@ class EmployeeDetailsController extends Controller
             return $result;
         } catch (\Exception $e) {
             return $this->helper->guzzleErrorHandler($e, ' EmployeeDetailsController => bulkUpdateBankDetail => Method-get ');
+        }
+    }
+
+    public function bulkRegisterEmployees(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls'
+        ]);
+        try {
+            $file = $request->file('file');
+            $multipartData = [[
+                'name' => 'file',
+                'contents' => fopen($file->getRealPath(), 'r'),
+                'filename' => $file->getClientOriginalName(),
+                'headers' => [
+                    'Content-Type' => $file->getMimeType()
+                ]
+            ]];
+            $api_url = env('MAIN_API') . 'admin/bulk-register';
+            $response = $this->helper->postApiCall('post-with-token-multipart', $api_url, $multipartData);
+            return response()->json($response['data'], $response['statusCode']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unable to process the file.'], 500);
+        }
+    }
+
+    public function bulkUpdateEmployees(Request $request)
+    {
+        $request->validate([
+            'file' => 'required|file|mimes:xlsx,xls'
+        ]);
+        try {
+            $file = $request->file('file');
+            $multipartData = [[
+                'name' => 'file',
+                'contents' => fopen($file->getRealPath(), 'r'),
+                'filename' => $file->getClientOriginalName(),
+                'headers' => [
+                    'Content-Type' => $file->getMimeType()
+                ]
+            ]];
+            $api_url = env('MAIN_API') . 'admin/bulk-update';
+            $response = $this->helper->postApiCall('post-with-token-multipart', $api_url, $multipartData);
+            return response()->json($response['data'], $response['statusCode']);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unable to process the file.'], 500);
+        }
+    }
+
+    public function downloadBulkRegisterTemplate()
+    {
+        return $this->downloadTemplateFromApi('admin/bulk-register/template', 'bulk-register-template.xlsx');
+    }
+
+    public function downloadBulkUpdateTemplate()
+    {
+        return $this->downloadTemplateFromApi('admin/bulk-update/template', 'bulk-update-template.xlsx');
+    }
+
+    private function downloadTemplateFromApi($path, $filename)
+    {
+        try {
+            $token = Session::get('admin_session')['token'] ?? null;
+            if (!$token) {
+                abort(401, 'Unauthorized');
+            }
+            $client = new Client();
+            $api_url = rtrim(env('MAIN_API'), '/') . '/' . ltrim($path, '/');
+            $response = $client->get($api_url, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $token,
+                    'user-agent' => request()->userAgent() ?? 'EMPMonitor'
+                ]
+            ]);
+            $content = $response->getBody()->getContents();
+            $headers = [
+                'Content-Type' => $response->getHeaderLine('Content-Type') ?: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+                'Content-Disposition' => $response->getHeaderLine('Content-Disposition') ?: 'attachment; filename=' . $filename
+            ];
+            return response($content, 200, $headers);
+        } catch (\Exception $e) {
+            return response()->json(['message' => 'Unable to download template.'], 500);
         }
     }
 

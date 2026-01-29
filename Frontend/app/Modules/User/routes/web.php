@@ -23,6 +23,10 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::get('/logout', [UserController::class,'logout'])->name('logout');
             Route::post('/register-Employee', [UserController::class,'EmployeeRegistration']);
             Route::get('/EmployeeDetail', [UserController::class,'EmployeeDetails']);
+            Route::post('/employee-details/bulk-register', [EmployeeDetailsController::class,'bulkRegisterEmployees']);
+            Route::post('/employee-details/bulk-update', [EmployeeDetailsController::class,'bulkUpdateEmployees']);
+            Route::get('/employee-details/bulk-register/template', [EmployeeDetailsController::class,'downloadBulkRegisterTemplate']);
+            Route::get('/employee-details/bulk-update/template', [EmployeeDetailsController::class,'downloadBulkUpdateTemplate']);
             Route::get('/get-employee-details', [UserDetailsController::class,'employeeFullDetailsPage'])->name('getEmployeeDetails');
             Route::get('/show_details', [UserController::class,'show_details']);
             Route::post('/show_details', [UserController::class,'show_details']);

@@ -233,7 +233,7 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId, showEntries,
             var data = response.data;
             if (response.code === 200) {
                 var ReportsData = data.data;
-                if (ReportsData) {
+                if (ReportsData && ReportsData.length > 0) {
                     ReportsData.forEach(function (attHistory) {
                         let startTime = moment(attHistory.start_time).tz('Asia/Kolkata').format('DD-MM-YYYY HH:mm:ss');
                         let endTime = moment(attHistory.end_time).tz('Asia/Kolkata').format('DD-MM-YYYY HH:mm:ss');
@@ -242,7 +242,7 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId, showEntries,
                         const duration = moment.duration(time1.diff(time2));
                         const hours = duration.asHours();
                         appendData +='<tr>'; 
-                        appendData += '<td class="stickyCol-sticky-col""><a title="View Full Details" href="get-employee-details?id=' + attHistory.id + '">' + attHistory.first_name + ' ' + attHistory.last_name + ' </a></td>';
+                        appendData += '<td class="stickyCol-sticky-col"><a title="View Full Details" href="get-employee-details?id=' + attHistory.id + '">' + attHistory.first_name + ' ' + attHistory.last_name + ' </a></td>';
                         if (ADD_REMOVE_COLUMN.includes('Email')) appendData += '<td class="EmailTable" style="width: 90px;">' + attHistory.email + '</td>';
                         if (ADD_REMOVE_COLUMN.includes('EmpCode')) appendData += '<td class="EmpCodeTable" style="width: 90px;">' + attHistory.employee_code + '</td>';
                         if (ADD_REMOVE_COLUMN.includes('ClockIn')) appendData += '<td class="ClockInTable" style="width: 90px;">' + startTime + '</td>';
@@ -256,15 +256,25 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId, showEntries,
                         appendData += '<td class="IdleTimeTable" style="width: 90px;">' + formatSecondsToHHMMSS(attHistory.neutral_usage) + '</td>';
                         appendData +=  '</tr>';
                     });
-                }
-
-                $('#attendanceHistory').empty();
-                $('#attendanceHistory').append(appendData);
-                if (PAGE_COUNT_CALL === true) {
-                    TOTAL_COUNT_EMAILS = response.data.totalCount;
+                    
+                    $('#attendanceHistory').empty();
+                    $('#attendanceHistory').append(appendData);
+                    if (PAGE_COUNT_CALL === true) {
+                        TOTAL_COUNT_EMAILS = response.data.totalCount;
+                        paginationSetup();
+                        TOTAL_COUNT_EMAILS < SHOW_ENTRIES ? $("#showPageNumbers").html(' ' + DATATABLE_LOCALIZE_MSG.showing + ' ' + 1 + ' ' + DATATABLE_LOCALIZE_MSG.to + ' ' + TOTAL_COUNT_EMAILS + ' ' + DATATABLE_LOCALIZE_MSG.of + ' ' + TOTAL_COUNT_EMAILS)
+                            : $("#showPageNumbers").html(' ' + DATATABLE_LOCALIZE_MSG.showing + ' ' + 1 + ' ' + DATATABLE_LOCALIZE_MSG.to + ' ' + SHOW_ENTRIES + ' ' + DATATABLE_LOCALIZE_MSG.of + ' ' + TOTAL_COUNT_EMAILS);
+                    }
+                } else {
+                    // No data found
+                    TOTAL_COUNT_EMAILS = 0;
+                    let colSpan = 7 + ADD_REMOVE_COLUMN.length;
+                    appendData += '<tr><td colspan="' + colSpan + '" style="text-align: center; padding: 20px;">No data found</td></tr>';
+                    $('#attendanceHistory').empty();
+                    $('#attendanceHistory').append(appendData);
+                    $("#showPageNumbers").html(' ' + DATATABLE_LOCALIZE_MSG.showing + ' ' + 0 + ' ' + DATATABLE_LOCALIZE_MSG.to + ' ' + 0 + ' ' + DATATABLE_LOCALIZE_MSG.of + ' ' + 0);
                     paginationSetup();
-                    TOTAL_COUNT_EMAILS < SHOW_ENTRIES ? $("#showPageNumbers").html(' ' + DATATABLE_LOCALIZE_MSG.showing + ' ' + 1 + ' ' + DATATABLE_LOCALIZE_MSG.to + ' ' + TOTAL_COUNT_EMAILS + ' ' + DATATABLE_LOCALIZE_MSG.of + ' ' + TOTAL_COUNT_EMAILS)
-                        : $("#showPageNumbers").html(' ' + DATATABLE_LOCALIZE_MSG.showing + ' ' + 1 + ' ' + DATATABLE_LOCALIZE_MSG.to + ' ' + SHOW_ENTRIES + ' ' + DATATABLE_LOCALIZE_MSG.of + ' ' + TOTAL_COUNT_EMAILS);
+                    $('.pagination').jqPagination('destroy');
                 }
 
             } else {
@@ -273,8 +283,9 @@ function attendanceReports(SelectlocID, SelectDeptId, SelectUserId, showEntries,
                 MAIL_DATA = "";
                 paginationSetup();
                 $('.pagination').jqPagination('destroy');
-                message = response.msg; 
-                 appendData += '<tr><td></td><td></td><td></td><td> ' + response.msg + ' </td><td></td><td></tr>';
+                message = response.msg;
+                let colSpan = 7 + ADD_REMOVE_COLUMN.length;
+                appendData += '<tr><td colspan="' + colSpan + '" style="text-align: center; padding: 20px;">' + response.msg + '</td></tr>';
                 $('#attendanceHistory').empty();
                 $('#attendanceHistory').append(appendData);
             }

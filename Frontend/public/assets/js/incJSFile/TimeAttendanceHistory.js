@@ -630,9 +630,10 @@ async function download_table_as_pdf() {
         doc.text(length1, 101, $("#locationdept").children(':selected').text().replace('See', ''), {align: 'right'}, 100, 20);
         let length2 = 150 + ($("#employee").children(':selected').text().replace('See', '').length - 6) * 5.5;
         doc.text(length2, 129, $("#employee").children(':selected').text().replace('See', ''), {align: 'right'}, 100, 20);
-        $("#FromDatePdf").html(from);
-        $("#locationPdf").html($("#locationdept").children(':selected').text().replace('See', ''));
-        $("#employeePdf").html($("#employee").children(':selected').text().replace('See', ''));
+        // Security: Use .text() instead of .html() to prevent XSS
+        $("#FromDatePdf").text(from);
+        $("#locationPdf").text($("#locationdept").children(':selected').text().replace('See', ''));
+        $("#employeePdf").text($("#employee").children(':selected').text().replace('See', ''));
 
         doc.text(360, 73, REPORT_DOWNLOAD_MSG.toDate + " :-", {align: 'right'}, 100, 20);
         doc.text(360, 101, REPORT_DOWNLOAD_MSG.department + " :-", {align: 'right'}, 100, 20);

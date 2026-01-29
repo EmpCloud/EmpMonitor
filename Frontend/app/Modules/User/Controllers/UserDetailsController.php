@@ -44,15 +44,34 @@ class UserDetailsController extends Controller
             if(Session::has('admin_session')) $session_user = Session::get('admin_session')['role'];
             else if(Session::has('employee_session')) $session_user = Session::get('employee_session')['role'];
 
-            $api_url = env('MAIN_API').$session_user.'/web-app-activity?'.$request->data;
-            $method = 'get-with-token';
-            $response = $this->helper->postApiCall($method, $api_url, null);
-            $result['code'] = 200;
-            $result['data'] = $response['data'];
-            $result['msg'] = $response['message']; 
+            // Security: Changed from GET to POST to avoid sensitive data in query params
+            $data = $request->input('data');
+            parse_str($data, $parsedData);
+            
+            $api_url = env('MAIN_API').$session_user.'/web-app-activity';
+            $method = 'post_with_token';
+            $postData = array(
+                "employeeId" => isset($parsedData['employeeId']) ? (int)$parsedData['employeeId'] : null,
+                "startDate" => $parsedData['startDate'] ?? null,
+                "endDate" => $parsedData['endDate'] ?? null,
+                "type" => isset($parsedData['type']) ? (int)$parsedData['type'] : 1
+            );
+            $response = $this->helper->postApiCall($method, $api_url, $postData);
+            
+            // Handle response properly
+            if (isset($response['data'])) {
+                $result['code'] = $response['data']['code'] ?? 200;
+                $result['data'] = $response['data']['data'] ?? $response['data'];
+                $result['msg'] = $response['data']['message'] ?? 'Success';
+            } else {
+                $result['code'] = 500;
+                $result['data'] = null;
+                $result['msg'] = $response['message'] ?? 'Error occurred';
+            }
+            
             return $result;
         } catch (\Exception $e) {
-             return $this->helper->errorHandler($e, ' UserDetailsController =>getBrowserHistory => Method-get ');
+             return $this->helper->errorHandler($e, ' UserDetailsController =>getBrowserHistory => Method-post ');
         }
     } 
 

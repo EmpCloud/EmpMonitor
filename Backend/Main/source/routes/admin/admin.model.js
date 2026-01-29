@@ -51,6 +51,36 @@ class AdminModel {
   }
 
   /**
+   * Find employee by email
+   */
+  async findEmployeeByEmail(email, excludeId = null) {
+    const pool = await mySqlSingleton.getPool();
+    let query = 'SELECT id FROM employees WHERE LOWER(email) = LOWER(?)';
+    const params = [email.trim()];
+    if (excludeId) {
+      query += ' AND id <> ?';
+      params.push(excludeId);
+    }
+    const [rows] = await pool.query(query, params);
+    return rows[0] || null;
+  }
+
+  /**
+   * Find employee by employee code
+   */
+  async findEmployeeByCode(employeeCode, excludeId = null) {
+    const pool = await mySqlSingleton.getPool();
+    let query = 'SELECT id FROM employees WHERE LOWER(employee_code) = LOWER(?)';
+    const params = [employeeCode.trim()];
+    if (excludeId) {
+      query += ' AND id <> ?';
+      params.push(excludeId);
+    }
+    const [rows] = await pool.query(query, params);
+    return rows[0] || null;
+  }
+
+  /**
    * Get all employees with pagination
    */
   async getAllEmployees(skip, limit, name, count = 0) {
@@ -122,6 +152,19 @@ class AdminModel {
       'UPDATE employees SET first_name = ?, last_name = ?, role = ?, mobile_number = ?, employee_code = ?, time_zone = ?, email = ?, password = ? WHERE id = ?',
       [firstName, lastName, role, mobileNumber, employeeCode, timeZone, email, password, id]
     );
+  }
+
+  /**
+   * Patch employee with dynamic fields
+   */
+  async patchEmployee(id, fields) {
+    const pool = await mySqlSingleton.getPool();
+    const columns = Object.keys(fields);
+    if (!columns.length) return;
+    const setClause = columns.map(column => `${column} = ?`).join(', ');
+    const values = columns.map(column => fields[column]);
+    values.push(id);
+    await pool.query(`UPDATE employees SET ${setClause} WHERE id = ?`, values);
   }
 
   /**
@@ -242,6 +285,8 @@ class AdminModel {
     if (type === 2) {
       query.url = { $ne: null, $ne: "" };
     }
+
+    query.yyyymmdd = { $gte: startDate.split('-').join(''), $lte: endDate.split('-').join('') };
 
     return WebAppActivityModel.find(query);
   }

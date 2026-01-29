@@ -35,6 +35,7 @@ $(document).ready(function () {
     $("#expiry_period").datepicker({
         uiLibrary: 'bootstrap4',
     });
+    initBulkUploadHandlers();
 });
 
 function changeNoOfDays(e){
@@ -389,6 +390,97 @@ function getUsers(showEntries, skipvalue, searchText, sortName, sortOrder, activ
         }
     });
     $("#SearchButton").attr('disabled', false);
+}
+
+function initBulkUploadHandlers() {
+    if (typeof BULK_UPLOAD_JS === "undefined") return;
+    handleBulkUpload('#bulkRegisterForm', '/' + userType + '/employee-details/bulk-register', '#bulkRegisterStatus', '#bulkRegisterSummary');
+    handleBulkUpload('#bulkUpdateForm', '/' + userType + '/employee-details/bulk-update', '#bulkUpdateStatus', '#bulkUpdateSummary');
+
+    $('#bulkRegisterModal, #bulkUpdateModal').on('hidden.bs.modal', function () {
+        resetBulkModal(this);
+    });
+
+    $(document).on('change', '.bulk-upload-input', function () {
+        const fileName = this.files && this.files.length ? this.files[0].name : $(this).siblings('.custom-file-label').data('default-label');
+        $(this).siblings('.custom-file-label').text(fileName);
+    });
+}
+
+function resetBulkModal(modalElement) {
+    const $modal = $(modalElement);
+    const form = $modal.find('form')[0];
+    if (form) form.reset();
+    $modal.find('.custom-file-label').each(function () {
+        const defaultLabel = $(this).data('default-label');
+        if (defaultLabel) $(this).text(defaultLabel);
+    });
+    $modal.find('.alert').addClass('d-none').removeClass('alert-success alert-danger alert-info').text('');
+    $modal.find('.alert-light').addClass('d-none').empty();
+}
+
+function handleBulkUpload(formSelector, url, statusSelector, summarySelector) {
+    if (!$(formSelector).length) return;
+    $(formSelector).off('submit').on('submit', function (e) {
+        e.preventDefault();
+        const form = this;
+        const formData = new FormData(form);
+        const $status = $(statusSelector);
+        const $summary = $(summarySelector);
+        const $submitButton = $(form).find('button[type="submit"]');
+        $status.removeClass('d-none alert-danger alert-success').addClass('alert-info').text(BULK_UPLOAD_JS.processing);
+        $summary.addClass('d-none').empty();
+        $submitButton.prop('disabled', true);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                const message = response.message || BULK_UPLOAD_JS.success;
+                $status.removeClass('alert-info').addClass('alert-success').text(message);
+                renderBulkSummary(summarySelector, response.summary);
+                form.reset();
+                $(form).find('.custom-file-label').each(function () {
+                    const defaultLabel = $(this).data('default-label');
+                    if (defaultLabel) $(this).text(defaultLabel);
+                });
+                getUsers(SHOW_ENTRIES, 0, $("#SearchTextField").val(), SORT_NAME, SORT_ORDER, ACTIVE_STATUS);
+            },
+            error: function (xhr) {
+                const message = (xhr.responseJSON && xhr.responseJSON.message) ? xhr.responseJSON.message : NotAbleToLoad;
+                $status.removeClass('alert-info').addClass('alert-danger').text(message);
+                $summary.addClass('d-none').empty();
+            },
+            complete: function () {
+                $submitButton.prop('disabled', false);
+            }
+        });
+    });
+}
+
+function renderBulkSummary(containerSelector, summary) {
+    const $container = $(containerSelector);
+    if (!summary) {
+        $container.addClass('d-none').empty();
+        return;
+    }
+    const failedList = Array.isArray(summary.failed) ? summary.failed : [];
+    const $wrapper = $('<div></div>');
+    $('<strong></strong>').text(BULK_UPLOAD_JS.summaryTitle).appendTo($wrapper);
+    $('<p class="mb-1"></p>').text(`${BULK_UPLOAD_JS.total}: ${summary.total || 0}`).appendTo($wrapper);
+    $('<p class="mb-1 text-success"></p>').text(`${BULK_UPLOAD_JS.successCount}: ${summary.success || 0}`).appendTo($wrapper);
+    $('<p class="mb-2 text-danger"></p>').text(`${BULK_UPLOAD_JS.failedCount}: ${failedList.length}`).appendTo($wrapper);
+    if (failedList.length) {
+        const $list = $('<ul class="pl-3 mb-0 text-danger"></ul>');
+        failedList.forEach(item => {
+            const rowLabel = item.row ? `${BULK_UPLOAD_JS.row} ${item.row}` : BULK_UPLOAD_JS.row;
+            $('<li></li>').text(`${rowLabel}: ${item.message || ''}`).appendTo($list);
+        });
+        $wrapper.append($list);
+    }
+    $container.removeClass('d-none').html($wrapper);
 }
 
 let EmplooyeeDetails = (response, CollapseMergeOption) => {
@@ -1105,7 +1197,9 @@ function successMessage(msg) {
 function getListEmp(){
     (SELECTED_CHECKBOXES.toString()).split(",").forEach(function (id) {
         let empName = $('#td' + id).text();
-        $('#selectedEmployeeList').append('<li>' + empName + '</li>');
+        // Security: Create element safely to prevent XSS
+        let li = $('<li></li>').text(empName);
+        $('#selectedEmployeeList').append(li);
     })
 }
 function clearList(){

@@ -27,7 +27,6 @@
     
     .ad_tab tbody tr:hover {
         background-color: #f8f9fa;
-        transform: scale(1.001);
     }
     
     .ad_tab tbody td {
@@ -43,7 +42,6 @@
         font-size: 18px;
         padding: 10px;
         border-radius: 8px;
-        transition: all 0.3s ease;
     }
     
     .add-tab-icon:hover {

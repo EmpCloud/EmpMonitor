@@ -289,11 +289,15 @@ $(document).ready(function() {
         var write_message = function(){
             $(".chat-write form input").on('keypress', function (e) {
                 if ((e.which == 13)&&(!$(this).val().length == 0)) {
+                    // Security: Create elements safely to prevent XSS
+                    let chatText = $(this).val();
                     if($('.right-sidebar-chat .chat-bubbles .chat-bubble:last-child').hasClass('me')) {
-                        
-                    $('<span class="chat-bubble-text">' + $(this).val() + '</span>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child span:last-child");
+                        let span = $('<span class="chat-bubble-text"></span>').text(chatText);
+                        span.insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child span:last-child");
                     } else {
-                        $('<div class="chat-bubble me"><div class="chat-bubble-text-container"><span class="chat-bubble-text">' + $(this).val() + '</span></div></div>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
+                        let bubble = $('<div class="chat-bubble me"><div class="chat-bubble-text-container"><span class="chat-bubble-text"></span></div></div>');
+                        bubble.find('.chat-bubble-text').text(chatText);
+                        bubble.insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
                     };
                     $(this).val('');
                 } else if(e.which == 13) {

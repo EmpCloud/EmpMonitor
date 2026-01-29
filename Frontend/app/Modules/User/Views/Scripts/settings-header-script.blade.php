@@ -47,7 +47,7 @@
 
 <link href="../assets/plugins/daterangepicker/daterangepicker.css" rel="stylesheet" />
 
-<link href="../assets/plugins/jquery-ui/jquery-ui.css" rel="stylesheet"/>
+<link href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.min.css" rel="stylesheet"/>
 
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" rel="stylesheet">
 <!-- Theme Styles -->
