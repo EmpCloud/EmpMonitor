@@ -1,3 +1,29 @@
+// HTML Sanitization function to prevent XSS attacks
+function escapeHtml(unsafe) {
+    if (unsafe === null || unsafe === undefined) return '';
+    return String(unsafe)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;")
+        .replace(/\//g, "&#x2F;");
+}
+
+// Sanitize attributes (more strict for use in HTML attributes)
+function escapeAttribute(unsafe) {
+    if (unsafe === null || unsafe === undefined) return '';
+    return String(unsafe)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#x27;")
+        .replace(/\//g, "&#x2F;")
+        .replace(/\(/g, "&#40;")
+        .replace(/\)/g, "&#41;");
+}
+
 // for Moment load
 let momentJS = document.createElement('script');
 momentJS.src = 'https://MomentJS.com/downloads/moment.js';
@@ -26,7 +52,12 @@ let ALERT_LIST = JSON.parse(localStorage.getItem(userType + '_ALERT_LIST')) || [
 let BLUR_VALUE = '5px';
 
 // Math.max to set minimum 0
-let appendNumberOnNotificationIcon = () => $('#unReadPushNotificationCount').html("&nbsp;" + (Math.max(0, Number(ALERT_COUNT)) > 99 ? '99+' : ALERT_COUNT) + "&nbsp;");
+// Security: Ensure ALERT_COUNT is properly sanitized before display
+let appendNumberOnNotificationIcon = () => {
+    let count = Math.max(0, Number(ALERT_COUNT));
+    let displayCount = count > 99 ? '99+' : String(count);
+    $('#unReadPushNotificationCount').text('\u00A0' + displayCount + '\u00A0');
+};
 appendNumberOnNotificationIcon();
 
 const bgColoursArray = [{type: 'NR', color: '#00ad42'}, {type: 'LR', color: '#c3d100'}, {
@@ -175,17 +206,25 @@ function appendTheToastsData(alerts, type) {
         ALERT_LIST.push(notification);
         localStorage.setItem(userType + '_ALERT_LIST', JSON.stringify(ALERT_LIST));
         let [bgColor,] = bgColoursArray.filter(({type}) => type === notification.risk_level).map(obj => obj.color);
+        
+        // Sanitize all user-provided data to prevent XSS attacks
+        const safeBgColor = escapeAttribute(bgColor || '#666');
+        const safeRule = escapeHtml(notification.rule || '');
+        const safeCreatedAt = escapeHtml(moment(notification.created_at).fromNow() || '');
+        const safeId = escapeAttribute(notification.id || '');
+        const safeMessage = escapeHtml(convertStringLanguage(notification.type, notification.message) || '');
+        
         $('<div class="toast mainToast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">\n' +
-            '                <div class="toast-header" style="background-color: ' + bgColor + '" >\n' +
-            '                    <img src="' + ALERTS_LOGO + '" height="30px" width="30px"\n' +
+            '                <div class="toast-header" style="background-color: ' + safeBgColor + '" >\n' +
+            '                    <img src="' + escapeAttribute(ALERTS_LOGO) + '" height="30px" width="30px"\n' +
             '                         class="rounded mr-2" alt="...">\n' +
-            '                    <strong class="mr-auto text-light">' + notification.rule + '</strong>\n' +
-            '                    <small class="text-light">' + moment(notification.created_at).fromNow() + '</small>\n' +
-            '                    <button type="button" class="ml-2 mb-1 close popUp" data-dismiss="toast" aria-label="Close" title="' + ALERTS_TOAST_JS.markRead + '" id="btnMarkRead" onclick="markAsRead([Number(\'' + notification.id + '\')])">\n' +
+            '                    <strong class="mr-auto text-light">' + safeRule + '</strong>\n' +
+            '                    <small class="text-light">' + safeCreatedAt + '</small>\n' +
+            '                    <button type="button" class="ml-2 mb-1 close popUp" data-dismiss="toast" aria-label="Close" title="' + escapeAttribute(ALERTS_TOAST_JS.markRead) + '" id="btnMarkRead" onclick="markAsRead([Number(\'' + safeId + '\')])">\n' +
             '                        <span aria-hidden="true">&times;</span>\n' +
             '                    </button>\n' +
             '                </div><div class="toast-body" style="padding-top: 5px !important; padding-bottom: 5px !important;">\n' +
-            '                    ' + convertStringLanguage(notification.type, notification.message) + '\n' +
+            '                    ' + safeMessage + '\n' +
             '                </div></div>').insertAfter('#toastHeader');
     });
     $('.notification_brw').attr('hidden', false);
@@ -261,15 +300,23 @@ function openToast(type, time) {
 
 function appendEmpty() {
     $('#toastHeader').nextAll().remove();
+    
+    // Sanitize user-provided data to prevent XSS
+    const safeAlertsLogo = escapeAttribute(ALERTS_LOGO);
+    const safeMarkRead = escapeAttribute(ALERTS_TOAST_JS.markRead);
+    const safeClickToSeeNotif = escapeHtml(ALERTS_TOAST_JS.clickToSeeNotif);
+    const safeListLink = escapeAttribute($('#listLink').attr('value') || '');
+    const safeClickOldList = escapeHtml(ALERTS_TOAST_JS.clickOldList);
+    
     $('<div class="toast mainToast" data-autohide="false" role="alert" aria-live="assertive" aria-atomic="true">\n' +
         '                <div class="toast-header bg-secondary">\n' +
-        '                    <img src="' + ALERTS_LOGO + '" height="30px" width="30px"\n' +
+        '                    <img src="' + safeAlertsLogo + '" height="30px" width="30px"\n' +
         '                         class="rounded mr-2" alt="...">\n' +
         '                    <strong class="mr-auto">EMP Monitor</strong>\n' +
-        '                    <button type="button" class="ml-2 mb-1 close popUp" data-dismiss="toast" aria-label="Close" title="' + ALERTS_TOAST_JS.markRead + '">\n' +
+        '                    <button type="button" class="ml-2 mb-1 close popUp" data-dismiss="toast" aria-label="Close" title="' + safeMarkRead + '">\n' +
         '                        <span aria-hidden="true">&times;</span>\n' +
         '                    </button>\n' +
-        '                </div><div class="toast-body"><i class="fa fa-exclamation-triangle text-danger pr-2" aria-hidden="true"></i>' + ALERTS_TOAST_JS.clickToSeeNotif + ', <a href=' + $('#listLink').attr('value') + '>' + ALERTS_TOAST_JS.clickOldList + '</a></div></div>').insertAfter('#toastHeader');
+        '                </div><div class="toast-body"><i class="fa fa-exclamation-triangle text-danger pr-2" aria-hidden="true"></i>' + safeClickToSeeNotif + ', <a href="' + safeListLink + '">' + safeClickOldList + '</a></div></div>').insertAfter('#toastHeader');
     $('.notification_brw').attr('hidden', false);
     $('[data-toggle="tooltip"]').tooltip();
     openToast();

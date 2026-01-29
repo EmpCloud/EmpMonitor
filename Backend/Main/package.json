@@ -13,8 +13,10 @@
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-rate-limit": "^7.5.1",
     "helmet": "^8.1.0",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^2.0.0",
     "moment-timezone": "^0.5.48",
     "mongoose": "^8.13.0",
     "morgan": "^1.10.0",
@@ -22,6 +24,7 @@
     "nodejs_employee_management": "file:",
     "swagger-ui-express": "^5.0.0",
     "underscore": "^1.13.7",
+    "xlsx": "^0.18.5",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {

@@ -1,5 +1,18 @@
 @extends('User::Layout._layout')
 
+@php
+if (!function_exists('formatDuration')) {
+    function formatDuration($seconds): string
+    {
+        $seconds = (int) max(0, $seconds);
+        $hours = intdiv($seconds, 3600);
+        $minutes = intdiv($seconds % 3600, 60);
+        $remainingSeconds = $seconds % 60;
+        return sprintf('%02d:%02d:%02d', $hours, $minutes, $remainingSeconds);
+    }
+}
+@endphp
+
 @section('title')
 <title>@if((new App\Modules\User\helper)->checkHost() )
     @if((new App\Modules\User\helper)->checkHost() )
@@ -245,9 +258,9 @@
                                         <th>URL</th>
                                         <th>Start Time</th>
                                         <th>End Time</th>
-                                        <th>Total Seconds</th>
-                                        <th>Idle Seconds</th>
-                                        <th>Active Seconds</th>
+                                        <th>Total Duration</th>
+                                        <th>Idle Duration</th>
+                                        <th>Active Duration</th>
                                         <th>Keystrokes Count</th>
                                         <th>Mouse Movements Count</th>
                                         <th>Button Clicks</th>
@@ -255,26 +268,26 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if(isset($reportData['code']) && $reportData['code'] == 200)
+                                    @if(isset($reportData['code']) && $reportData['code'] == 200 && is_array($reportData['data']))
                                     @foreach($reportData['data'] as $report)
                                     <tr>
-                                        <td>{{ $report['first_name'] }} {{ $report['last_name'] }}</td>
-                                        <td>{{ $report['email'] }}</td>
-                                        <td>{{ $report['location_name'] }}</td>
-                                        <td>{{ $report['department_name'] }}</td>
+                                        <td>{{ $report['first_name'] ?? '--' }} {{ $report['last_name'] ?? '' }}</td>
+                                        <td>{{ $report['email'] ?? '--' }}</td>
+                                        <td>{{ $report['location_name'] ?? '--' }}</td>
+                                        <td>{{ $report['department_name'] ?? '--' }}</td>
                                         <td>{{ $report['role'] ?? '--' }}</td>
-                                        <td>{{ $report['title'] }}</td>
-                                        <td>{{ $report['application_name'] }}</td>
-                                        <td>{{ $report['url'] }}</td>
-                                        <td>{{ $report['start_time'] }}</td>
-                                        <td>{{ $report['end_time'] }}</td>
-                                        <td>{{ $report['total_seconds'] }}</td>
-                                        <td>{{ $report['idle_seconds'] }}</td>
-                                        <td>{{ $report['active_seconds'] }}</td>
-                                        <td>{{ $report['keystrokesCount'] }}</td>
-                                        <td>{{ $report['mouseMovementsCount'] }}</td>
-                                        <td>{{ $report['buttonClicks'] }}</td>
-                                        <td>{{ $report['keystrokes'] }}</td>
+                                        <td>{{ $report['title'] ?? '--' }}</td>
+                                        <td>{{ $report['application_name'] ?? '--' }}</td>
+                                        <td>{{ $report['url'] ?? '--' }}</td>
+                                        <td>{{ $report['start_time'] ?? '--' }}</td>
+                                        <td>{{ $report['end_time'] ?? '--' }}</td>
+                                        <td>{{ formatDuration($report['total_seconds'] ?? 0) }}</td>
+                                        <td>{{ formatDuration($report['idle_seconds'] ?? 0) }}</td>
+                                        <td>{{ formatDuration($report['active_seconds'] ?? 0) }}</td>
+                                        <td>{{ $report['keystrokesCount'] ?? 0 }}</td>
+                                        <td>{{ $report['mouseMovementsCount'] ?? 0 }}</td>
+                                        <td>{{ $report['buttonClicks'] ?? 0 }}</td>
+                                        <td>{{ $report['keystrokes'] ?? 0 }}</td>
                                     </tr>
                                     @endforeach
                                     @endif
@@ -311,9 +324,9 @@
             <th>URL</th>
             <th>Start Time</th>
             <th>End Time</th>
-            <th>Total Seconds</th>
-            <th>Idle Seconds</th>
-            <th>Active Seconds</th>
+            <th>Total Duration</th>
+            <th>Idle Duration</th>
+            <th>Active Duration</th>
             <th>Keystrokes Count</th>
             <th>Mouse Movements Count</th>
             <th>Button Clicks</th>
@@ -343,6 +356,19 @@
 <script>
 let reportTable;
 let currentData = [];
+
+function formatDurationJS(seconds) {
+    const totalSeconds = Number(seconds);
+    if (Number.isNaN(totalSeconds) || totalSeconds < 0) {
+        return '00:00:00';
+    }
+    const rounded = Math.floor(totalSeconds);
+    const hours = Math.floor(rounded / 3600);
+    const minutes = Math.floor((rounded % 3600) / 60);
+    const secs = rounded % 60;
+    const parts = [hours, minutes, secs].map(part => String(part).padStart(2, '0'));
+    return parts.join(':');
+}
 
 $(function() {
     const start = moment().subtract(29, 'days');
@@ -473,19 +499,19 @@ function updateTableData(data) {
         if (data && data.length > 0) {
             data.forEach(function(item) {
                 reportTable.row.add([
-                    item.first_name + ' ' + item.last_name,
-                    item.email || '',
-                    item.location_name || '',
-                    item.department_name || '',
+                    (item.first_name || '--') + ' ' + (item.last_name || ''),
+                    item.email || '--',
+                    item.location_name || '--',
+                    item.department_name || '--',
                     item.role || '--',
                     item.title || '',
                     item.application_name || '',
                     item.url || '',
                     item.start_time || '',
                     item.end_time || '',
-                    item.total_seconds || '',
-                    item.idle_seconds || '',
-                    item.active_seconds || '',
+                    formatDurationJS(item.total_seconds),
+                    formatDurationJS(item.idle_seconds),
+                    formatDurationJS(item.active_seconds),
                     item.keystrokesCount || '',
                     item.mouseMovementsCount || '',
                     item.buttonClicks || '',
@@ -556,19 +582,19 @@ function exportToPDF() {
             // Prepare table data
             const tableData = currentData.map(function(item) {
                 return [
-                    item.first_name + ' ' + item.last_name,
-                    item.email || '',
-                    item.location_name || '',
-                    item.department_name || '',
+                    (item.first_name || '--') + ' ' + (item.last_name || ''),
+                    item.email || '--',
+                    item.location_name || '--',
+                    item.department_name || '--',
                     item.role || '--',
                     item.title || '',
                     item.application_name || '',
                     item.url || '',
                     item.start_time || '',
                     item.end_time || '',
-                    item.total_seconds || '',
-                    item.idle_seconds || '',
-                    item.active_seconds || '',
+                    formatDurationJS(item.total_seconds),
+                    formatDurationJS(item.idle_seconds),
+                    formatDurationJS(item.active_seconds),
                     item.keystrokesCount || '',
                     item.mouseMovementsCount || '',
                     item.buttonClicks || '',
@@ -587,9 +613,9 @@ function exportToPDF() {
                 'URL',
                 'Start Time',
                 'End Time',
-                'Total Seconds',
-                'Idle Seconds',
-                'Active Seconds',
+                'Total Duration',
+                'Idle Duration',
+                'Active Duration',
                 'Keystrokes Count',
                 'Mouse Movements Count',
                 'Button Clicks',
@@ -660,19 +686,19 @@ function exportToPDFWithoutLogo() {
     // Prepare table data
     const tableData = currentData.map(function(item) {
         return [
-            item.first_name + ' ' + item.last_name,
-            item.email || '',
-            item.location_name || '',
-            item.department_name || '',
+            (item.first_name || '--') + ' ' + (item.last_name || ''),
+            item.email || '--',
+            item.location_name || '--',
+            item.department_name || '--',
             item.role || '--',
             item.title || '',
             item.application_name || '',
             item.url || '',
             item.start_time || '',
             item.end_time || '',
-            item.total_seconds || '',
-            item.idle_seconds || '',
-            item.active_seconds || '',
+            formatDurationJS(item.total_seconds),
+            formatDurationJS(item.idle_seconds),
+            formatDurationJS(item.active_seconds),
             item.keystrokesCount || '',
             item.mouseMovementsCount || '',
             item.buttonClicks || '',
@@ -691,9 +717,9 @@ function exportToPDFWithoutLogo() {
         'URL',
         'Start Time',
         'End Time',
-        'Total Seconds',
-        'Idle Seconds',
-        'Active Seconds',
+        'Total Duration',
+        'Idle Duration',
+        'Active Duration',
         'Keystrokes Count',
         'Mouse Movements Count',
         'Button Clicks',
@@ -755,9 +781,9 @@ function exportToExcel() {
             'URL',
             'Start Time',
             'End Time',
-            'Total Seconds',
-            'Idle Seconds',
-            'Active Seconds',
+            'Total Duration',
+            'Idle Duration',
+            'Active Duration',
             'Keystrokes Count',
             'Mouse Movements Count',
             'Button Clicks',
@@ -769,19 +795,19 @@ function exportToExcel() {
             headers, // First row is headers
             ...currentData.map(function(item) {
                 return [
-                    item.first_name + ' ' + item.last_name,
-                    item.email || '',
-                    item.location_name || '',
-                    item.department_name || '',
+                    (item.first_name || '--') + ' ' + (item.last_name || ''),
+                    item.email || '--',
+                    item.location_name || '--',
+                    item.department_name || '--',
                     item.role || '--',
                     item.title || '',
                     item.application_name || '',
                     item.url || '',
                     item.start_time || '',
                     item.end_time || '',
-                    item.total_seconds || '',
-                    item.idle_seconds || '',
-                    item.active_seconds || '',
+                    formatDurationJS(item.total_seconds),
+                    formatDurationJS(item.idle_seconds),
+                    formatDurationJS(item.active_seconds),
                     item.keystrokesCount || '',
                     item.mouseMovementsCount || '',
                     item.buttonClicks || '',
@@ -806,9 +832,9 @@ function exportToExcel() {
             { wch: 30 }, // URL
             { wch: 15 }, // Start Time
             { wch: 15 }, // End Time
-            { wch: 12 }, // Total Seconds
-            { wch: 12 }, // Idle Seconds
-            { wch: 12 }, // Active Seconds
+            { wch: 14 }, // Total Duration
+            { wch: 14 }, // Idle Duration
+            { wch: 14 }, // Active Duration
             { wch: 15 }, // Keystrokes Count
             { wch: 18 }, // Mouse Movements Count
             { wch: 12 }, // Button Clicks

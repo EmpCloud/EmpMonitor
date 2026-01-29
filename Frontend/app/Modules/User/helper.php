@@ -78,11 +78,12 @@ class helper
                 $result = [];
                 $response = null; 
                 try { 
+                    // Use JSON for better data structure preservation and backend compatibility
                     $response = $this->client->request('POST', $api_url, [ 
-                        'form_params' => $data,
+                        'json' => $data,
                         'headers' => [
                             'user-agent' => $_SERVER['HTTP_USER_AGENT'],
-                            'Content-Type' => 'application/x-www-form-urlencoded',
+                            'Content-Type' => 'application/json',
                             'Authorization' => 'Bearer ' . $session_token
                             ]
                         ]);
@@ -125,6 +126,26 @@ class helper
                     $response->message = $e->getMessage();
                     Log::info('Exception postApiCall delete' . $e->getLine() . "=> code =>" . $e->getCode() . " => message =>  " . $e->getMessage());
                     return $response;
+                }
+                break;
+
+            case "post-with-token-multipart":
+                $result = [];
+                try {
+                    $response = $this->client->request('POST', $api_url, [
+                        'multipart' => $data,
+                        'headers' => [
+                            'user-agent' => $_SERVER['HTTP_USER_AGENT'] ?? 'EMPMonitor',
+                            'Authorization' => 'Bearer ' . $session_token
+                        ]
+                    ]);
+                    $body = json_decode($response->getBody()->getContents(), true);
+                    $result['statusCode'] = $response->getStatusCode();
+                    $result['data'] = $body;
+                    return $result;
+                } catch (Exception $e) {
+                    Log::info('Exception postApiCall post-with-token-multipart ' . $e->getLine() . "=> code =>" . $e->getCode() . " => message =>  " . $e->getMessage());
+                    throw $e;
                 }
                 break;
 

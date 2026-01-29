@@ -1,3 +1,6 @@
+@php
+    $rolePrefix = (new App\Modules\User\helper())->getHostName();
+@endphp
 <link href="https://cdn.jsdelivr.net/gh/gitbrent/bootstrap4-toggle@3.6.1/css/bootstrap4-toggle.min.css" type="text/css" rel="stylesheet"/>
 
 <script src="../assets/js/JqueryPagination/jquery.jqpagination.js" type="text/javascript"></script>
@@ -50,6 +53,10 @@
     }
     .introjs-showElement {
         z-index: 999999 !important;
+    }
+    #bulking{
+        width:70% !important;
+        margin: auto;
     }
 </style>
 <!-- Add Emp Details Modal -->
@@ -237,6 +244,70 @@
             <div class="col-md-12" id="loaderForm1" style="display: none;">
                 <div class="loader"></div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Register Modal -->
+<div class="modal fade" id="bulkRegisterModal" tabindex="-1" role="dialog" aria-labelledby="bulkRegisterModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content" id="bulking">
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkRegisterModalLabel">{{ __('messages.bulkRegister') }} {{ __('messages.employee') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="bulkRegisterForm" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <p class="text-muted">{{ __('messages.bulkTemplateInfo') }}</p>
+                    <div class="custom-file mb-3">
+                        <input type="file" class="custom-file-input bulk-upload-input" id="bulkRegisterFile" name="file" accept=".xlsx,.xls" required>
+                        <label class="custom-file-label" data-default-label="{{ __('messages.upload') }} {{ __('messages.file') }}" for="bulkRegisterFile">{{ __('messages.upload') }} {{ __('messages.file') }}</label>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <a href="{{ url($rolePrefix.'/employee-details/bulk-register/template') }}" class="btn btn-link px-0">
+                            <i class="fa fa-download mr-1"></i> {{ __('messages.bulkDownloadTemplate') }}
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBulkRegister">{{ __('messages.upload') }}</button>
+                    </div>
+                    <div class="alert alert-info mt-3 d-none" id="bulkRegisterStatus"></div>
+                    <div class="alert alert-light border mt-3 d-none" id="bulkRegisterSummary"></div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Bulk Update Modal -->
+<div class="modal fade" id="bulkUpdateModal" tabindex="-1" role="dialog" aria-labelledby="bulkUpdateModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content " id="bulking" >
+            <div class="modal-header">
+                <h5 class="modal-title" id="bulkUpdateModalLabel">{{ __('messages.bulkUpdate') }} {{ __('messages.employee') }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="bulkUpdateForm" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <p class="text-muted">{{ __('messages.bulkUpdateTemplateInfo') }}</p>
+                    <div class="custom-file mb-3">
+                        <input type="file" class="custom-file-input bulk-upload-input" id="bulkUpdateFile" name="file" accept=".xlsx,.xls" required>
+                        <label class="custom-file-label" data-default-label="{{ __('messages.upload') }} {{ __('messages.file') }}" for="bulkUpdateFile">{{ __('messages.upload') }} {{ __('messages.file') }}</label>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center flex-wrap">
+                        <a href="{{ url($rolePrefix.'/employee-details/bulk-update/template') }}" class="btn btn-link px-0">
+                            <i class="fa fa-download mr-1"></i> {{ __('messages.bulkDownloadTemplate') }}
+                        </a>
+                        <button type="submit" class="btn btn-primary" id="submitBulkUpdate">{{ __('messages.upload') }}</button>
+                    </div>
+                    <div class="alert alert-info mt-3 d-none" id="bulkUpdateStatus"></div>
+                    <div class="alert alert-light border mt-3 d-none" id="bulkUpdateSummary"></div>
+                </div>
+            </form>
         </div>
     </div>
 </div>

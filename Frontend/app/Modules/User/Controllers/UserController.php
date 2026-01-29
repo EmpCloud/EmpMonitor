@@ -812,22 +812,35 @@ class UserController extends Controller
             $endDate = (new \DateTime())->format('Y-m-d');
             $startDate = (new \DateTime('-30 days'))->format('Y-m-d');
             $result;
-            $api_url = env('MAIN_API') . "admin/report?start_date=$startDate&end_date=$endDate";
-            $method = "get-with-token";
-            $response = $this->helper->postApiCall($method, $api_url, []);
-            if ($response['code'] == 200) {
+            
+            // Security: Changed from GET to POST to avoid sensitive data in query params
+            $api_url = env('MAIN_API') . "admin/report";
+            $method = "post_with_token";
+            $postData = [
+                'start_date' => $startDate,
+                'end_date' => $endDate
+            ];
+            $response = $this->helper->postApiCall($method, $api_url, $postData);
+            
+            // Handle response structure properly
+            // Backend returns: { code: 200, data: { data: [...], count: ... } }
+            if (isset($response['data']) && isset($response['data']['code']) && $response['data']['code'] == 200) {
                 $result['code'] = 200;
                 $result['msg'] = 'success';
-                $result['data'] = $response['data']['data'];
+                // Extract the actual array from nested data structure
+                $result['data'] = $response['data']['data']['data'] ?? [];
+                $result['count'] = $response['data']['data']['count'] ?? 0;
                 $reportData = $result;
             } else {
                 $result['code'] = 400;
                 $result['msg'] = 'No data found';
+                $result['data'] = [];
+                $result['count'] = 0;
                 $reportData = $result;
             }
             return view("User::Report.report")->with(array('departments' => $departments, 'location_departmnet' => $location, 'reportData' => $reportData, 'employeesList' => $employeesList));
         } catch (\Exception $e) {
-            return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartments => Method-get');
+            return $this->ExceptionErrorHandler($e, "400", ' UserController => getDepartments => Method-post');
         }
     }
 
@@ -840,40 +853,44 @@ class UserController extends Controller
             $fromDate = $request->input('from_date');
             $toDate = $request->input('to_date');
 
-            // Build query parameters
-            $queryParams = [];
+            // Security: Changed from GET to POST to avoid sensitive data in query params
+            // Build POST body parameters
+            $postData = [];
             if ($fromDate) {
-                $queryParams['start_date'] = $fromDate;
+                $postData['start_date'] = $fromDate;
             }
             if ($toDate) {
-                $queryParams['end_date'] = $toDate;
+                $postData['end_date'] = $toDate;
             }
             if ($locationId) {
-                $queryParams['location_id'] = $locationId;
+                $postData['location_id'] = $locationId;
             }
             if ($departmentId) {
-                $queryParams['department_id'] = $departmentId;
+                $postData['department_id'] = $departmentId;
             }
             if ($employeeId) {
-                $queryParams['employee_id'] = $employeeId;
+                $postData['employee_id'] = $employeeId;
             }
 
-            $queryString = http_build_query($queryParams);
-            $api_url = env('MAIN_API') . "admin/report?" . $queryString;
-            $method = "get-with-token";
-            $response = $this->helper->postApiCall($method, $api_url, []);
+            $api_url = env('MAIN_API') . "admin/report";
+            $method = "post_with_token";
+            $response = $this->helper->postApiCall($method, $api_url, $postData);
 
-            if ($response['code'] == 200) {
+            // Handle response structure properly
+            // Backend returns: { code: 200, data: { data: [...], count: ... } }
+            if (isset($response['data']) && isset($response['data']['code']) && $response['data']['code'] == 200) {
                 return response()->json([
                     'code' => 200,
-                    'data' => $response['data']['data'] ?? [],
+                    'data' => $response['data']['data']['data'] ?? [],
+                    'count' => $response['data']['data']['count'] ?? 0,
                     'message' => 'Success'
                 ]);
             } else {
                 return response()->json([
                     'code' => 400,
                     'data' => [],
-                    'message' => $response['message'] ?? 'No data found'
+                    'count' => 0,
+                    'message' => $response['data']['message'] ?? 'No data found'
                 ]);
             }
         } catch (\Exception $e) {

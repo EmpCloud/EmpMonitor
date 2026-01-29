@@ -1,6 +1,7 @@
 const express = require('express');
 const DashboardController = require('./dashboard.controller');
 const authMiddleware = require('../../middleware/authMiddleware');
+const { dashboardLimiter } = require('../../middleware/rateLimitMiddleware');
 
 class DashboardRoutes {
   constructor() {
@@ -9,6 +10,9 @@ class DashboardRoutes {
   }
 
   initializeRoutes() {
+    // Apply rate limiting to prevent DoS attacks
+    this.myRoutes.use(dashboardLimiter);
+    
     // Apply authentication middleware to all routes
     this.myRoutes.use(authMiddleware.authenticateToken);
     

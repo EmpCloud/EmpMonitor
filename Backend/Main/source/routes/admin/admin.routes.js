@@ -4,6 +4,36 @@ const router = require('express').Router();
 const AdminController = require('./admin.controller');
 const MonitoringControlController = require('./monitoring-control.controller');
 const authMiddleware = require('../../middleware/authMiddleware');
+const { authLimiter, strictLimiter } = require('../../middleware/rateLimitMiddleware');
+const multer = require('multer');
+
+const excelUploadMiddleware = () => {
+  const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: { fileSize: 5 * 1024 * 1024 },
+    fileFilter: (req, file, cb) => {
+      const allowedExtensions = ['.xlsx', '.xls'];
+      const allowedMimeTypes = [
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel'
+      ];
+      const hasValidExtension = allowedExtensions.some(ext => file.originalname.toLowerCase().endsWith(ext));
+      if (allowedMimeTypes.includes(file.mimetype) || hasValidExtension) {
+        return cb(null, true);
+      }
+      cb(new Error('Only Excel files (.xlsx/.xls) are allowed.'));
+    }
+  });
+
+  return (req, res, next) => {
+    upload.single('file')(req, res, (err) => {
+      if (err) {
+        return res.status(400).json({ message: err.message || 'Unable to process the uploaded file.' });
+      }
+      next();
+    });
+  };
+};
 
 class AdminRoutes {
   constructor() {
@@ -12,13 +42,18 @@ class AdminRoutes {
   }
 
   core() {
-    // Public routes
-    this.myRoutes.post('/login', (req, res) => AdminController.adminLogin(req, res));
+    // Public routes - with strict rate limiting to prevent brute force attacks
+    this.myRoutes.post('/login', authLimiter, (req, res) => AdminController.adminLogin(req, res));
     
     // Protected routes (require authentication)
     this.myRoutes.use(authMiddleware.authenticateToken);
     this.myRoutes.use(authMiddleware.authorizeRole(['admin']));
     
+    // Apply rate limiting to all protected routes
+    this.myRoutes.use(strictLimiter);
+    
+    const uploadExcel = excelUploadMiddleware();
+
     // Employee management
     this.myRoutes.post('/register', (req, res) => AdminController.adminRegister(req, res));
     this.myRoutes.get('/employees', (req, res) => AdminController.getAllEmployees(req, res));
@@ -26,13 +61,16 @@ class AdminRoutes {
     this.myRoutes.put('/update-employee', (req, res) => AdminController.updateEmployee(req, res));
     this.myRoutes.delete('/employees/:id', (req, res) => AdminController.deleteEmployee(req, res));
     this.myRoutes.delete('/employee-delete-multiple', (req, res) => AdminController.deleteEmployees(req, res));
+    this.myRoutes.post('/bulk-register', uploadExcel, (req, res) => AdminController.bulkRegisterEmployees(req, res));
+    this.myRoutes.post('/bulk-update', uploadExcel, (req, res) => AdminController.bulkUpdateEmployees(req, res));
+    this.myRoutes.get('/bulk-register/template', (req, res) => AdminController.downloadBulkRegisterTemplate(req, res));
+    this.myRoutes.get('/bulk-update/template', (req, res) => AdminController.downloadBulkUpdateTemplate(req, res));
     
     // Attendance
     this.myRoutes.post('/attendance', (req, res) => AdminController.getAttendance(req, res));
     this.myRoutes.post('/attendance/:id', (req, res) => AdminController.getAttendanceById(req, res));
     
-    // Web app activity
-    this.myRoutes.get('/web-app-activity', (req, res) => AdminController.getWebAppActivity(req, res));
+    // Web app activity - POST only to avoid sensitive data in query params
     this.myRoutes.post('/web-app-activity', (req, res) => AdminController.getWebAppActivity(req, res));
     
     // Department management
@@ -47,8 +85,7 @@ class AdminRoutes {
     this.myRoutes.put('/locations/:id', (req, res) => AdminController.updateLocation(req, res));
     this.myRoutes.delete('/locations/:id', (req, res) => AdminController.deleteLocation(req, res));
     
-    // Reports
-    this.myRoutes.get('/report', (req, res) => AdminController.getReports(req, res));
+    // Reports - POST only to avoid sensitive data in query params
     this.myRoutes.post('/report', (req, res) => AdminController.getReports(req, res));
     
     // Localization

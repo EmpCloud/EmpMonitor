@@ -101,6 +101,14 @@
         label.custom-file-label {
             z-index: 2;
         }
+        .bulk_data .btn-primary {
+            color: #fff;
+            background-color: #6e9cfe;
+            border-color: #6e9cfe;
+            border-radius: 35px !important;
+            font-size: 14px;
+            padding: 4px 20px;
+        }
     </style>
 @endsection
 
@@ -142,14 +150,23 @@
 
                                         <div class="col-md-12"> 
                                             <div class="bulk_data">
-                                            <div class="btn-group btn-group-sm btn-block">
-                                                 
-                                                         <button class="btn btn-primary width_full_btn side-step1" onclick=planValidate(1);
-                                                                id="add_btn"
-                                                                data-toggle="modal"> {{ __('messages.register') }} {{ __('messages.employee') }}
-                                                        </button>
-                                                  
-                                              
+                                            <div class="btn-group btn-group-sm flex-wrap " role="group">
+                                                <button type="button" class="btn btn-primary width_full_btn side-step1 mr-2 mb-2"
+                                                        onclick=planValidate(1);
+                                                        id="add_btn"
+                                                        data-toggle="modal">
+                                                    {{ __('messages.register') }} {{ __('messages.employee') }}
+                                                </button>
+                                                <button type="button" class="btn btn-primary mb-2 mr-2"
+                                                        id="addBulkRegBtn"
+                                                        data-toggle="modal" data-target="#bulkRegisterModal">
+                                                    {{ __('messages.bulkRegister') }}
+                                                </button>
+                                                <button type="button" class="btn btn-primary mb-2"
+                                                        id="editBulkRegBtn"
+                                                        data-toggle="modal" data-target="#bulkUpdateModal">
+                                                    {{ __('messages.bulkUpdate') }}
+                                                </button>
                                             </div>
                                             </div>
                                            

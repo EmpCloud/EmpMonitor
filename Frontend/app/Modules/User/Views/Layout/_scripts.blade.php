@@ -1,7 +1,7 @@
 <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.min.js"></script>
-<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jQuery-slimScroll/1.3.8/jquery.slimscroll.min.js"></script>
 <script src="../assets/js/concept.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
@@ -70,6 +70,7 @@
     let TABLE_HEADER_ATTENDANCE = JSON.parse('{{__('messages.Attendance_downoad_Updated_js')}}'.replace(/&quot;/g, '"'));
     let EXPORT_WITH_HEADER = JSON.parse('{{__('messages.exportExcelHeader')}}'.replace(/&quot;/g, '"'));
     let EXPORT_EXCEL_VALIDATION = JSON.parse('{{__('messages.exportExcelValidation')}}'.replace(/&quot;/g, '"'));
+    let BULK_UPLOAD_JS = JSON.parse('{{__('messages.bulkUploadJs')}}'.replace(/&quot;/g, '"'));
     let ATTENDANCEREPORT = JSON.parse('{{__('messages.ATTENDANCEREPORTTEXT')}}'.replace(/&quot;/g, '"'));
     let is_admin = "<?php if(Session::has(env('Admin')) && (new App\Modules\User\helper)->getHostName() == env('Admin')) echo true ?>";
    
