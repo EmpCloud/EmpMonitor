@@ -65,6 +65,9 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::get('/productivity', [UserController::class,'productivityRanking'])->name('productivity');
             Route::post('/productivity-update', [UserController::class,'productivityUpdate']);
             Route::post('/productivity', [UserController::class,'productivityRanking'])->name('productivity');
+            Route::post('productivity-report-data-new', [UserController::class,'ReportDataNew']);
+            Route::post('productivity-report-data-list-new', [UserController::class,'ReportForTableNew']);
+            Route::get('productivity-report-new', [UserController::class,'productivityReportNew'])->name('productivity-report-new');
 
             // Monitoring Control Routes
             Route::get('/monitoring-control', [MonitoringControlController::class,'monitoringRules'])->name('monitoring-control');
@@ -76,6 +79,8 @@ Route::group(['module' => 'User', 'middleware' => ['web'], 'namespace' => 'App\M
             Route::post('/monitoring-rules/assign', [MonitoringControlController::class,'assignEmployees']);
             Route::get('/monitoring-rules/unassigned', [MonitoringControlController::class,'getUnassignedEmployees']);
             Route::get('/monitoring-rules/all-employees', [MonitoringControlController::class,'getAllEmployees']);
+          
+          
 
         }); 
     });

@@ -964,5 +964,169 @@ class UserController extends Controller
         }
         return $result;
     }
+    // Update in productivity report
+    public function productivityReportNew(Request $request)
+    {
+        
+       $location = $this->getLocationsDept();
+            $departments = $this->getDepartments();
+            $employeesList = $this->helper->employeesList();
+        $responseData['total_count'] = 0;
+        $startDate = date("Y-m-d", strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . "-7 days"));;
+        $endDate = date('Y-m-d', strtotime(date("Y-m-d", strtotime(date("Y-m-d"))) . "-1 days"));
+         $api_url = env('MAIN_API') . 'productivity-reports/productivity-new?skip=0&limit=10&startDate=' . $startDate . '&endDate=' . $endDate . "&location_id=All";
+        $method = "get-with-token";
+        $response = $this->helper->postApiCall($method, $api_url, 0);
+        $responseData['productivity_table'] = [];
+        $responseData['hasMoreData'] = false;
 
+        if ($response['code'] == 200 && count($response['data']) > 0) {
+            for ($i = 0; $i < count($response['data']); $i++) {
+                $responseData['productivity_table'][$i]['name'] = $response['data'][$i]['name'];
+                $responseData['productivity_table'][$i]['Productive'] = $this->convertSecToHHSSMM($response['data'][$i]['productive_duration']);
+                $responseData['productivity_table'][$i]['Unproductive'] = $this->convertSecToHHSSMM($response['data'][$i]['non_productive_duration']);
+                $responseData['productivity_table'][$i]['Neutral'] = $this->convertSecToHHSSMM($response['data'][$i]['neutral_duration']);
+                $responseData['productivity_table'][$i]['Idle'] = $this->convertSecToHHSSMM($response['data'][$i]['idle_duration']);
+                $responseData['productivity_table'][$i]['Total'] =  $this->convertSecToHHSSMM($response['data'][$i]['computer_activities_time']);
+                $responseData['productivity_table'][$i]['Total_hrs'] = $this->convertSecToHHSSMM($response['data'][$i]['total_logged_duration']);
+                $responseData['productivity_table'][$i]['Pro_percent'] = $response['data'][$i]['productivity'];
+                $responseData['productivity_table'][$i]['unpro_percent'] = $response['data'][$i]['unproductivity'];
+                $responseData['productivity_table'][$i]['count'] = $response['data'][$i]['count'];
+                $responseData['productivity_table'][$i]['computer_name'] = $response['data'][$i]['computer_name'] ?? '';
+            }
+            $responseData['total_count'] = $response['total'];
+        }
+        return view('User::Report.productivity_report_new')->with(array('departments' => $departments, 'location_departmnet' => $location, 'response' => $responseData, 'employeesList' => $employeesList));
+    }
+    public function ReportForTableNew(Request $request)
+    {
+        try {
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+            $limit = count($request->all()) != 0 ? $request->limit : 10;
+            $skip = count($request->all()) != 0 ? $request->skip : 0;
+            // sortColumn=Name&sortOrder=D
+
+            $user = "";
+            $loc = "";
+            $dept = "";
+            $sortOrder = "";
+            $sortColumn = "";
+            $responseData['productivity_table'] = [];
+            $responseData['hasMoreData'] = false;
+            $DownloadReport = false;
+            $dateByReport = false;
+
+            if ($request->user_id != null) {
+                $user = "&employee_id=" . $request->user_id;
+            }
+            if ($request->dept_id != null) {
+                $dept = "&department_id=" . $request->dept_id;
+            }
+            if ($request->loc_id != null) {
+                $loc = "&location_id=" . $request->loc_id;
+            }
+            else {
+                $loc = "&location_id=All";
+            }
+            if ($request->sortName != '') {
+                $sortColumn = '&sortColumn=' . $request->sortName;
+                $sortOrder = '&sortOrder=' . $request->sortOrder;
+            }
+          
+           
+                $api_url = env('MAIN_API') . 'productivity-reports/productivity-list-new?startDate=' . $startDate . '&endDate=' . $endDate . $user . $loc . $dept . '&skip=' . (int)$skip . '&limit=' . (int)$limit . $sortColumn . $sortOrder ;
+             $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, 0);
+             if ($response['code'] == 200 && count($response['data']) > 0) {
+                if (!$DownloadReport) {
+                    $responseData['total_count'] = $response['total'];
+                }
+                for ($i = 0; $i < count($response['data']); $i++) {
+                    $responseData['productivity_table'][$i]['name'] = $response['data'][$i]['name'];
+                    $responseData['productivity_table'][$i]['Productive'] = $this-> timeConverterHMS($response['data'][$i]['productive_duration']);
+                    $responseData['productivity_table'][$i]['Unproductive'] = $this-> timeConverterHMS($response['data'][$i]['non_productive_duration']);
+                    $responseData['productivity_table'][$i]['Neutral'] = $this-> timeConverterHMS($response['data'][$i]['neutral_duration']);
+                    $responseData['productivity_table'][$i]['idle_duration'] = $this-> timeConverterHMS($response['data'][$i]['idle_duration']);
+                    $responseData['productivity_table'][$i]['Total'] = $this-> timeConverterHMS($response['data'][$i]['office_time']);
+                    $responseData['productivity_table'][$i]['Total_hrs']=$this-> timeConverterHMS($response['data'][$i]['total_logged_duration']);
+                    $responseData['productivity_table'][$i]['Pro_percent'] = $response['data'][$i]['productivity'];
+                    $responseData['productivity_table'][$i]['unpro_percent'] = $response['data'][$i]['unproductivity'];
+                    $responseData['productivity_table'][$i]['count'] = $response['data'][$i]['count'];
+                    $responseData['productivity_table'][$i]['computer_name'] = $response['data'][$i]['computer_name'] ?? null;
+                    $responseData['productivity_table'][$i]['username'] = $response['data'][$i]['username'] ?? null;
+                    $DownloadReport && $dateByReport ? $responseData['productivity_table'][$i]['s_date'] = $response['data'][$i]['s_date'] : '';
+                }
+                $responseData['code'] = 200;
+            } else {
+                $responseData['code'] = 404;
+            }
+            return $responseData;
+        } catch (\Exception $e) {
+           
+            return $this->ExceptionErrorHandler($e);
+        }
+    }
+     public function ReportDataNew(Request $request)
+    {
+        try {
+
+            $startDate = $request->start_date;
+            $endDate = $request->end_date;
+            $user = $loc = $dept = "";
+            if ($request->user_id != null && $request->user_id != "All") {
+                $user = "&employee_id=" . $request->user_id;
+            }
+            if ($request->dept_id != null && $request->dept_id != "All") {
+                $dept = "&department_id=" . $request->dept_id;
+            }
+            if ($request->loc_id != null && $request->loc_id != "All") {
+                $loc = "&location_id=" . $request->loc_id;
+            }
+            $api_url =env('MAIN_API') . 'productivity-reports/productivity-new?startDate=' . $startDate . '&endDate=' . $endDate . $user . $loc . $dept;
+
+            $result = [];
+            $resultJson = [];
+            $method = "get-with-token";
+            $response = $this->helper->postApiCall($method, $api_url, 0);
+
+
+            if ($response['code'] == 200 && count($response['data']) > 0) {
+
+                for ($i = 0; $i < count($response['data']); $i++) {
+                    $result[$i]['productiveTime'] = $this-> timeConverterHMS($response['data'][$i]['productive_duration']);
+                    $result[$i]['nonProductiveTime'] = $this-> timeConverterHMS($response['data'][$i]['non_productive_duration']);
+                    $result[$i]['neutralTime'] = $this-> timeConverterHMS($response['data'][$i]['neutral_duration']);
+                    $result[$i]['Productive'] = $response['data'][$i]['productive_duration'] / 3600;
+                    $result[$i]['Unproductive'] = $response['data'][$i]['non_productive_duration'] / 3600;
+                    $result[$i]['Neutral'] = $response['data'][$i]['neutral_duration'] / 3600;
+                    $result[$i]['date'] = $response['data'][$i]['name'];
+                    array_push($resultJson, json_encode($result[$i]));
+                }
+            }
+            $res['code'] = 200;
+            $res['data'] = $result;
+            return ($res);
+        } catch (\Exception $e) {
+            return $this->ExceptionErrorHandler($e);
+        }
+    }
+    function convertSecToHHSSMM($d) {
+        if(gettype($d) != "integer") $d = number_format($d);
+        $h = floor($d / 3600);
+        $m = floor($d % 3600 / 60);
+        $s = floor($d % 3600 % 60);
+
+        $hDisplay = $h > 0 ? $h  : "00";
+        $mDisplay = $m > 0 ? $m  : "00";
+        $sDisplay = $s > 0 ? $s : "00";
+        return $hDisplay. ":".$mDisplay.":".$sDisplay;
+    }
+      function timeConverterHMS($seconds){
+        $hours = floor($seconds / 3600);
+        $minutes = floor(($seconds % 3600) / 60);
+        $seconds = $seconds % 60;
+        $time = sprintf("%02d:%02d:%02d", $hours, $minutes, $seconds);
+        return $time;
+    }
 }

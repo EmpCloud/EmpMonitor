@@ -66,6 +66,26 @@
                 </ul>
                 
             </li>
+             <li>
+                <a href="javascript:void(0)">
+                    <i class="menu-icon icon-file-text"
+                       title="{{ __('messages.reports') }}"></i><span>{{ __('messages.reports') }}</span><i
+                        class="accordion-icon fas fa-angle-left"></i>
+                </a>
+                <ul class="sub-menu">
+                 
+
+                 <li>   <a href="{{ route('reports', (new App\Modules\User\helper())->getHostName()) }}">
+                   <span>{{ __('messages.reports') }}</span>
+                </a> 
+                            </li>
+                    
+                 
+                            <li><a title="{{ __('messages.productivityReport') }}"
+                                   href="{{route('productivity-report-new',(new App\Modules\User\helper)->getHostName())}}">{{ __('messages.productivityReport') }}</a>
+                            </li>
+                </ul>
+            </li>
           
             @endif
             <li>
@@ -80,15 +100,13 @@
                     <i class="menu-icon far fa-calendar-alt"
                         title="{{ __('messages.timesheets') }}"></i><span>{{ __('messages.timesheets') }}</span>
                 </a>
-                <a href="{{ route('reports', (new App\Modules\User\helper())->getHostName()) }}">
-                    <i class="menu-icon icon-file-text"
-                       title="{{ __('messages.reports') }}"></i><span>{{ __('messages.reports') }}</span>
-                </a> 
+             
                  <a href="{{route('productivity',(new App\Modules\User\helper)->getHostName())}}"
                                    title="{{ __('messages.productivityRules') }}"> <i class="menu-icon fas fa-tasks"
                                        title="{{ __('messages.productivityRules') }}"></i>{{ __('messages.productivityRules') }}</a>
                 @endif
             </li>
+            
         </ul>
     </div>
 </div>

@@ -1933,6 +1933,444 @@
           "500": { "description": "Internal server error" }
         }
       }
+    },
+    "/productivity-reports/productivity-new": {
+      "get": {
+        "tags": ["Private"],
+        "summary": "Get productivity data with hierarchical filtering",
+        "description": "Retrieves productivity data aggregated by location, department, employee, or date based on the provided filters. Returns productivity metrics with pagination support.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "description": "Start date for the report (format: YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-01-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "description": "End date for the report (format: YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-01-31"
+            }
+          },
+          {
+            "name": "location_id",
+            "in": "query",
+            "required": false,
+            "description": "Location ID to filter by. Use 'All' for all locations",
+            "schema": {
+              "type": "string",
+              "default": "All",
+              "example": "All"
+            }
+          },
+          {
+            "name": "department_id",
+            "in": "query",
+            "required": false,
+            "description": "Department ID to filter by",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "employee_id",
+            "in": "query",
+            "required": false,
+            "description": "Employee ID to filter by",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "description": "Number of records to skip (for pagination)",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of records to return",
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "example": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Productivity data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of records",
+                      "example": 10
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "integer",
+                            "description": "ID based on grouping (location_id, department_id, employee_id, or yyyymmdd)",
+                            "example": 123
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Location/Department/Employee Name or Date",
+                            "example": "New York"
+                          },
+                          "productive_duration": {
+                            "type": "integer",
+                            "description": "Productive time in seconds",
+                            "example": 28800
+                          },
+                          "non_productive_duration": {
+                            "type": "integer",
+                            "description": "Non-productive time in seconds",
+                            "example": 3600
+                          },
+                          "neutral_duration": {
+                            "type": "integer",
+                            "description": "Neutral time in seconds",
+                            "example": 1800
+                          },
+                          "idle_duration": {
+                            "type": "integer",
+                            "description": "Idle time in seconds",
+                            "example": 600
+                          },
+                          "office_time": {
+                            "type": "integer",
+                            "description": "Total office time (productive + non-productive + neutral + idle)",
+                            "example": 34800
+                          },
+                          "computer_activities_time": {
+                            "type": "integer",
+                            "description": "Computer activities time (productive + non-productive + neutral)",
+                            "example": 34200
+                          },
+                          "total_logged_duration": {
+                            "type": "integer",
+                            "description": "Total logged time in seconds",
+                            "example": 35000
+                          },
+                          "count": {
+                            "type": "integer",
+                            "description": "Number of records aggregated",
+                            "example": 5
+                          },
+                          "productivity": {
+                            "type": "string",
+                            "description": "Productivity percentage",
+                            "example": "85.50"
+                          },
+                          "unproductivity": {
+                            "type": "string",
+                            "description": "Unproductivity percentage",
+                            "example": "10.67"
+                          },
+                          "full_name": {
+                            "type": "string",
+                            "description": "Full name (only for employee detail view)",
+                            "example": "John Doe"
+                          },
+                          "computer_name": {
+                            "type": "string",
+                            "description": "Computer name (only for employee detail view, null for other views)",
+                            "example": null
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "Username (only for employee detail view, null for other views)",
+                            "example": null
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "Date in YYYY-MM-DD format (only for employee detail view)",
+                            "example": "2024-01-15"
+                          },
+                          "employee_id": {
+                            "type": "integer",
+                            "description": "Employee ID (only for employee detail view)",
+                            "example": 456
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Productivity List."
+                    },
+                    "error": {
+                      "type": "null",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Token not provided or invalid"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/productivity-reports/productivity-list-new": {
+      "get": {
+        "tags": ["Private"],
+        "summary": "Get paginated productivity list with hierarchical filtering",
+        "description": "Similar to /productivity-new but with different default pagination (limit: 10 instead of 20) and includes computer_name and username for all result types.",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "required": true,
+            "description": "Start date for the report (format: YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-01-01"
+            }
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "required": true,
+            "description": "End date for the report (format: YYYY-MM-DD)",
+            "schema": {
+              "type": "string",
+              "format": "date",
+              "example": "2024-01-31"
+            }
+          },
+          {
+            "name": "location_id",
+            "in": "query",
+            "required": false,
+            "description": "Location ID to filter by. Use 'All' for all locations",
+            "schema": {
+              "type": "string",
+              "default": "All",
+              "example": "All"
+            }
+          },
+          {
+            "name": "department_id",
+            "in": "query",
+            "required": false,
+            "description": "Department ID to filter by",
+            "schema": {
+              "type": "integer",
+              "example": 1
+            }
+          },
+          {
+            "name": "employee_id",
+            "in": "query",
+            "required": false,
+            "description": "Employee ID to filter by",
+            "schema": {
+              "type": "integer",
+              "example": 10
+            }
+          },
+          {
+            "name": "skip",
+            "in": "query",
+            "required": false,
+            "description": "Number of records to skip (for pagination)",
+            "schema": {
+              "type": "integer",
+              "default": 0,
+              "example": 0
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "description": "Maximum number of records to return",
+            "schema": {
+              "type": "integer",
+              "default": 10,
+              "example": 10
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Productivity list data retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "code": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "total": {
+                      "type": "integer",
+                      "description": "Total number of records",
+                      "example": 10
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "_id": {
+                            "type": "integer",
+                            "description": "ID based on grouping (location_id, department_id, employee_id, or yyyymmdd)",
+                            "example": 123
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Location/Department/Employee Name or Date",
+                            "example": "New York"
+                          },
+                          "productive_duration": {
+                            "type": "integer",
+                            "description": "Productive time in seconds",
+                            "example": 28800
+                          },
+                          "non_productive_duration": {
+                            "type": "integer",
+                            "description": "Non-productive time in seconds",
+                            "example": 3600
+                          },
+                          "neutral_duration": {
+                            "type": "integer",
+                            "description": "Neutral time in seconds",
+                            "example": 1800
+                          },
+                          "idle_duration": {
+                            "type": "integer",
+                            "description": "Idle time in seconds",
+                            "example": 600
+                          },
+                          "office_time": {
+                            "type": "integer",
+                            "description": "Total office time (productive + non-productive + neutral + idle)",
+                            "example": 34800
+                          },
+                          "computer_activities_time": {
+                            "type": "integer",
+                            "description": "Computer activities time (productive + non-productive + neutral)",
+                            "example": 34200
+                          },
+                          "total_logged_duration": {
+                            "type": "integer",
+                            "description": "Total logged time in seconds",
+                            "example": 35000
+                          },
+                          "count": {
+                            "type": "integer",
+                            "description": "Number of records aggregated",
+                            "example": 5
+                          },
+                          "productivity": {
+                            "type": "string",
+                            "description": "Productivity percentage",
+                            "example": "85.50"
+                          },
+                          "unproductivity": {
+                            "type": "string",
+                            "description": "Unproductivity percentage",
+                            "example": "10.67"
+                          },
+                          "full_name": {
+                            "type": "string",
+                            "description": "Full name (only for employee detail view)",
+                            "example": "John Doe"
+                          },
+                          "computer_name": {
+                            "type": "string",
+                            "description": "Computer name (populated for all result types)",
+                            "example": "PC-001"
+                          },
+                          "username": {
+                            "type": "string",
+                            "description": "Username (populated for all result types)",
+                            "example": "jdoe"
+                          },
+                          "date": {
+                            "type": "string",
+                            "description": "Date in YYYY-MM-DD format (only for employee detail view)",
+                            "example": "2024-01-15"
+                          },
+                          "employee_id": {
+                            "type": "integer",
+                            "description": "Employee ID (only for employee detail view)",
+                            "example": 456
+                          }
+                        }
+                      }
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Productivity List."
+                    },
+                    "error": {
+                      "type": "null",
+                      "example": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Token not provided or invalid"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
     }
   },
   "components": {
