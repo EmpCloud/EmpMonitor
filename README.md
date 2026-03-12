@@ -124,10 +124,11 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
     <p>With automated reporting, you can generate detailed performance summaries, attendance logs, and activity breakdowns effortlessly. These reports not only save time but also provide actionable data to improve workforce management, enhance accountability, and drive better decision-making across your organization.</p>
 
     <p>Whether you’re monitoring application usage, tracking work hours, or identifying areas for improvement, EmpMonitor ensures transparency, efficiency, and trust in your workplace.</p>
-     <details>
-  <summary>Preview</summary>
+
+    <details>
+    <summary>Preview</summary>
       <img src="/assets/Employee-details.png" alt = "Dashboard Preview" width ="800" height = "400 "></img>
-  </details>
+    </details>
     <details>
         <summary>Features</summary>
 
@@ -208,12 +209,14 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
     </details>
     </ul>
 
-
+> [!TIP]
+> <p>Start your <a href="https://empmonitor.com/employee-monitoring-software/"><b><i>free employee monitoring software trial</b></i></a> for seamless hybrid oversight. Use employee monitoring software to track attendance, capture screenshots, and boost productivity ethically.</p>
 
 
   
 - **Time-Tracking**:   
     <p>EmpMonitor open source has the <b>industry-leading Work Hours Monitoring feature</b> enables precise tracking of employee work hours through real-time timesheets and performance analytics. Real-time timesheets ensure accurate records of login/logout times, breaks, and overtime, promoting transparency and schedule compliance. Meanwhile, performance analytics offer insights into productivity trends like peak performance hours, task completion rates, and application usage. These insights help identify inefficiencies, optimize workflows, and allocate resources effectively. By fostering accountability, EmpMonitor keeps employees productive and equips managers with actionable data for informed decision-making. Whether streamlining operations, improving payroll accuracy, or enhancing team performance, this feature drives efficiency, transparency, and accountability across your organization.</p>
+
     <details>
   <summary>Preview</summary>
       <img src="/assets/Time-tracking.png" alt = "Dashboard Preview" width ="800" height = "400 "></img>
@@ -263,6 +266,9 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
     </ul>
     </details>
 
+> [!TIP]
+> <p>Begin your <a href="https://empmonitor.com/time-tracking-software/"><b><i>time-tracking software trial</b></i></a> to gain total visibility into daily operations. Deploy time-tracking software to monitor active minutes, validate remote work sessions, and enhance team accountability.</p>
+
 
 - **User Activity Monitoring**: 
     <p>
@@ -270,6 +276,7 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
 
     This tool is particularly beneficial for remote teams, providing transparency and keeping everyone aligned, no matter where they work. By analyzing real-time data and trends, businesses can foster accountability, improve resource allocation, and create a culture of efficiency. User Activity Monitoring isn’t about micromanaging—it’s about empowering employees to work smarter while maintaining a secure and productive workplace.
     </p>
+
      <details>
   <summary>Preview</summary>
       <img src="/assets/User-activity.png" alt = "Dashboard Preview" width ="1000" height = "500 "></img>
@@ -298,12 +305,17 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
     </details>
     </details>
 
+> [!TIP]
+> <p>Activate your <a href="https://empmonitor.com/user-activity-monitoring/"><b><i>free user activity monitoring trial</b></i></a> to secure comprehensive oversight of your digital workspace. Deploy user activity monitoring to audit application engagement, inspect browser history, and maintain a secure, compliant environment for your team.</p>
+
+
 - **Insider Threat Prevention**: 
     <p>
     It is the <b>only platform with exclusive solution for Real-Time Insider Threat Detection & Data Protection</b>. It is a powerful feature designed to detect security risks and unauthorized activities in real-time, helping businesses prevent data breaches and protect sensitive information. By monitoring employee access and behavior, this tool identifies potential threats whether intentional or accidental and enables organizations to take proactive measures to mitigate risks. It tracks activities such as file access, application usage, and data transfers, ensuring compliance with security policies and safeguarding valuable assets from internal vulnerabilities.
 
     This feature is particularly essential for remote teams, providing visibility into employee actions regardless of their location. By analyzing real-time data and identifying unusual behavior patterns, businesses can foster accountability, reduce risks, and maintain a culture of trust and security. Insider Threat Prevention isn’t about micromanaging it’s about empowering organizations to stay ahead of potential threats while enabling employees to work confidently within a secure and transparent framework.
     </p>
+
      <details>
   <summary>Preview</summary>
       <img src="/assets/Inside-threat.png" alt = "Dashboard Preview" width ="800" height = "400 "></img>
@@ -343,14 +355,18 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
         <ul>◇ <b>Audit Logs for Compliance</b>: Supports comprehensive audit logs to ensure adherence to data protection regulations and simplify compliance checks.</ul>
     </details>
     </ul>
-
     </details>
+
+> [!TIP]
+> <p>Secure your <a href="https://empmonitor.com/insider-threat-prevention/"><b><i>free insider threat prevention trial</b></i></a> for real-time visibility into sensitive organizational activities; leveraging insider threat prevention allows your security team to receive instant alerts and visualize high-risk user actions across the network.</p>
+
 
 - **Attendance Monitoring**: 
 
      <p>Attendance Monitoring automates employee attendance tracking and leave management, ensuring accuracy and efficiency. It records daily attendance with clear statuses like Present (P), Absent (A), and Half-Day (D), while seamlessly integrating with payroll systems for compliance and error-free processing. As a <b>World-wide Trusted Platform for Workforce Management</b>, this feature simplifies workforce management, saves time, and provides a reliable system for tracking attendance and leave, enabling businesses to focus on strategic goals.
      </p>
-     <details>
+
+    <details>
   <summary>Preview</summary>
       <img src="/assets/Attendance-monitoring.png" alt = "Dashboard Preview" width ="800" height = "400 "></img>
   </details>
@@ -365,13 +381,17 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
         <ul>◇ <b>Flexible Filters</b>: Sort and view attendance information by month, location, or team for quick, targeted insights.</ul>
         <ul>◇ <b>Quick Employee Lookup</b>: Find specific employee records instantly, enhancing accessibility for HR and leadership.</ul>
         <ul>◇ <b>Downloadable Reports</b>: Export data in Excel for payroll, compliance, and analyzing trends to support strategic planning and audits.</ul>
-
     <ul>
     </details>
+
+> [!TIP]
+> <p>Automate everything by using <a href="https://empmonitor.com/attendance-tracking-software/"><b><i>free attendance monitoring trial</b></i></a> to gain real-time visibility into remote and on-site clock-ins; leveraging attendance monitoring in this way allows you to manage flexible schedules while maintaining strict organizational discipline.</p>
+
 
 - **Workforce Productivity & Engagement**: 
 
     <p>This feature enhances team performance by analyzing workflows and tracking engagement levels. Using AI-driven insights, it identifies inefficiencies, optimizes operations, and boosts productivity. This feature empowers businesses to create a more engaged and high-performing workforce, driving better results and operational excellence.</p>
+
     <details>
     <summary>Preview</summary>
       <img src="/assets/Workforce-productivity.png" alt = "Dashboard Preview" width ="800" height = "400 "></img>
@@ -388,6 +408,9 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
         <ul>◇ <b>Employee-Specific Search</b>: Quickly search for individual employees to view their detailed productivity statistics and performance history.</ul>
         <ul>◇ <b>Performance Benchmarking</b>: Compare employee productivity against previous performance and organizational averages to identify improvement areas and optimize work schedules.</ul>
       </details>
+
+> [!TIP]
+> <p>Empower your team with a <a href="https://empmonitor.com/workforce-productivity-engagement-software/"><b><i>free workforce productivity & engagement trial</b></i></a> to eliminate friction within remote and hybrid workflows, while deploying workforce productivity & engagement to visualize burnout risks and sustain long-term employee motivation.</p>
 
 
 - **Project Management**: 
@@ -406,6 +429,68 @@ With powerful automation, AI-driven insights, and a user-friendly interface, Emp
         <ul>◇ <b>Comprehensive Reporting</b>: Generate detailed reports on project progress, resource allocation, and team performance. Use these insights to analyze trends, improve workflows, and make data-driven decisions for future projects.</ul>
         <ul>◇ <b>Workflow Optimization</b>: Leverage real-time data and analytics to refine work strategies, eliminate inefficiencies, and enhance overall productivity. This leads to better project outcomes and a more efficient, well-connected workforce.</ul>
     </details>
+
+> [!TIP]
+> <p>Scale your operations with a <a href="https://empmonitor.com/project-management/"><b><i>free project management trial</b></i></a> designed to harmonize complex team tasks; project management excellence is the foundation for maintaining transparency while your organization expands into new markets.</p>
+
+
+- **Screen Recordingv**: 
+
+    <p>EmpMonitor’s high-precision Screen Recording module is engineered to provide a sequential visual history of employee workflows and desktop activity. By capturing time-stamped video segments, you can verify compliance, audit quality standards, and protect sensitive data through automated visual oversight.
+
+    With secure cloud storage, you can retrieve encrypted logs to validate task completion and safeguard intellectual property effortlessly. These visual records eliminate uncertainty in remote environments, allowing you to maintain organizational integrity, enhance transparency, and provide concrete evidence for internal security audits.</p>
+
+> [!TIP]
+> <p>Prevent task errors by integrating a <a href="https://empmonitor.com/live-screencasting-recording/"><b><i>free screen recording trial</b></i></a> into your quality checks, as screen recording tools provide the automated desktop captures and video playback needed to audit employee workflows and protect company standards.</p>
+
+  
+- **Live Screencasting**: 
+
+    <p>EmpMonitor’s interactive Live Screencasting feature offers instantaneous, real-time desktop access to assist distributed teams and troubleshoot technical roadblocks. By streaming high-frequency updates from active workstations, managers can provide direct on-screen guidance and resolve software hurdles without the friction of third-party tools.
+
+    With seamless remote visibility, you can accelerate issue resolution and reduce downtime to keep your project milestones on track. Whether you are conducting remote training or supervising critical operations, this tool bridges the gap between locations to ensure immediate collaboration, operational continuity, and team momentum.</p>
+
+> [!TIP]
+> <p>Reduce technical downtime by integrating a <a href="https://empmonitor.com/live-screencasting-recording/"><b><i>free live screencasting trial</b></i></a> into your support workflow, as live screencasting features provide the instant remote view and screen sharing needed to guide team members through technical troubleshooting in real-time.</p>
+
+    
+- **Data Loss Prevention**:
+
+    EmpMonitor’s Data Loss Prevention tool is like a digital guard for your company’s most important files. It works by keeping a close watch on how information moves, making sure your private secrets don't accidentally get sent out through email or copied onto a USB drive. By stopping data from leaving your office without a permit, you protect your business from big mistakes and keep your hard work safe.
+
+    The data loss prevention system sends you an instant alert if it sees something risky happening, so you can act before any damage is done. This helps you build a strong, honest relationship with your clients because they know their information is safe with you. Using this software is a simple way to make your office more secure and ensure that your team is working in a protected, professional space.
+
+> [!TIP]
+> <p>Avoid costly data leaks by integrating a <a href="https://empmonitor.com/data-loss-prevention-software/"><b><i>free data loss prevention trial</b></i></a> into your security plan, as data loss prevention software provides the file movement alerts and USB blocking needed to stop unauthorized data transfers before they occur.</p>
+
+  
+- **Field Force Management**:
+
+    Take the guesswork out of managing remote teams with EmpMonitor’s Field Force Management app. It provides live GPS updates so you always know where your sales or delivery staff are located. This helps you verify on-site visits, improve your team's routes, and save money on daily travel. It’s a simple way to make sure your field operations are running exactly as planned.
+
+    The mobile-friendly field force management system allows your staff to log their work and check in instantly without needing to call the office. You get a clear, organized report of everything happening in the field, making it easy to spot and fix delays. Whether you are tracking a few drivers or a large sales team, this app makes your mobile business faster and more efficient.
+
+> [!TIP]
+> <p>Cut unnecessary travel costs with a <a href="https://empmonitor.com/field-force-management-application/"><b><i>free field force management trial</b></i></a> into your mobile operations, as field force management apps provide the live GPS tracking and geofencing needed to optimize field staff routes and ensure on-time arrivals.</p>
+  
+
+- **Face Recognition Attendance**:
+
+    EmpMonitor’s Face Recognition Attendance system makes sure that every minute of work is recorded fairly. By using smart cameras to recognize faces, the system ensures that only the right person can clock in for their shift. This completely stops "buddy punching" and guarantees that your attendance sheets are 100% correct, so every employee receives the exact pay they earned for their time.
+
+    The face recognition attendance system works instantly, allowing your team to walk in and start their day without any delays. You can view all the arrival times and logs on one easy screen, which takes the stress out of managing a large team. It is a modern, honest way to handle office hours that keeps everyone accountable and makes your payroll process much more reliable.
+
+> [!TIP]
+> <p>End time-tracking fraud by using a <a href="https://empmonitor.com/face-recognition-attendance-access-management/"><b><i>free face recognition attendance trial</b></i></a> into your check-in process, as a face recognition attendance system provides the biometric logs and touchless clock-in needed to ensure accurate payroll for every employee.</p>
+
+- **Real-Time Activities Tracking**:
+
+    Improve your team’s focus with EmpMonitor’s Real-Time Activities Tracking tool. This feature shows you which apps and websites are being used in the moment, making it easy to see if your team is staying on task or getting distracted. By understanding how time is spent during the day, you can help your employees cut out time-wasters and focus on the work that actually matters for your business.
+
+    With a live dashboard, you can check the status of any project instantly without having to send "check-in" emails or hold extra meetings. This saves time for everyone and lets your staff work with fewer interruptions. Using this tool creates a more productive environment where goals are met faster and everyone knows exactly what needs to be done next.
+
+> [!TIP]
+> <p>Stop management guesswork by integrating a <a href="https://empmonitor.com/real-time-activity-tracking-for-smarter-management/"><b><i>free real-time activities tracking trial</b></i></a> into your routine, as real-time activities tracking software provides the live dashboard and active app monitoring needed to boost workforce productivity as it happens.</p>
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
